@@ -8,24 +8,25 @@
       @click="startBasicImport()"
       size="large"
     />
-    <br />
-    <br />
-    
+    <br/>
+    <br/>
     <hr/>
-<!--
-    <span>Bearbeite Meta-Daten:</span>
-      &nbsp;
-      <InputSwitch  v-model="isImportAdvanced" />
-      &nbsp;
-      <span v-if="isImportAdvanced">Alle</span>
-      <span v-if="!isImportAdvanced">Pflichtfelder</span>
-      <br/>
-      <br/>
--->
-    <div v-if="!showBasicImport">
+    <br />
+    <Button
+      label="Setze Client-Defaults"
+      icon="pi pi-save"
+      @click.prevent="showDefaultsEdit = !showDefaultsEdit"
+      size="large"
+    />
+    <br/>
+
+    <Dialog v-model:visible="showDefaultsEdit" class="dialogEditClientDefaults">
 
       <h3>Setze die Meta-Daten-Defaults:</h3>
-      <Button label="Speichere Defaults im Browser/Client" @click="onSaveMDDefaults()"/>
+      <Button
+        icon="pi pi-save"
+        label="Speichere Defaults im Browser/Client"
+        @click="onSaveMDDefaults()"/>
       <br/>
       <br/>
 
@@ -34,17 +35,8 @@
         :meta_data="mdUserDefaults"
         :context_ids="getContexts()"
         />
-<!--
-         :template="defaults_meta_data"
-          :result_meta_data="mdUserDefaults"
-          @interface="onUserMDDefaultsIF"
-   
-      Stored Defaults:
-      <JsonViewer :value="defaults_meta_data" />
-      Template Result:
-      <JsonViewer :value="mdUserDefaults" />
--->
-    </div>
+
+    </Dialog>
 
     <Dialog v-model:visible="showCollectionList">
           <p>
@@ -71,12 +63,8 @@
             :resource_id="edit_entry_id"
             :context_ids="getContexts()"
           />
-<!--
-  :template="mdEditEntry"
-            :result_meta_data="me_meta_data"
-            @interface="setEditInterface"
-            -->
-        </div>
+
+      </div>
         
     </Dialog>
 
@@ -84,40 +72,40 @@
     <Dialog v-model:visible="showBasicImport" class="basicImporterDialog" style="width: 85vw;">
       <h3>Basis Import - Schritt {{ showStep }} / 5</h3>
       <div class="importMain">
-
+        <OkOrError :error_msg="error_msg" :ok_msg="ok_msg"/>
         <div class="importNav">
           <Button @click="selectStep(1)" :disabled="showStep == 1">
             <Badge value="1 " />
             &nbsp;
-            <span>Projekt</span>
+            <span>Defaults</span>
           </Button>
           &nbsp;
 
           <Button @click="selectStep(2)" :disabled="showStep == 2">
             <Badge value="2 " />
             &nbsp;
-            <span>Defaults</span>
+            <span>Dateiauswahl</span>
           </Button>
           &nbsp;
 
           <Button @click="selectStep(3)" :disabled="showStep == 3">
             <Badge value="3 " />
             &nbsp;
-            <span>Dateiauswahl</span>
+            <span>Meta-Daten</span>
           </Button>
           &nbsp;
-
+<!--
           <Button @click="selectStep(4)" :disabled="showStep == 4">
             <Badge value="4 " />
             &nbsp;
             <span>Meta-Daten</span>
           </Button>
           &nbsp;
-
-          <Button @click="selectStep(5)" :disabled="showStep == 5">
-            <Badge value="5 " />
+-->
+          <Button @click="selectStep(4)" :disabled="showStep == 4">
+            <Badge value="4 " />
             &nbsp;
-            <span>Ende</span>
+            <span>Projekt</span>
           </Button>
           &nbsp;
 
@@ -125,12 +113,163 @@
 
         <div class="importView">
           <div v-if="showStep == 1">
-            <Button
+            <div>
+              <Button
+                  icon="pi pi-caret-right"
+                  severity="secondary"
+                  @click="selectStep(2)"
+                  style="float: right;" />
+
+              <h4>Lege die Import-Default-Werte fest:</h4>
+              <p>Set defaults to be applied to all imports</p>
+                
+                <br/>
+                <Button
+                  v-if="collection_id"
+                  label="Speichere die Meta-Daten für das Set"
+                  @click="saveCollectionMD()"/>
+                <br/>
+                <br/>
+
+                <TemplateEntryMetaDataEdit 
+                  :meta_data="mdImportDefaults"
+                  :context_ids="getContexts()"
+                  />
+              </div>
+            
+          </div>
+          <div v-if="showStep == 2">
+            <div>
+              <Button v-if="uploadedEntries.length > 0"
                 icon="pi pi-caret-right"
-                @click="selectStep(2)"
-                style="float: right"
+                style="float: right;"
+                @click="showStep = 3" />
+
+              <h4>Wähle Dateien aus</h4>
+
+              <p>
+                <!--
+                 <UploadView
+                  @change="onUploadChanged" />    
+                 -->
+                 
+                <UploadViewWebApp
+                  @change="onUploadChanged"/>
+              </p>
+            </div>
+
+            
+            
+          </div>
+
+          <div v-else-if="showStep == 3">
+     
+            <h3>Uploaded Entries:</h3>
+
+            <Button label="Apply Defaults to all"
+                severity="secondary"
+                style="float:right"
+                icon="pi pi-edit" 
+                @click.prevent="clickedApplyDefaultsAll()"/>
+
+            <EntriesGrid
+            v-if="uploadedEntriesShow"
+              :entriesList="uploadedEntries"
+              :error_map="uploadedEntriesErrorMap"
+              :show_actions="true"
+              :show_action_list="['edit', 'save']"
+              :show_preview="true"
+                @clickedEdit="clickedEdit"
+                @clickedSave="clickedApplyDefaults"
               />
 
+
+          </div>
+          <!--
+          <div v-else-if="showStep == 4">
+
+            <h4>Show Uploads</h4>
+            <p>
+
+              <Button label="Apply Defaults to all"
+                severity="secondary"
+                icon="pi pi-edit" 
+                @click.prevent="clickedApplyDefaultsAll()"/>
+                &nbsp;
+
+              <Button label="Add all to collection"
+                severity="secondary"
+                v-if="collection_id"
+                icon="pi pi-edit"
+                @click.prevent="clickedAddToCollectionAll()"/>
+              <br/>
+              <br/>
+
+              <DataTable 
+                v-if="uploadedEntriesShow"
+                :value="uploadedEntries"
+                tableStyle="min-width: 50rem">
+                <template #header>
+                    <div class="flex flex-wrap align-items-center justify-content-between gap-2">
+                        <span class="text-xl text-900 font-bold">New Media Entries</span>
+                        
+                    </div>
+                </template>
+
+                <Column header="Action">
+                    <template #body="slotProps">
+                        <div class="flex flex-col">
+
+                            <Button icon="pi pi-pencil" @click.prevent="clickedEdit(slotProps.data.id)"/>
+                            <Button icon="pi pi-save" @click.prevent="mediaEntryApplyDefaultsAndSave(slotProps.data)"/>
+
+                            <Button icon="pi pi-plus"
+                              v-if="collection_id"
+                              @click.prevent="addToCollection(collection_id, slotProps.data.id)"/>
+                        </div>
+                    </template>
+                </Column>
+
+                <Column header="Entry / File">
+                    <template #body="slotProps">
+
+                      <span>Published:&nbsp;<Chip>{{ slotProps.data.is_published }}</Chip></span>
+                      <br/>
+                      <EntryPublishInfo
+                          :entry_id="slotProps.data.id" />
+
+                    </template>
+                </Column>
+
+                <Column header="MetaData">
+                    <template #body="slotProps">
+
+                        <MetaDataView                    
+                          :entryId="slotProps.data.id"
+                          :mode="uploadedMDShowMode"
+                        />
+                        
+                    </template>
+                </Column>
+
+                <Column header="Download">
+                    <template #body="slotProps">
+                        <FileView :entry_data="slotProps.data"/>
+                        
+                    </template>
+                </Column>
+
+                <template #footer> In total there are {{ uploadedEntries ? uploadedEntries.length : 0 }} entries. </template>
+                </DataTable>
+
+              <hr/>
+            
+            </p>
+
+
+          </div>
+          -->
+          <div v-else-if="showStep == 4">
             <h4>Optionales Import Projekt:</h4>
             <p>Lege ein neues Set an, dem die Uploads hinzugefügt werde.</p>
             
@@ -167,167 +306,22 @@
               </p>
             </div>
 
-            <br />
-            
-          </div>
-          <div v-if="showStep == 2">
-
-            <div>
-              <Button
-                  icon="pi pi-caret-right"
-                  @click="showStep = 3"
-                  style="float: right;" />
-
-              <h4>Lege die Import-Default-Werte fest:</h4>
-              <p>Set defaults to be applied to all imports</p>
-                
-                <br/>
-                <Button
-                  v-if="collection_id"
-                  label="Speichere die Meta-Daten für das Set"
-                  @click="saveCollectionMD()"/>
-                <br/>
-                <br/>
-
-                <TemplateEntryMetaDataEdit 
-                  
-                  :meta_data="mdImportDefaults"
-                  :context_ids="getContexts()"
-                  />
-<!--
-  :template="mdUserDefaults"
-                  :result_meta_data="mdImportDefaults"
-                  @interface="onImportMDDefaultsIF"
-  -->
-              </div>
-            
-          </div>
-
-          <div v-else-if="showStep == 3">
-            <Button v-if="uploadedEntries.length > 0"
-              icon="pi pi-caret-right"
-              style="float: right;"
-              @click="showStep = 4" />
-
-            <h4>Wähle Dateien aus</h4>
-
-            <p>
-              <!--
-                 <UploadView
-                  @change="onUploadChanged" />    
-                 -->
-                 
-                 <UploadViewWebApp
-                @change="onUploadChanged"/>
-              
-              
-            </p>
-
-          </div>
-          <div v-else-if="showStep == 4">
-
-            <h4>Show Uploads</h4>
-            <p>
-              <!--
-              <JsonViewer :value="uploadedEntries" />
-              -->
-
-              <Button label="Apply Defaults to all"
-                severity="secondary"
-                icon="pi pi-edit" 
-                @click.prevent="clickedApplyDefaultsAll()"/>
-                &nbsp;
-                <!--
-              <Button label="Publish all"
-                severity="secondary"
-                icon="pi pi-edit"
-                @click.prevent="clickedPublishAll()"/>
-                &nbsp;
-                -->
-              <Button label="Add all to collection"
+            <Button label="Add all to collection"
                 severity="secondary"
                 v-if="collection_id"
                 icon="pi pi-edit"
                 @click.prevent="clickedAddToCollectionAll()"/>
-              <br/>
-              <br/>
 
-              <DataTable 
-                v-if="uploadedEntriesShow"
-                :value="uploadedEntries"
-                tableStyle="min-width: 50rem">
-                <template #header>
-                    <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-                        <span class="text-xl text-900 font-bold">New Media Entries</span>
-                        <!--
-                        <Button icon="pi pi-refresh" rounded raised />
-                        -->
-                    </div>
-                </template>
-
-                <Column header="Action">
-                    <template #body="slotProps">
-                        <div class="flex flex-col">
-
-                            <Button icon="pi pi-pencil" @click.prevent="clickedEdit(slotProps.data.id)"/>
-                            <Button icon="pi pi-save" @click.prevent="mediaEntryApplyDefaultsAndSave(slotProps.data)"/>
-
-                            <Button icon="pi pi-plus"
-                              v-if="collection_id"
-                              @click.prevent="addToCollection(collection_id, slotProps.data.id)"/>
-                        </div>
-                    </template>
-                </Column>
-
-                <Column header="Entry / File">
-                    <template #body="slotProps">
-
-                      <span>Published:&nbsp;<Chip>{{ slotProps.data.is_published }}</Chip></span>
-                      <br/>
-                      <EntryPublishInfo
-                          :entry_id="slotProps.data.id" />
+            <br />
 
 
-                      <!--
-                      <EntryInfo :entry_data="slotProps.data" />
-
-                      <JsonViewer :value="slotProps.data" copyable boxed sort/>
-                      -->
-                    </template>
-                </Column>
-
-                <Column header="MetaData">
-                    <template #body="slotProps">
-
-                        <MetaDataView                    
-                          :entryId="slotProps.data.id"
-                          :mode="uploadedMDShowMode"
-                        />
-                        
-                    </template>
-                </Column>
-
-                <Column header="Download">
-                    <template #body="slotProps">
-                        <FileView :entry_data="slotProps.data"/>
-                        
-                    </template>
-                </Column>
-
-                <template #footer> In total there are {{ uploadedEntries ? uploadedEntries.length : 0 }} entries. </template>
-                </DataTable>
-
-              <hr/>
-            
-            </p>
-
-
-          </div>
-          <div v-else-if="showStep == 5">
-            <h3>Uploaded Entries:</h3>
+            <h3>Vollständige Einträge:</h3>
 
             <EntriesGrid
+              v-if="uploadedEntriesShow"
               :entriesList="uploadedEntries"
+              :error_map="uploadedEntriesErrorMap"
+              :show_published="true"
               :show_actions="false"
               :show_preview="true"
                 @clickedDelete="resultClickedDelete"
@@ -360,7 +354,7 @@
             
             
             <CollectionEntriesGrid
-              v-if="collection_id"
+              v-if="collection_id && uploadedEntriesShow == true"
               :show_actions="false"
               :show_preview="true"
               :collection_id="collection_id"/>
@@ -374,7 +368,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, onMounted } from "vue";
+import { watch, ref, onMounted, handleError } from "vue";
 import { useRouter } from 'vue-router'
 
 import Dialog from "primevue/dialog";
@@ -385,6 +379,7 @@ import Badge from "primevue/badge";
 
 import { authHelper } from "../modules/auth";
 import { apiHelper } from "../modules/api";
+import { errorHelper } from "../modules/error";
 import { GenMetaData, madekHelper } from "../modules/madek";
 import UploadView from '../components/upload_simple/UploadView.vue'
 import UploadViewWebApp from "../components/upload_simple/UploadViewWebApp.vue";
@@ -394,26 +389,24 @@ import CollectionSelect from "../components/collections/CollectionSelect.vue";
 import { 
   iCollection,
   iMediaEntry,
-  iMetaData,
-  iKeyword,
-  iPerson
+
 } from "../api_resources";
 
-import TemplateMetaDataEdit from "../components/meta-data/template/TemplateMetaDataEdit.vue";
+
 import TemplateEntryMetaDataEdit from "../components/meta-data/template/TemplateEntryMetaDataEdit.vue";
 import EntriesGrid from "../components/entries/EntriesGrid.vue";
 import CollectionEntriesGrid from "../components/collections/CollectionEntriesGrid.vue";
 import MetaDataView from "../components/meta-data/MetaDataView.vue";
 import EntryPublishInfo from "../components/entries/EntryPublishInfo.vue";
 import EntryInfo from "../components/entries/EntryInfo.vue";
-import InputSwitch from "primevue/inputswitch";
+
 import { useMadekStore } from "../stores/madek_store";
 
 
 const router = useRouter()
+const { error_msg, ok_msg, handle_error } = errorHelper()
 
-
-const { api, authParams} = apiHelper()
+const { api, authParams } = apiHelper()
 
 const madek_store = useMadekStore()
 const { 
@@ -456,6 +449,7 @@ const showCollectionList = ref(false as boolean)
 
 const showEditEntry = ref(false as boolean)
 const showBasicImport = ref(false as boolean)
+const showDefaultsEdit = ref(false as boolean)
 const isImportAdvanced = ref(false as boolean)
 const showStep = ref(1 as number)
 const collection_id = ref('' as string)
@@ -480,37 +474,42 @@ const getContexts = () => {
   return madek_store.appSettings.contexts_for_entry_validation
 }
 
-let userMDDefaultsIF = {
-  import : () => {},
-  build: () => {}
-}
-const onUserMDDefaultsIF = (uif: any) => { userMDDefaultsIF = uif}
-
-let importMDDefaultsIF = {
-  import : () => {},
-  build: () => {}
-}
-const onImportMDDefaultsIF = (uif: any) => { importMDDefaultsIF = uif}
-
-let editInterface = {
-  import : () => {},
-  build: () => {}
-}
-
-const setEditInterface = (eif:any) => { editInterface = eif }
 
 //TODO loaded and uploaded entries MD
 const clickedApplyDefaults = (me_id:string) => {
+  
   const upme = uploadedEntries.value.find( (me) => { return me.id === me_id })
 
   if (!upme || !upme.id || !upme.media_file || !upme.media_file.filename) {
     console.error("mediaEntryApplyDefaultsAndSave: invalid upload")
     return
   }
-
+  mediaEntryApplyDefaultsAndSave(upme)
+  /*
   copyMDInto(mdImportDefaults.value, uploadedEntriesMD.value[me_id])
   uploadedEntriesMD.value[me_id][MKEY_TITLE].string = upme.media_file.filename
   
+  const resKey = 'media_entry_id'
+  const resId = me_id
+  const meta_data = uploadedEntriesMD.value[me_id]
+  const loadedMD = {}//uploadedEntriesMD.value[resId]
+  
+  loadResourceMetaData(resKey, resId, loadedMD, () => {
+      console.log("loaded before save resource md: " + JSON.stringify(loadedMD))
+      saveResourceMetaData(resKey, resId, meta_data, loadedMD, () => {
+          console.log("saved meta data")
+          uploadedEntriesErrorMap.value[me_id] = "saved"
+          loadResourceMetaData(resKey, resId, loadedMD, () => {
+              
+              console.log("reloaded resource md: " + JSON.stringify(loadedMD))
+              uploadedEntriesMD.value[resId] = loadedMD
+              
+              uploadedEntriesReload()
+              
+
+          })
+      })
+  })*/
 }
 
 const clickedEdit = (me_id:string) => {
@@ -563,16 +562,32 @@ const onClickedEditEntrySave = () => {
       console.log("loaded before save resource md: " + JSON.stringify(loadedMD))
       saveResourceMetaData(resKey, resId, meta_data, loadedMD, () => {
           console.log("saved meta data")
+          uploadedEntriesErrorMap.value[resId] = "saved"
+
+          tryPublish(resId, (result) => {
+            console.log("tried publish MD: " + JSON.stringify(result))
+            uploadedEntriesErrorMap.value[resId] = "vollständig"
+            const loadedMD = {}
+            loadResourceMetaData(resKey, resId, loadedMD, () => {
+              console.log("reloaded resource md: " + JSON.stringify(loadedMD))
+              uploadedEntriesMD.value[resId] = loadedMD
+            })
+            
+            uploadedEntriesReload()
+            edit_entry_id.value = ''
+            showEditEntry.value = false
+          })
+          /*
           loadResourceMetaData(resKey, resId, loadedMD, () => {
               
               console.log("reloaded resource md: " + JSON.stringify(loadedMD))
               uploadedEntriesMD.value[resId] = loadedMD
               
               uploadedEntriesReload()
-              edit_entry_id.value = ''
-              showEditEntry.value = false
+              
 
           })
+          */
       })
   })
   
@@ -595,10 +610,7 @@ const saveCollectionMD = () => {
     })
   })
 }
-/*
-const addTitle = (me_id: string, title: string) => {
-	
-}*/
+
 
 const mediaEntrySaveMetaData = (meId: string, meta_data: any, cbOK:any) => {
   const loadedMD = {}
@@ -629,29 +641,34 @@ const tryPublish = (me_id: string, cbOK: any) => {
 }
 const mediaEntryApplyDefaultsAndSave = (upme:any) => {
 
-  importMDDefaultsIF.build();
+  
   if (!upme || !upme.id || !upme.media_file || !upme.media_file.filename) {
     console.error("mediaEntryApplyDefaultsAndSave: invalid upload")
     return
   }
 
-
+// TODO use already loaded or edited md as base
 
   const meta_data = {}
   copyMDInto(mdImportDefaults.value, meta_data)
 
   const me_id = upme.id
+
   meta_data[MKEY_TITLE].string = upme.media_file.filename
+
   mediaEntrySaveMetaData(me_id, meta_data, () => {
     console.log("save MD")
+    uploadedEntriesErrorMap.value[me_id] = "saved"
+
     tryPublish(me_id, (result) => {
       console.log("tried publish MD")
-      /*const loadedMD = {}
+      uploadedEntriesErrorMap.value[me_id] = "vollständig"
+      const loadedMD = {}
       loadResourceMetaData('media_entry_id', me_id, loadedMD, () => {
         console.log("reloaded resource md: " + JSON.stringify(loadedMD))
         uploadedEntriesMD.value[me_id] = loadedMD
       })
-      */
+      
       uploadedEntriesReload()
     })
     
@@ -678,12 +695,13 @@ const clickedAddToCollectionAll = () => {
 }
 
 const clickedApplyDefaultsAll = () => {
-  importMDDefaultsIF.build();
+  
   uploadedEntries.value.forEach((me) => {
     mediaEntryApplyDefaultsAndSave(me)
   })
 }
 
+const uploadedEntriesErrorMap = ref({})
 
 function addToCollection(collectionId: string, me_id:string) {
 	const body = { position: 0 };
@@ -694,9 +712,12 @@ function addToCollection(collectionId: string, me_id:string) {
 		authParams?.value)
 	.then(resp => {
 		console.log("entry added to collection" + JSON.stringify(resp.data))
-
+    uploadedEntriesReload()
+    uploadedEntriesErrorMap.value[me_id] = "Added to collection"
 	}).catch(error => {
-		console.error("Could not add media entry " + me_id + " to collection: " + collectionId + " error: " + JSON.stringify(error))
+    uploadedEntriesErrorMap.value[me_id] = "Could not add to collection"
+    handle_error("Could not add media entry " + me_id + " to collection: " + collectionId, error)
+		//console.error("Could not add media entry " + me_id + " to collection: " + collectionId + " error: " + JSON.stringify(error))
 	})
 }
 
@@ -860,5 +881,8 @@ onMounted(() => {
 }
 .p-inputtext {
   padding: 0.7rem;
+}
+.p-dialog .dialogEditClientDefaults {
+  width: 40rem;
 }
 </style>
