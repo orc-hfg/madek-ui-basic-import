@@ -66,3 +66,8 @@ onMounted(() => {
 })
 
 </script>
+<style scoped>
+.p-tag-danger {
+    background-color: var(--pink-400);
+}
+</style>

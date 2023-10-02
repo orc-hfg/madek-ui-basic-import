@@ -2,7 +2,10 @@ import { ref } from "vue"
 
 export const errorHelper = () => {
 
+    const defaultResetTime = 10000
     const error_msg = ref('')
+    const ok_msg = ref('')
+    
 
     const handle_error = (msg:string, error:any) => {
         const mmsg = 'ERROR: ' + msg + ' error: ' + JSON.stringify(error)
@@ -17,13 +20,32 @@ export const errorHelper = () => {
     }
 
     const reset_error = () => { error_msg.value = '' }
+    const reset_ok = () => { ok_msg.value = '' }
+
+    const timed_handle_error = (msg: string, error: any, msecs:number = defaultResetTime) => {
+        handle_error(msg, error)
+        setTimeout(() => {
+            reset_error()
+        },msecs) 
+    }
+
+    const timed_handle_ok = (msg: string, msecs:number = defaultResetTime) => {
+        ok_msg.value = msg
+        setTimeout(() => {
+            reset_ok()
+        },msecs) 
+    }
 
 
     return {
         error_msg,
+        ok_msg,
         handle_error,
         handle_http_error,
-        reset_error
+        reset_error,
+        reset_ok,
+        timed_handle_error,
+        timed_handle_ok
 
     }
 }

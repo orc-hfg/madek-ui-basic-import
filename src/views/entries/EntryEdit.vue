@@ -15,6 +15,7 @@ import EntryPreview from '../../components/files/EntryPreview.vue'
 import EntryPublishInfo from '../../components/entries/EntryPublishInfo.vue'
 import TemplateEntryMetaDataEdit from '../../components/meta-data/template/TemplateEntryMetaDataEdit.vue'
 import { useMadekStore } from '../../stores/madek_store'
+import OkOrError from '../../components/OkOrError.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -32,7 +33,7 @@ const {
 
 const madek_store = useMadekStore()
 
-const { error_msg, handle_error, reset_error} = errorHelper()
+const { error_msg, ok_msg, handle_error, reset_error, timed_handle_ok, timed_handle_error } = errorHelper()
 
 const mediaEntryId = ref('' as string)
 const mediaEntryDetails = ref({} as iMediaEntry)
@@ -45,6 +46,7 @@ const metaDataMap = ref(new Map<string,iMetaData>)
 
 const show_descs = ref(false as boolean)
 const show_hints = ref(false as boolean)
+const show_keys = ref(false as boolean)
 const loadedMetaData = ref({} as GenMetaData)
 const editMetaData = ref({} as GenMetaData)
 
@@ -161,6 +163,7 @@ onMounted(() => {
 
 <template>
     <div class="mediaEntryEdit">
+
       <div style="float: right">
         <InputText type="text" v-model.lazy.trim="mediaEntryId" class="pad-1"/>
         &nbsp;
@@ -171,8 +174,6 @@ onMounted(() => {
         </Button>
       </div>
       <h2>Medien Eintrag bearbeiten:</h2>
-      
-      <p severity="danger" v-if="error_msg">ERROR: {{ error_msg }}</p>    
         
       <hr/>
 
@@ -183,37 +184,48 @@ onMounted(() => {
         </div>
 
         <div class="col-8 md:col-12 lg:col-9 border-1 surface-border border-round px-3 py-1">
+          <OkOrError :error_msg="error_msg" :ok_msg="ok_msg"/>
+          
           <TabView>
             <TabPanel>
               <template #header>
                 Meta-Daten
               </template>
 
-              <div class="flex flex-wrap py-2">
+              <div class="flex flex-wrap py-2 gap-2">
+                <div>
                 <Button @click="saveMetaData()"
                   severity="secondary"
                   icon="pi pi-save"
                   />
-                  &nbsp;
+                </div>
+                <div>
+                
                   <Button @click="loadMetaData()"
                     severity="secondary"
                     icon="pi pi-history"
                   />
 
-                  <div class="px-2" severity="danger">
-                    <span >Zeige Beschreibungen:</span>
-                    &nbsp;
-                    <InputSwitch v-model="show_descs"/>
-                    &nbsp;
+                </div>
+
+                <div class="py-1 gap-1 flex flex-row bg:surface-200">
+                  <div class="px-1 gap-1 flex flex-row bg:surface-200">
+                    <div class=""><InputSwitch v-model="show_descs"/></div>
+                    <div class="py-2"><i class="pi pi-eye"/>&nbsp;<span>Beschreibung</span></div>
                   </div>
 
-                  
+                  <div class="px-1 gap-1 flex flex-row bg:surface-200">
+                    <div class=""><InputSwitch v-model="show_hints"/></div>
+                    <div class="py-2"><i class="pi pi-eye"/>&nbsp;<span>Hinweise</span></div>
+                  </div>
 
-                  <div class="px-1">
-                    Zeige Hinweise
-                    &nbsp;
-                  <InputSwitch v-model="show_hints"/>
+                  <div class="px-1 gap-1 flex flex-row bg:surface-200">
+                    <div class=""><InputSwitch v-model="show_keys"/></div>
+                    <div class="py-2"><i class="pi pi-eye"/>&nbsp;<span>Schlüssel</span></div>
+                  </div>
+
                 </div>
+                
               </div>
 
               <div v-if="mediaEntryDetails.is_published != true">
@@ -232,6 +244,7 @@ onMounted(() => {
                 :publish_result="publish_result"
                 :show_descs="show_descs"
                 :show_hints="show_hints"
+                :show_keys="show_keys"
                 />
 
 <!--              
@@ -255,57 +268,7 @@ onMounted(() => {
             </TabPanel>
           </TabView>
         </div>
-<!--
-        <div class="col-8 md:col-12 lg:col-9 border-1 surface-border border-round px-3 py-1">
-          
 
-          <h3>Meta-Daten bearbeiten
-            <Button @click="saveMetaData()"
-          icon="pi pi-save"
-          style="float: right;"
-          />
-          </h3>
-
-        
-          <div v-if="mediaEntryDetails.is_published != true">
-            
-            <h4>Unvollstängide Meta-Daten!</h4>
-            <EntryPublishInfo
-                :entry_id="mediaEntryId"
-                :publish_result="publish_result"/>
-                <hr/>
-          </div>
-          
-          <TemplateEntryMetaDataEdit
-            
-            :context_ids="getEditContexts()"
-            :template="templateEditMetaData"
-            :meta_data="editMetaData"
-            :publish_result="publish_result"
-            />
-
-        </div>
-
-        <div class="col-12 border-1 surface-border border-round px-1 py-1"
-          v-if="mediaEntryDetails.is_published == true">
-
-          <h3>Berechtigungen:</h3>
-          <EntryPermView
-            :entry_id="mediaEntryId" />
-        </div>
-        -->
-<!--
-        LD: <JsonViewer :value="loadedMetaData" />
-        TEMP: <JsonViewer :value="templateEditMetaData" />
-        ED: <JsonViewer :value="editMetaData" />
-
-
-        
-
-        
-
-        <EntryMetaDataEdit :mediaEntryId="mediaEntryId"></EntryMetaDataEdit>
-    -->    
         
     
         <br/>

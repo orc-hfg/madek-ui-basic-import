@@ -2,9 +2,11 @@
 import { ref, onMounted, watch, PropType, getTransitionRawChildren } from 'vue'
 
 import Chip from 'primevue/chip';
-import Accordion from 'primevue/accordion';
-import AccordionTab from 'primevue/accordiontab';
 
+import Dialog from 'primevue/dialog';
+import SelectButton from 'primevue/selectbutton';
+import PeopleSearch from '../../people/PeopleSearch.vue';
+import GroupSearch from '../../people/GroupSearch.vue';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 
@@ -12,18 +14,16 @@ import { apiHelper } from '../../../modules/api';
 import { madekHelper, GenMetaData, GenMetaDatum } from '../../../modules/madek';
 import { errorHelper } from '../../../modules/error'
 
-import { 
+import {
   iContextKey,
   iKeyword,
   iPerson,
 } from '../../../api_resources'
-import { PeopleListData } from '../../../generated/data-contracts';
-import { PeopleListParamsSubtypeEnum } from '../../../generated/API_fetch_xeio';
 
 const { api } = apiHelper()
 const { error_msg, handle_error, reset_error} = errorHelper()
 
-const { 
+const {
   madekLoading,
     MKEY_TITLE,
     MD_TYPE_KEYWORDS,
@@ -32,7 +32,7 @@ const {
     MD_TYPE_JSON,
     MD_TYPE_TEXT,
     MD_TYPE_TEXT_DATE,
-    
+
     getContextKeysForContext,
     getMetaKeyKeywords,
     checkAllLoaded,
@@ -49,15 +49,14 @@ const {
 
 const props = defineProps(
   {
-    //input_meta_data: { type: Object as PropType<GenMetaData>, default: {}, required: true},
-    meta_data:  { type: Object as PropType<GenMetaData>, default: {}, required: true},    
-    //result_meta_data:  { type: Object as PropType<GenMetaData>, default: {}, required: true},
+    meta_data:  { type: Object as PropType<GenMetaData>, default: {}, required: true},
     context_ids: { type: Array<String>, required: true},
     resource_id: { type: String, required: false },
     resource_key: { type: String, required: false },
     publish_result: { type: Boolean, required: false, default: true },
     show_descs: { type: Boolean, required: false, default: true },
-    show_hints: { type: Boolean, required: false, default: true }
+    show_hints: { type: Boolean, required: false, default: true },
+    show_keys: { type: Boolean, required: false, default: true }
   }
 )
 
@@ -67,12 +66,27 @@ const props = defineProps(
 const buildMetaData = () => {
   //copyMDInto(meta_data.value, props.result_meta_data, true)
 }
-const peopleList = ref([] as iPerson[])
-const peopleSearch = ref('' as string)
 
+const showGroupSearch = ref(false)
+const showPersonSearch = ref(false)
+interface iShowModeOptions {
+  name: string,
+  value: string
+}
+const text_date_show_mode_options = [
+  { name: 'Freitext', value: 'free' },
+  { name: 'Zeitpunkt', value: 'stamp' },
+  { name: 'Zeitspanne', value: 'span' }
+]
+const text_date_show_mode = ref({})
+
+
+//const peopleList = ref([] as iPerson[])
+//const peopleSearch = ref('' as string)
+/*
 const getPeople = () => {
   api.api.peopleList({
-    subtype: //'Person', 
+    subtype: //'Person',
       PeopleListParamsSubtypeEnum.Person,
     searchable: peopleSearch.value,
     full_data: true
@@ -80,7 +94,7 @@ const getPeople = () => {
     peopleList.value = resp.data.people
   })
 }
-
+*/
 const updatedContextsKeyMap =() => {
   if (checkAllLoaded() != true) {
     console.error("ABORT: not loaded yet.")
@@ -95,6 +109,8 @@ const updatedContextsKeyMap =() => {
         console.log("unknown or hidden meta key: " + ckey.meta_key_id)
       }
       else {
+        text_date_show_mode.value[mkey.id] = text_date_show_mode_options[0]
+
         if (!contextKeysMap.value.has(cid)) {
           contextKeysMap.value.set(cid, [] as iContextKey[])
         }
@@ -107,9 +123,51 @@ const updatedContextsKeyMap =() => {
 
 }
 
+const getSelectedPeople = (meta_key_id:string) => {
+  const result = props.meta_data[meta_key_id].selectedPeople
+  return result
+}
+
+const getSelectedKeywords = (meta_key_id:string) => {
+  const result = props.meta_data[meta_key_id]?.selectedKeywords
+  return result
+}
+const selectingPeopleMetaKeyId = ref('')
+const clickedSelectPersonShow = (meta_key_id:string) => {
+  selectingPeopleMetaKeyId.value = meta_key_id
+  showPersonSearch.value = true
+}
+const clickedSelectGroupShow = (meta_key_id:string) => {
+  selectingPeopleMetaKeyId.value = meta_key_id
+  showGroupSearch.value = true
+}
+const selectedPerson = (person: iPerson) => {
+  const mkid = selectingPeopleMetaKeyId.value
+  props.meta_data[mkid].selectedPeople.push(person)
+  showPersonSearch.value = false
+}
+const selectedGroup = (person: iPerson) => {
+  const mkid = selectingPeopleMetaKeyId.value
+  props.meta_data[mkid].selectedPeople.push(person)
+  showGroupSearch.value = false
+}
+const isPeopleAllowedPerson = (meta_key_id: string) => {
+  const mk = getMetaKey(meta_key_id)
+  const result = !!mk?.allowed_people_subtypes?.find((val) => { return val === 'Person'})
+  //console.log("Person? subtypes "  + mk?.allowed_people_subtypes + ":" + result)
+  return result
+}
+const isPeopleAllowedGroup = (meta_key_id: string) => {
+  const mk = getMetaKey(meta_key_id)
+  const result = !!mk?.allowed_people_subtypes?.find((val) => { return val === 'PeopleGroup'})
+  //console.log("Group? subtypes "  + mk?.allowed_people_subtypes + ":" + result)
+  return result
+}
+/*
 watch([peopleSearch], (val) => {
   getPeople()
 })
+*/
 
 const contextKeysMap = ref(new Map<string, iContextKey[]>())
 
@@ -120,7 +178,7 @@ onMounted(() => {
 
 const isMissingKey = (meta_key_id: string) => {
   let result = false
-  props.publish_result?.failedKeys?.find(key => { 
+  props.publish_result?.failedKeys?.find(key => {
     result = meta_key_id == key
     return meta_key_id == key
   })
@@ -146,14 +204,14 @@ const addKeyword = (meta_key_id: string, kw: iKeyword) => {
 }
 
 const removeKeyword = (meta_key_id: string, kwid: string) => {
-  props.meta_data[meta_key_id].selectedKeywords = 
+  props.meta_data[meta_key_id].selectedKeywords =
     props.meta_data[meta_key_id].selectedKeywords.filter( (kw:iKeyword) => { return kw.id !== kwid})
   buildMetaData()
 }
 
 const getMetaKeyFilteredKeywords = (meta_key_id: string, search: string) => {
   if (search.length > 0) {
-    return getMetaKeyKeywords(meta_key_id)?.filter( (kw: iKeyword) => { return kw.term.indexOf(search) > 0})  
+    return getMetaKeyKeywords(meta_key_id)?.filter( (kw: iKeyword) => { return kw.term.indexOf(search) > 0})
   }
   return getMetaKeyKeywords(meta_key_id);
 }
@@ -166,232 +224,298 @@ const addPerson = (meta_key_id: string, person: iPerson) => {
 }
 
 const removePerson = (meta_key_id: string, pid: string) => {
-  props.meta_data[meta_key_id].selectedPeople = 
+  props.meta_data[meta_key_id].selectedPeople =
     props.meta_data[meta_key_id].selectedPeople.filter( (p:iPerson) => { return p.id !== pid})
-  buildMetaData()  
+  buildMetaData()
 }
-
 </script>
 
 <template>
   <div class="mde-entry">
-    
-      
-            <div>
-         
-              <TabView :scrollable="true">
-                <TabPanel
-                  v-for="context_id in context_ids"
-                  style="padding: 0px;"
-                  class="">
-                  <template #header>
-                    <span>{{ getContextML(context_id, 'labels') || context_id }}</span>
-                  </template>
+    <div>
+      <TabView :scrollable="true">
+        <TabPanel v-for="context_id in context_ids" style="padding: 0px" class="">
+          <template #header>
+            <span>{{ getContextML(context_id, "labels") || context_id }}</span>
+            <span v-if="show_keys">[{{ context_id }}]</span>
+          </template>
 
-                  <p v-if="show_descs && getContextML(context_id, 'descriptions')">
-                    <span>{{ getContextML(context_id, 'descriptions') }}</span>
-                  </p>
+          <p v-if="show_descs && getContextML(context_id, 'descriptions')">
+            <span>{{ getContextML(context_id, "descriptions") }}</span>
+          </p>
 
-                  <div v-for="contextKey in contextKeysMap.get(context_id)"
-                    class="border-1 surface-border pb-1">
-<!--
-                  <Accordion>
-                    <AccordionTab
-                    v-for="contextKey in contextKeysMap.get(context_id)">
+          <div
+            v-for="contextKey in contextKeysMap.get(context_id)"
+            class="border-1 surface-border pb-1"
+          >
+            <div
+              class="border-1 surface-border px-3 py-2 meta-header"
+              :class="{ missing: isMissingKey(contextKey.meta_key_id) }"
+            >
+              <span>{{
+                getMetaKeyML(contextKey.meta_key_id, "labels") || contextKey.meta_key_id
+              }}</span>
 
-    
-                      v-if="!!meta_data[contextKey.meta_key_id]"
-                      v-for="metaKeyId in Object.keys(template)"></AccordionTab>
-                      
-                      v-if="getMetaKey(contextKey.meta_key_id)">
--->
-                      <div class="border-1 surface-border px-3 py-2 meta-header">
-                        <span>{{ getMetaKeyML( contextKey.meta_key_id, 'labels') }}</span>
-                        &nbsp;
-                        
-                        &nbsp;
-                        <span>[{{ contextKey.meta_key_id }}]</span>
-                        &nbsp;
-                        <span>{{ contextKey.is_required && 'Required!' || '' }}</span>
+              <span class="" v-if="contextKey.is_required">*</span>
 
-                        &nbsp;
-                        <span>{{ isMissingKey(contextKey.meta_key_id) && 'Missing!' || '' }}</span>
-                        
-                      </div>
+              <i
+                class="pi pi-question"
+                title="Fehlende Meta-Daten!"
+                v-if="isMissingKey(contextKey.meta_key_id)"
+              />
 
-                      <div class="px-3 py-1 meta-desc"
-                        v-if="show_descs && getMetaKeyML( contextKey.meta_key_id, 'descriptions')">
-                        <span>{{ getMetaKeyML( contextKey.meta_key_id, 'descriptions') }}</span>
-                      </div>
-                      <div class="px-3 py-1 meta-hint"
-                        v-if="show_hints && getMetaKeyML( contextKey.meta_key_id, 'hints')">
-                        <span>{{ getMetaKeyML( contextKey.meta_key_id, 'hints') }}</span>
-                      </div>
+              <span v-if="show_keys">[{{ context_id }}]</span>
+              <!--<span>{{ isMissingKey(contextKey.meta_key_id) && 'Missing!' || '' }}</span>-->
+            </div>
 
-                      <div class="mde-text" v-if="isMetaKeyObjectType(contextKey.meta_key_id, MD_TYPE_TEXT)">
+            <div
+              class="px-3 py-1 meta-desc"
+              v-if="show_descs && getMetaKeyML(contextKey.meta_key_id, 'descriptions')"
+            >
+              <span>{{ getMetaKeyML(contextKey.meta_key_id, "descriptions") }}</span>
+            </div>
 
-                        <div v-if="getMetaKey(contextKey.meta_key_id).text_type === 'line'">
-                          <InputText type="text" style="width:100%"
-                              @change="buildMetaData()"
-                              v-model.lazy.trim="meta_data[contextKey.meta_key_id].string"/>
-                        </div>
+            <div
+              class="px-3 py-1 meta-hint"
+              v-if="show_hints && getMetaKeyML(contextKey.meta_key_id, 'hints')"
+            >
+              <span>{{ getMetaKeyML(contextKey.meta_key_id, "hints") }}</span>
+            </div>
 
-                        <div v-else>
-                          <TextArea v-model="meta_data[contextKey.meta_key_id].string"
-                            @change="buildMetaData()"
-                            rows="7" style="width:100%"/>  
-                        </div>
+            <div
+              class="mde-text"
+              v-if="isMetaKeyObjectType(contextKey.meta_key_id, MD_TYPE_TEXT)"
+            >
+              <div v-if="getMetaKey(contextKey.meta_key_id).text_type === 'line'">
+                <InputText
+                  type="text"
+                  style="width: 100%"
+                  @change="buildMetaData()"
+                  v-model.lazy.trim="meta_data[contextKey.meta_key_id].string"
+                />
+              </div>
 
-                        <br/>
+              <div v-else>
+                <TextArea
+                  v-model="meta_data[contextKey.meta_key_id].string"
+                  @change="buildMetaData()"
+                  rows="7"
+                  style="width: 100%"
+                />
+              </div>
+
+              <br />
+            </div>
+
+            <div
+              class="mde-text"
+              v-if="isMetaKeyObjectType(contextKey.meta_key_id, MD_TYPE_TEXT_DATE)"
+              >
+              <div class="bg:surface-200 px-3 py-2 gap-2 meta-desc flex flex-row">
+                <div class="py-2">Eingabe:</div>
+                <div>
+                  <SelectButton 
+                    v-model="text_date_show_mode[contextKey.meta_key_id]"
+                    :options="text_date_show_mode_options"
+                    option-label="name"/>
+                </div>
+              </div>
+
+              <div class="flex flex-row gap-2 px-3 py-2"
+                v-if="text_date_show_mode[contextKey.meta_key_id].value == 'span'">
+                  <div class="flex flex-row gap-1">
+                    <div class="py-2">
+                      Begin:
                     </div>
-
-                    <div class="mde-text" v-if="isMetaKeyObjectType(contextKey.meta_key_id, MD_TYPE_TEXT_DATE)">
-                        <p>
-                        <!--
-                          Text Date Edit Template
-                          {{ meta_data[contextKey.meta_key_id] }}
--->
-                          <InputText type="date" style="width:100%"
-                            @change="buildMetaData()"
-                            v-model.lazy.trim="meta_data[contextKey.meta_key_id].string"/>
-                      
-                        <br/>
-                        
-                      </p>
-                    </div>
-
-                    <div class="mde-text" v-if="isMetaKeyObjectType(contextKey.meta_key_id, MD_TYPE_JSON)">
-                        <p>
-                        <!--
-                          JSON Edit Template
-                          {{ template[contextKey.meta_key_id] }}
-                          -->
-                        
-                          <TextArea v-model="meta_data[contextKey.meta_key_id].json" 
-                            @change="buildMetaData()"
-                            rows="7" style="width:100%"/>  
-                        
-                        <br/>
-                      </p>
-                    </div>
-
-                    <div class="mde-text" v-if="isMetaKeyObjectType(contextKey.meta_key_id, MD_TYPE_PEOPLE)">
-                      <p>
-                        Selected People:
-                      </p>
-                      <br/>
-                        <span v-for="person in meta_data[contextKey.meta_key_id].selectedPeople" class="chipItem">
-                          <Chip>
-                            {{ person.first_name }}
-                            {{ person.last_name }}
-                            &nbsp;
-                            <Button
-                              icon="pi pi-times"
-                              rounded outlined
-                              size="small"
-                              @click.prevent="removePerson(contextKey.meta_key_id, person.id)"/>
-                          </Chip>
-                        </span>
-                        <br/>
-                        
-                        <hr/>
-
-                        <p>
-                        Available People:
-                        </p>
-                        <br/>
-                        <br/>
-                        <InputText v-model.trim="peopleSearch" />
-                        <div >
-                          <Chip v-for="person in peopleList">
-                            {{ person.first_name }}
-                            {{ person.last_name }}
-                            &nbsp;
-                            <Button
-                              icon="pi pi-plus"
-                              @click.prevent="addPerson(contextKey.meta_key_id, person)" />
-                          </Chip>
-                        </div>
-                        <br/>
-                    </div>
-
-
-                    <div class="mde-text" v-if="isMetaKeyObjectType(contextKey.meta_key_id, MD_TYPE_KEYWORDS)">
-                      <div class="bg:surface-200 px-3 py-1 meta-desc">
-                          Auswahl:
-                        </div>
-                        
-                        <div class="flex flex-wrap px-3 py-3 meta-hint">
-                          <div class="flex flex-wrap px-1 py-1"
-                             v-for="kw in meta_data[contextKey.meta_key_id].selectedKeywords" >
-                              
-                              <Button
-                              
-                              severity="secondary"    
-                                
-                                rounded 
-                                size="small"
-                                @click.prevent="removeKeyword(contextKey.meta_key_id, kw.id)">
-                                
-                                
-                                <span>{{ kw.term }}</span>
-                                &nbsp;
-                                <i class="pi pi-times" />
-                              </Button>
-                            
-                          </div>
-                        </div>
-                        
-                        
-                        <hr/>
-
-                        <div class="bg:surface-200 px-3 py-1 meta-desc">
-                          Verfügbar:
-                          <InputText v-model.lazy.trim="kwsearch"/>
-                        </div>
-
-                        <div class="flex flex-wrap px-3 py-3 meta-hint">
-                        
-                          <div class="flex flex-wrap px-1 py-1"
-                            v-for="kw in getMetaKeyFilteredKeywords(contextKey.meta_key_id, kwsearch)">
-                            <Button
-                              v-if="!isKeywordSelected(contextKey.meta_key_id, kw.id)"
-                              icon="pi pi-plus"
-                              :label="kw.term"
-                                rounded
-                                size="small"
-                                @click.prevent="addKeyword(contextKey.meta_key_id, kw)"/>
-                              
-                          </div>
-                        </div>
-<!--
-                        <MultiSelect
-                            v-model="meta_data[contextKey.meta_key_id].selectedKeywords"
-                            :options="getMetaKeyKeywords(contextKey.meta_key_id)"
-                            optionLabel="term"
-                            @change="buildMetaData()"
-                            
-                            :filter="true"
-                            placeholder="Select Keyword" />
--->
-
-                    </div>
-
+                    <InputText type="date"
+                      v-model.lazy.trim="textValueStart"/>
                   </div>
-<!--
-                    </AccordionTab>
-                  </Accordion>    
-                  -->
-                </TabPanel>
-              </TabView>
-              
-        </div>
 
-    <br/>
-    <br/>
+                  <div class="flex flex-row gap-1">
+                    <div class="py-2">
+                      Ende:
+                    </div>
+                    <InputText type="date"
+                      v-model.lazy.trim="textValueEnd"/>
+                  </div>
+
+                  <Button @click="meta_data[contextKey.meta_key_id].string = textValueStart + ' - ' + textValueEnd" label="Fertig"/>
+              </div>
+              <div class="flex flex-row gap-2 px-3 py-2"
+                v-else-if="text_date_show_mode[contextKey.meta_key_id].value == 'stamp'">
+                <InputText type="date"
+                  v-model.lazy.trim="meta_data[contextKey.meta_key_id].string"/>
+              </div>
+
+              <div v-else>
+                <InputText type="text"
+                  v-model.lazy.trim="meta_data[contextKey.meta_key_id].string"/>
+              </div>
+
+              <div class="bg:surface-200 px-3 py-2 gap-2 meta-desc flex flex-row">
+                <div class="py-2">Ergebnis:</div>
+                <InputText type="text"
+                v-model.lazy.trim="meta_data[contextKey.meta_key_id].string"/>
+              </div>
+              
+                
+              
+
+        
+<!--
+              <p>
+               <InputText
+                  type="date"
+                  style="width: 100%"
+                  @change="buildMetaData()"
+                  v-model.lazy.trim="meta_data[contextKey.meta_key_id].string"
+                />
+             <br />
+              </p>
+-->
+            </div>
+
+            <div
+              class="mde-text"
+              v-if="isMetaKeyObjectType(contextKey.meta_key_id, MD_TYPE_JSON)"
+              >
+              <p>
+              <TextArea
+                  v-model="meta_data[contextKey.meta_key_id].json"
+                  @change="buildMetaData()"
+                  rows="7"
+                  style="width: 100%"
+                />
+
+                <br />
+              </p>
+            </div>
+
+            <div
+              class="mde-text"
+              v-if="isMetaKeyObjectType(contextKey.meta_key_id, MD_TYPE_PEOPLE)"
+            >
+              <div class="bg:surface-200 px-3 py-1 meta-desc">Auswahl:</div>
+
+              <div class="flex flex-wrap px-3 py-3 meta-hint">
+                <div
+                  class="flex flex-wrap px-1 py-1"
+                  v-for="person in getSelectedPeople(contextKey.meta_key_id)"
+                
+                  >
+                  <Button
+                    severity="secondary"
+                    rounded
+                    size="small"
+                    @click.prevent="removePerson(contextKey.meta_key_id, person.id)"
+                  >
+                  <span>
+                  {{ person.first_name }}
+                  {{ person.last_name }}
+                  </span>
+                  &nbsp;
+                    <i class="pi pi-times" />
+                  </Button>
+  
+                </div>
+              </div>
+              
+
+              <hr />
+
+              <div class="bg:surface-200 px-3 py-2 meta-desc flex flex-row gap-3">
+                <div class="py-2">Hinzufügen:</div>
+                <div v-if="isPeopleAllowedPerson(contextKey.meta_key_id)">
+                  <Button
+                    @click="clickedSelectPersonShow(contextKey.meta_key_id)"
+                    label="Person hinzufügen"
+                  />
+                </div>
+
+                <div v-if="isPeopleAllowedGroup(contextKey.meta_key_id)">
+                  <Button
+                    @click="clickedSelectGroupShow(contextKey.meta_key_id)"
+                    label="Gruppe hinzufügen"
+                  />
+                </div>
+              
+              </div>
+
+            </div>
+
+            <div
+              class="mde-text"
+              v-if="isMetaKeyObjectType(contextKey.meta_key_id, MD_TYPE_KEYWORDS)"
+            >
+              <div class="bg:surface-200 px-3 py-1 meta-desc">Auswahl:</div>
+
+              <div class="flex flex-wrap px-3 py-3 meta-hint">
+                <div
+                  class="flex flex-wrap px-1 py-1"
+                  v-for="kw in getSelectedKeywords(contextKey.meta_key_id)"
+                >
+                  <Button
+                    severity="secondary"
+                    rounded
+                    size="small"
+                    @click.prevent="removeKeyword(contextKey.meta_key_id, kw.id)"
+                  >
+                    <span>{{ kw.term }}</span>
+                    &nbsp;
+                    <i class="pi pi-times" />
+                  </Button>
+                </div>
+              </div>
+
+              <hr />
+
+              <div class="bg:surface-200 px-3 py-1 meta-desc">
+                Verfügbar:
+                <InputText v-model.lazy.trim="kwsearch" />
+              </div>
+
+              <div class="flex flex-wrap px-2 gap-2 py-3 meta-hint meta-kw-search">
+                <div
+                  class="flex flex-wrap px-1 h-2rem"
+                  v-for="kw in getMetaKeyFilteredKeywords(
+                    contextKey.meta_key_id,
+                    kwsearch
+                  )"
+                >
+                  <Button
+                    v-if="!isKeywordSelected(contextKey.meta_key_id, kw.id)"
+                    icon="pi pi-plus"
+                    :label="kw.term"
+                    rounded
+                    size="small"
+                    @click.prevent="addKeyword(contextKey.meta_key_id, kw)"
+                  />
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </TabPanel>
+      </TabView>
+    </div>
+
+    <br />
+    <br />
+    <Dialog v-model:visible="showPersonSearch" class="people-search">
+      <PeopleSearch @selectedPerson="selectedPerson" :subtype="'Person'" />
+    </Dialog>
+    <Dialog v-model:visible="showGroupSearch" class="people-search">
+      <PeopleSearch @selectedPerson="selectedGroup" :subtype="'PeopleGroup'" />
+    </Dialog>
+    <!--
+      <Dialog v-model:visible="showKeywordSearch" >
+        <PeopleSearch
+          @selectedPerson="selectedGroup"
+          :subtype="'PeopleGroup'"/>
+      </Dialog>
+      -->
   </div>
 </template>
-
 
 <style>
 .p-chip .p-button {
@@ -409,10 +533,15 @@ const removePerson = (meta_key_id: string, pid: string) => {
   padding: 0px !important;
 }
 .mde-text {
-
 }
 .meta-header {
   background-color: var(--primary-100);
+}
+.pi.pi-question {
+  font-size: 0.8rem !important;
+}
+.meta-header.missing {
+  background-color: var(--pink-400);
 }
 .meta-desc {
   background-color: var(--surface-300);
@@ -420,5 +549,11 @@ const removePerson = (meta_key_id: string, pid: string) => {
 .meta-hint {
   background-color: var(--surface-200);
 }
-
+.people-search {
+  width: 70vw;
+}
+.meta-kw-search {
+  max-height: 10rem;
+  overflow-y: auto;
+}
 </style>
