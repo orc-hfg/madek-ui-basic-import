@@ -174,17 +174,17 @@ onMounted(() => {
         </Button>
       </div>
       <h2>Medien Eintrag bearbeiten:</h2>
-        
+      <OkOrError :error_msg="error_msg" :ok_msg="ok_msg"/>
       <hr/>
 
       <div class="flex flex-wrap">
         
-        <div class="col-4 lg:h-20rem sm:h-10rem sm:col-12 md:col-4 lg:col-3 border-1 surface-border border-round px-1 py-1" >
+        <div class="col-12 lg:h-20rem sm:h-13rem sm:col-6 md:col-4 lg:col-3 border-1 surface-border border-round px-1 py-1" >
           <EntryPreview :entry_data="mediaEntryDetails" class=""/>
         </div>
 
-        <div class="col-8 md:col-12 lg:col-9 border-1 surface-border border-round px-3 py-1">
-          <OkOrError :error_msg="error_msg" :ok_msg="ok_msg"/>
+        <div class="col-12 md:col-12 lg:col-9 border-1 surface-border border-round px-3 py-1">
+          
           
           <TabView>
             <TabPanel>

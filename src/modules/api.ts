@@ -1,4 +1,5 @@
 
+import { RequestParams } from '../generated/API_fetch_xeio';
 import { iPerson, iUser } from '../api_resources'
 import { reactive, ref, toRefs, watch } from 'vue'
 import { authHelper } from './auth';

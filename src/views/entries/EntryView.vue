@@ -16,28 +16,32 @@
 
         </div>
         <h2>Medien-Eintrag:</h2>
-        <div>
-            <p v-if="error_msg">ERROR: {{ error_msg }}</p>
+        <OkOrError :error_msg="error_msg"/>
+        <div class="flex flex-wrap">
+          
+            
 
-            <hr/>
-            <div class="col-4 lg:h-20rem sm:h-10rem sm:col-12 md:col-4 lg:col-3 border-1 surface-border border-round px-1 py-1" >
+            
+            <div class="col-12 lg:h-20rem sm:h-13rem sm:col-6 md:col-4 lg:col-4 border-1 surface-border border-round px-1 py-1" >
                 <EntryPreview :entry_data="mediaEntryDetails" size="large" class=" px-1 py-1" />
-              </div>
-            <hr/>
-            <h3>
+            </div>
+            <div class="col-12 md:col-8 lg:col-8 border-1 surface-border border-round px-3 py-1">
+              <h3>
                 <span>Meta-Daten:</span>
                 <SelectButton 
                     v-model="mdshow_mode"
                     :options="mdshow_mode_options"
                     option-label="name"
                     style="float:right"/>
-            </h3>
-            <br/>
-            
-            <MetaDataView 
-              class="px-1 border-1 surface-border surface-card border-round"
-                :entry-id="$route.params.entry_id as string"
-                :mode="mdshow_mode.value" />
+              </h3>
+              <br/>
+              
+              <MetaDataView 
+                class="px-1 border-1 surface-border surface-card border-round"
+                  :entry-id="$route.params.entry_id as string"
+                  :mode="mdshow_mode.value" />
+              
+            </div>
             
        
         </div>        
@@ -53,6 +57,7 @@ import { errorHelper } from '../../modules/error';
 import SelectButton from 'primevue/selectbutton';
 import MetaDataView from '../../components/meta-data/MetaDataView.vue';
 import EntryPreview from '../../components/files/EntryPreview.vue';
+import OkOrError from '../../components/OkOrError.vue';
 
 const {  } = madekHelper()
 

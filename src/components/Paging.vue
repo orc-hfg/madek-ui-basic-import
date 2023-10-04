@@ -1,12 +1,11 @@
 <template>
     <div style="float:right; padding-top: 1rem">
-        <div></div>
         <div>
             &nbsp;
             <span>Seitenauswahl</span>
             &nbsp;
             <Button icon="pi pi-caret-left" @click.prevent="pagePrev()"/>
-            <InputText type="number" v-model.lazy.trim="pagingPage" style="width: 3rem"/>
+            <InputText type="number" v-model.lazy.trim="pagingPage" style="width: 4rem"/>
             <Button icon="pi pi-caret-right" @click.prevent="pageNext()"/>
             &nbsp;
             <span>von</span>

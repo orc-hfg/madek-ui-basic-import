@@ -234,7 +234,7 @@ const removePerson = (meta_key_id: string, pid: string) => {
   <div class="mde-entry">
     <div>
       <TabView :scrollable="true">
-        <TabPanel v-for="context_id in context_ids" style="padding: 0px" class="">
+        <TabPanel v-for="context_id in context_ids">
           <template #header>
             <span>{{ getContextML(context_id, "labels") || context_id }}</span>
             <span v-if="show_keys">[{{ context_id }}]</span>
