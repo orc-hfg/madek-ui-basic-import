@@ -8,7 +8,7 @@
             @changed="pagingChanged" />
             
         <CollectionsGrid
-            :collectionsList="userCollections"
+            :collectionsList="allCollections"
             :show_action_list="['view', 'edit', 'delete']"
             @clickedView="clickedView"
             @clickedEdit="clickedEdit"
@@ -83,8 +83,6 @@ const show_paging = ref(true)
 const pagingPage = ref(1)
 const pagingCount = ref(10)
 const allCollections = ref([] as iCollection[])
-const userCollections = ref(new Array<iCollection>())
-const respUserCollections = ref(new Array<iCollection>())
 
 watch(props, () => {
     pagingCount.value = props.max_count
@@ -95,7 +93,8 @@ const updateData = () => {
     const userId = user?.value?.id
     const iquery = {
         full_data: true,
-        me_edit_metadata_and_relations:true
+        me_edit_metadata_and_relations:true,
+        creator_id: userId,
     }
     if (show_paging.value == true) {
         iquery.page = pagingPage.value -1
@@ -108,10 +107,7 @@ const updateData = () => {
             const cols = resp.data.collections as iCollection[]
             allCollections.value = cols
             
-            const uc = cols.filter(col => { return col.creator_id === userId})
-            userCollections.value = uc
-            const rc = cols.filter(col => { return col.responsible_user_id === userId})
-            respUserCollections.value = rc
+            
             
         })
         .catch(error => handle_error('get collectionList', error))

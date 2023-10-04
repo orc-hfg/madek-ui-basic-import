@@ -1,5 +1,5 @@
 <template>
-  <div class="import_hub" v-if="checkLoaded()">
+  <div class="import_hub">
     <h3>Starte den Import Wizard</h3>
 
     <Button
@@ -74,38 +74,31 @@
       <div class="importMain">
         <OkOrError :error_msg="error_msg" :ok_msg="ok_msg"/>
         <div class="importNav">
-          <Button @click="selectStep(1)" :disabled="showStep == 1">
+          <Button @click="selectStep(1)" :disabled="!isEnabledStep(1)">
             <Badge value="1 " />
-            &nbsp;
-            <span>Defaults</span>
-          </Button>
-          &nbsp;
-
-          <Button @click="selectStep(2)" :disabled="showStep == 2">
-            <Badge value="2 " />
             &nbsp;
             <span>Dateiauswahl</span>
           </Button>
           &nbsp;
 
-          <Button @click="selectStep(3)" :disabled="showStep == 3">
+          <Button @click="selectStep(2)" :disabled="!isEnabledStep(2)">
+            <Badge value="2 " />
+            &nbsp;
+            <span>Defaults</span>
+          </Button>
+          &nbsp;
+
+          <Button @click="selectStep(3)" :disabled="!isEnabledStep(3)">
             <Badge value="3 " />
             &nbsp;
             <span>Meta-Daten</span>
           </Button>
           &nbsp;
-<!--
-          <Button @click="selectStep(4)" :disabled="showStep == 4">
+
+          <Button @click="selectStep(4)" :disabled="!isEnabledStep(4)">
             <Badge value="4 " />
             &nbsp;
-            <span>Meta-Daten</span>
-          </Button>
-          &nbsp;
--->
-          <Button @click="selectStep(4)" :disabled="showStep == 4">
-            <Badge value="4 " />
-            &nbsp;
-            <span>Projekt</span>
+            <span>Projekt / Set</span>
           </Button>
           &nbsp;
 
@@ -113,6 +106,25 @@
 
         <div class="importView">
           <div v-if="showStep == 1">
+            <div>
+                IAU {{ isAllUploaded() }}
+              <Button v-if="uploadedEntries.length > 0"
+                icon="pi pi-caret-right"
+                style="float: right;"
+                @click="showStep = 3" />
+              <h4>Wähle Dateien aus</h4>
+              <p>
+                <!--
+                 <UploadView
+                  @change="onUploadChanged" />    
+                 -->
+                <UploadViewWebApp
+                  @change="onUploadChanged"
+                  @selected="onSelectedFiles"/>
+              </p>
+            </div>
+          </div>
+          <div v-if="showStep == 2">
             <div>
               <Button
                   icon="pi pi-caret-right"
@@ -123,54 +135,25 @@
               <h4>Lege die Import-Default-Werte fest:</h4>
               <p>Set defaults to be applied to all imports</p>
                 
-                <br/>
-                <Button
-                  v-if="collection_id"
-                  label="Speichere die Meta-Daten für das Set"
-                  @click="saveCollectionMD()"/>
-                <br/>
-                <br/>
-
+               
                 <TemplateEntryMetaDataEdit 
                   :meta_data="mdImportDefaults"
                   :context_ids="getContexts()"
                   />
               </div>
-            
           </div>
-          <div v-if="showStep == 2">
-            <div>
-              <Button v-if="uploadedEntries.length > 0"
-                icon="pi pi-caret-right"
-                style="float: right;"
-                @click="showStep = 3" />
-
-              <h4>Wähle Dateien aus</h4>
-
-              <p>
-                <!--
-                 <UploadView
-                  @change="onUploadChanged" />    
-                 -->
-                 
-                <UploadViewWebApp
-                  @change="onUploadChanged"/>
-              </p>
-            </div>
-
-            
-            
-          </div>
-
           <div v-else-if="showStep == 3">
-     
-            <h3>Uploaded Entries:</h3>
+            <div class="flex flex-wrap">
+              <h3>Uploaded Entries:</h3>
+            </div> 
 
-            <Button label="Apply Defaults to all"
+            <div class="flex flex-wrap justify-content-end py-2">
+              <Button label="Apply Defaults to all"
                 severity="secondary"
-                style="float:right"
+                
                 icon="pi pi-edit" 
                 @click.prevent="clickedApplyDefaultsAll()"/>
+            </div>
 
             <EntriesGrid
             v-if="uploadedEntriesShow"
@@ -312,7 +295,10 @@
                 icon="pi pi-edit"
                 @click.prevent="clickedAddToCollectionAll()"/>
 
-            <br />
+            <Button
+              v-if="collection_id"
+              label="Speichere die Meta-Daten für das Set"
+              @click="saveCollectionMD()"/>
 
 
             <h3>Vollständige Einträge:</h3>
@@ -368,7 +354,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, onMounted, handleError } from "vue";
+import { watch, ref, onMounted } from "vue";
 import { useRouter } from 'vue-router'
 
 import Dialog from "primevue/dialog";
@@ -406,7 +392,7 @@ import { useMadekStore } from "../stores/madek_store";
 const router = useRouter()
 const { error_msg, ok_msg, handle_error } = errorHelper()
 
-const { api, authParams } = apiHelper()
+const { api, authParams, user } = apiHelper()
 
 const madek_store = useMadekStore()
 const { 
@@ -417,8 +403,7 @@ const {
   MD_KEYWORDS_DATA,
 
   MKEY_TITLE,
-  MKEY_AUTHORS,
-
+  
   checkAllLoaded,
 
   getMetaKey,
@@ -485,31 +470,7 @@ const clickedApplyDefaults = (me_id:string) => {
     return
   }
   mediaEntryApplyDefaultsAndSave(upme)
-  /*
-  copyMDInto(mdImportDefaults.value, uploadedEntriesMD.value[me_id])
-  uploadedEntriesMD.value[me_id][MKEY_TITLE].string = upme.media_file.filename
-  
-  const resKey = 'media_entry_id'
-  const resId = me_id
-  const meta_data = uploadedEntriesMD.value[me_id]
-  const loadedMD = {}//uploadedEntriesMD.value[resId]
-  
-  loadResourceMetaData(resKey, resId, loadedMD, () => {
-      console.log("loaded before save resource md: " + JSON.stringify(loadedMD))
-      saveResourceMetaData(resKey, resId, meta_data, loadedMD, () => {
-          console.log("saved meta data")
-          uploadedEntriesErrorMap.value[me_id] = "saved"
-          loadResourceMetaData(resKey, resId, loadedMD, () => {
-              
-              console.log("reloaded resource md: " + JSON.stringify(loadedMD))
-              uploadedEntriesMD.value[resId] = loadedMD
-              
-              uploadedEntriesReload()
-              
-
-          })
-      })
-  })*/
+ 
 }
 
 const clickedEdit = (me_id:string) => {
@@ -676,17 +637,6 @@ const mediaEntryApplyDefaultsAndSave = (upme:any) => {
 }
 
 
-const clickedPublishAll = () => {
-  uploadedEntries.value.forEach((me) => {
-    const me_id = me.id
-    tryPublish(me_id, () => {
-        uploadedMDShowMode.value = 'showCore'
-        me.is_published = true
-        uploadedEntriesReload()
-    })
-  })
-}
-
 const clickedAddToCollectionAll = () => {
   uploadedEntries.value.forEach((me) => {
     const me_id = me.id
@@ -721,11 +671,33 @@ function addToCollection(collectionId: string, me_id:string) {
 	})
 }
 
+const selectedFilesStatus = ref([] as any[])
 
-const onUploadChanged = (entryId: string) => {
-  console.log("onUploadChanged: " + entryId)
-
+const isAllUploaded = () => {
+  let result = true
+  if (!!selectedFilesStatus.value) {
+    debugger
+    const found = selectedFilesStatus.value.find(file => { 
+      console.log("file status: " + file.status)
+      return !file.status
+        || file.status == undefined
+        || file.status == null
+        || file.status === 'loading'
+        
+         //file.status === 'Error' || file.status === true
+    })
+    
+    if (found) result = false
+  }
   
+  console.log("isAllUploaded: " + result)
+  return result
+}
+const onUploadChanged = (entryId: string, files:any) => {
+  console.log("onUploadChanged: " + entryId + ":" + files)
+
+  selectedFilesStatus.value = files
+  isAllUploaded()
 
   // check if it already has meta data
   const me_id = entryId
@@ -747,12 +719,17 @@ const onUploadChanged = (entryId: string) => {
   })
 }
 
+const onSelectedFiles = (files: any) => {
+  debugger
+  console.log("onSelectedFiles: " + JSON.stringify(files))
+  selectedFilesStatus.value = files
+}
 const updateCollectionTitle = () => {
   getCollectionTitle(collection_id.value, (title:string) => {
     collectionTitle.value = title;
 
-    mdUserDefaults.value[MKEY_TITLE]['string'] = title
-    importMDDefaultsIF.import()
+    //mdUserDefaults.value[MKEY_TITLE]['string'] = title
+    
   })
 }
 
@@ -787,6 +764,7 @@ const updateCollectionList = () => {
     const query = {
       full_data: true,
       me_edit_metadata_and_relations: true,
+      creator_id: user?.id
     }
     
     api.api.collectionsList(query, authParams?.value)
@@ -812,25 +790,9 @@ const selectCollection = (colId: string) => {
 
 
 const onSaveMDDefaults = () => {
-  userMDDefaultsIF.build()
+  
   storeMDDefaults(mdUserDefaults.value)
 }    
-
-const checkLoaded = () => {
-    let result = true;
-    result = checkAllLoaded()
-    // create template ds
-    if (result == true) {
-
-      if (!defaults_meta_data.value[MKEY_TITLE]) {
-        defaults_meta_data.value = getStoredMDDefaults()
-        //initMD(getContexts(), mdUserDefaults.value)
-        copyMDInto(defaults_meta_data.value, mdUserDefaults.value)
-      }
-      
-    }
-    return result
-}
 
 const gotoCollectionEntries = (colId:string) => {
   debugger
@@ -840,11 +802,30 @@ const gotoCollectionEntries = (colId:string) => {
 const startBasicImport = () => {
   showBasicImport.value = true
   copyMDInto(mdUserDefaults.value, mdImportDefaults.value, true)
-  
-  
 }
 
+const isEnabledStep = (step:number) => {
+  switch (step) {
+    case 1:
+      return (showStep.value != 1)
+      return true
+    case 2:
+      return (showStep.value != 2)
+      return true
+    case 3:
+      return (showStep.value != 3)
+    case 4:
+      return (showStep.value != 4)
+  
+    default:
+      return true;
+  }
+}
 onMounted(() => {
+
+  defaults_meta_data.value = getStoredMDDefaults()
+  initMD(getContexts(), mdUserDefaults.value)
+  copyMDInto(defaults_meta_data.value, mdUserDefaults.value)
 
 })
 

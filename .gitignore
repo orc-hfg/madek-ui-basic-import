@@ -1,0 +1,6 @@
+node_modules
+package-lock.json
+dist
+do-dist-dev.sh
+do-dist.sh
+

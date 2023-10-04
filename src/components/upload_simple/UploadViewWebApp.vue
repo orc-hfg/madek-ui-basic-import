@@ -3,6 +3,9 @@
 		<label for="project-name">
 			
 		</label>
+		<Button @click.prevent="uploadFilesWebApp(files, props.collection_id, uploadedCB)"
+			label="Upload"
+			class="upload-btn"/>
 		<DropZone class="drop-area" @files-dropped="addFiles" #default="{ dropZoneActive }">
 			<label for="file-input">
 				<span v-if="dropZoneActive">
@@ -22,8 +25,7 @@
 				<FilePreview v-for="file of files" :key="file.id" :file="file" tag="li" @remove="removeFile" />
 			</ul>
 		</DropZone>
-		<Button @click.prevent="uploadFilesWebApp(files, collection_id, uploadedCB)"
-			label="Upload"/>
+		
 		<br>
 	
 	</div>
@@ -38,31 +40,27 @@ import FilePreview from './FilePreview.vue'
 // File Management
 import useFileList from './compositions/file-list'
 import createUploader from './compositions/file-uploader'
-import { apiHelper } from '../../modules/api'
 
-const { checkSession } = apiHelper()
 const { files, addFiles, removeFile } = useFileList()
 
 const props = defineProps(['collection_id'])
 
-const emit = defineEmits(['change'])
+const emit = defineEmits(['change', 'selected'])
 
-const uploadedCB = (data: any) => {
-	console.log("uploadedCB: " + JSON.stringify(data))
-	emit('change', data)
+const uploadedCB = (data: any, files: any) => {
+	console.log("uploadedCB: " + JSON.stringify(data) + "\n files: " + files)
+	emit('change', data, files)
 }
 
 function onInputChange(e: any) {
-	//debugger
+	
 	addFiles(e.target.files)
+	emit('selected', files.value)
 	e.target.value = null // reset so that selecting the same file again will still cause it to fire this change
 }
 
 
 // Uploader
-
-
-//checkSession()
 
 const { uploadFilesWebApp } = createUploader('https://dev.madek.hfg-karlsruhe.de/entries/')
 //const { uploadFilesWebApp } = createUploader('http://localhost:3100/entries/')
@@ -100,6 +98,7 @@ body {
 }
 
 .drop-area {
+	float:left;
 	width: 100%;
 	max-width: 800px;
 	margin: 0 auto;
@@ -165,4 +164,8 @@ label {
 button {
 	cursor: pointer;
 }
+.upload-btn {
+	float: right
+}
+
 </style>

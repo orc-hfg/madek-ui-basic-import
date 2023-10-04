@@ -239,6 +239,8 @@ const onMetaData = (resp) => {
   }) 
 }
 const updateData =() => {
+  metaDataMap.value.clear()
+  metaDataExtendedMap.value.clear()
   if (props.collectionId) {
     getMetaData('collection_id', props.collectionId, onMetaData)
     

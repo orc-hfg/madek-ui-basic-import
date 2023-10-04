@@ -812,7 +812,7 @@ export const madekHelper = () => {
 
     const createGenMetaData = () => {
         const md : GenMetaData = {
-           data: new Map<string, GenMetaDatum>()
+           //data: new Map<string, GenMetaDatum>()
         }
         return md
     }
@@ -845,9 +845,9 @@ export const madekHelper = () => {
             return defaults_meta_data
         }
         // TODO or force 
-        //if (defaults_meta_data[MKEY_AUTHORS]) {
-        if (defaults_meta_data[MKEY_AUTHORS]) {
-            console.log("initEntryMetaDataDefaults: already has meta data")
+        
+        if (defaults_meta_data[MKEY_TITLE]) {
+            console.log("ABORT: initEntryMetaDataDefaults: already has meta data title")
             return defaults_meta_data
         }
 
@@ -858,12 +858,11 @@ export const madekHelper = () => {
         } as GenMetaDatum
     
         const kw_license_id = madek.appSettings.media_entry_default_license_id
-        if (!!kw_license_id) {
+        const mkey_license = madek.appSettings.media_entry_default_license_meta_key
+        if (!!kw_license_id && !!mkey_license) {
             const kw_license = madek.keywordsMap.get(kw_license_id)
-    
-            const mkey_license = madek.appSettings.media_entry_default_license_meta_key
-            defaults_meta_data[mkey_license] =
-            {
+
+            defaults_meta_data[mkey_license] = {
                 "meta_key_id": mkey_license,
                 "selectedKeywords": [ kw_license]
             } as GenMetaDatum
@@ -871,13 +870,17 @@ export const madekHelper = () => {
         }
         
         const mkey_usage = madek.appSettings.media_entry_default_license_usage_meta_key
-        defaults_meta_data[mkey_usage] =
-        {
-            "meta_key_id": mkey_usage,
-            "string": madek.appSettings.media_entry_default_license_usage_text
-        } as GenMetaDatum
-    
+        if (!!mkey_usage) {
+            defaults_meta_data[mkey_usage] =
+            {
+                "meta_key_id": mkey_usage,
+                "string": madek.appSettings.media_entry_default_license_usage_text
+            } as GenMetaDatum
+        }
+
+
         // set default authors to current users person
+        /*
         const mda = {
             meta_key_id: MKEY_AUTHORS,
             selectedPeople: new Array<PeopleDetailData>()
@@ -886,6 +889,8 @@ export const madekHelper = () => {
         mda.selectedPeople.push(person?.value)
         defaults_meta_data[MKEY_AUTHORS] = mda
     
+        */
+
         console.log("initEntryMetaDataDefaults: " + JSON.stringify(defaults_meta_data))
 
         return defaults_meta_data

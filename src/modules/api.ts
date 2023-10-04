@@ -1,4 +1,3 @@
-import { RequestParams } from './../generated/API_fetch';
 
 import { iPerson, iUser } from '../api_resources'
 import { reactive, ref, toRefs, watch } from 'vue'
@@ -21,7 +20,7 @@ export const apiHelper = (baseUrl?: string) => {
     
     const apiConfig = {
         baseUrl: baseUrl || 'https://dev.madek.hfg-karlsruhe.de'
-        //baseUrl: baseUrl || 'http://localhost:3102'
+        //baseUrl: baseUrl || 'http://localhost:3104'
     }
 
     const basicAuthHash = (login:string, password:string) => {

@@ -111,7 +111,6 @@ const { getCollectionTitle } = madekHelper()
 
 const props = defineProps({
     collectionsList: { type: Array<iCollection>, required: true },
-    //show_data_stream: { type: Boolean, default: false, required: false},
     show_preview: { type: Boolean, default: true, required: false},
     show_published: { type: Boolean, default: true, required: false},
     show_actions: { type: Boolean, default: true, required: false},
