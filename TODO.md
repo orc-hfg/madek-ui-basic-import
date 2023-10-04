@@ -24,13 +24,9 @@
 
 ## visual feedback
 
-## DONE: no meta-data author
-
 ## loading times
 
 ## design: layout, gaps, colors, fonts
-
-## DONE: how to publish: auto publish
 
 ## Wanted: user hub ultra compact view
 
@@ -38,29 +34,23 @@
 
 ## Paging / Pager
 
-## mark not complete state in entry editor
+## FRAGE: only required fields of contexts_for_entry_validation ??
 
-## only required fields of contexts_for_entry_validation ??
-
-## which groups are search ?
+## which groups are searchable ?
 
 - die durch den meta-key zugelassenen
 - Person / PeopleGroup ,  könnte auch P-Inst-Group sein
 - Finde Gruppe ORC, geht bei mir
 
-## case insensitive suche
+## case insensitive search
 
-## add keyword ( also API )
+- sql problem
 
 ## hide hidden meta-keys
 
-## get meta-keys for edit and for view ( also API )
 
 ## permission edit: feedback for immediate action
 
-## permission edit: do not edit unpublished entries
-
-## delegations ( also API )
 
 ## import: hide title in md defaults edit
 
@@ -82,11 +72,11 @@
 
 ## import: upload: drop zone: list view ?
 
-## import: upload: drop preview
+## import: upload: drop zone preview
 
-## import: upload: next btn only if all uploaded ( failed or ok ), disable all nav btns
+## import: upload: disable all nav btns during upload
 
-## import: upload: vs. api:
+## import: upload: dropzone (vs. api)
 
 - File upload, drop-zone still active, drop another file, no upload possible
 - enable, or disable drop zone
@@ -97,11 +87,9 @@
 
 ## import: uploaded: auto add entries to set ?
 
-## import: uploaded: meta-data: what is required / mandatory ?
+## FRAGE: import: uploaded: meta-data: what is required / mandatory ?
 
-## DONE: import: uploaded: meta-data: publish: auto publish
-
-## import: uploaded: meta-data: no author
+- appSettings ? or appSettings only required ?
 
 ## import: end: collection entries show btn
 
@@ -115,6 +103,12 @@
 - case insensitiv
 - not finds Baustelle nor baustelle but stelle ?
 
+## add keyword ( also API )
+
+## get meta-keys for edit and for view ( also API )
+
+## delegations ( also API )
+
 ## create kw
 
 ## create person
@@ -122,6 +116,10 @@
 ## create group
 
 ## delegations
+
+## collection edit perms
+
+## collection edit meta-data
 
 ## BUGS
 
@@ -142,10 +140,22 @@
 ### meta-data-view: mode-select-btn: double click on core
 
 - cannot read props of null reading value
+- nicht reproduzierbar
 
 ### no previews for uploads with importer
 
 Wann könnte das gewesen sein ? Jetzt immer noch ?
 
-### DONE: meta-data of previous shown entry is in empty meta-data places
+## TODOs DONE
 
+- DONE: import: uploaded: meta-data: publish: auto publish
+- DONE: import: uploaded: meta-data: no author
+- DONE: no meta-data author
+- DONE: how to publish: auto publish
+- DONE: import: upload: next btn only if all uploaded ( failed or ok ),
+- DONE: permission edit: do not edit unpublished entries
+- DONE: mark not complete state in entry editor
+
+## BUGS DONE
+
+- DONE: meta-data of previous shown entry is in empty meta-data places
