@@ -24,7 +24,7 @@
 
 ## visual feedback
 
-## loading times
+## todo: DONE: loading times
 
 ## responsiveness
 
@@ -32,11 +32,11 @@
 
 ## Wanted: user hub ultra compact view
 
-## Button tooltips
+## todo: Button tooltips
 
-## Paging / Pager
+## todo: Paging / Pager
 
-## TODO: only required fields of contexts_for_entry_validation ??
+## todo: only required fields of contexts_for_entry_validation ??
 
 ## FRAGE: which groups are searchable ?
 
@@ -44,84 +44,76 @@
 - Person / PeopleGroup ,  könnte auch P-Inst-Group sein
 - Finde Gruppe ORC, geht bei mir
 
-## case insensitive search
+## todo: case insensitive search
 
 - sql problem
 
-## permission edit: feedback for immediate action
+## todo: permission edit: feedback for immediate action
 
-## import: next btn top right
+## todo: import: next btn top right
 
-## import: wording
+## TODO: import: wording
 
-## import: collection: wording
+## TODO: import: collection: wording
 
-## import: create collection: reset to delete collection ?!?
+## TODO: import: create collection: reset to delete collection ?!?
 
 - besser vielleicht: andere Auswahl / Auswahl zurücksetzen.
 
-## import: defaults: wording
+## TODO: import: defaults: wording
 
-## import: defaults: no md save for collection
+## TODO: import: defaults: no md save for collection
 
-## import: upload: drop zone: list view ?
+## todo: import: upload: drop zone: list view ?
 
-## import: upload: drop zone preview
+## todo: import: upload: drop zone preview
 
-## import: upload: disable all nav btns during upload
+## todo: import: upload: disable all nav btns during upload
 
 ## BUG: import: upload: dropzone (vs. api)
 
 - File upload, drop-zone still active, drop another file, no upload possible
 - enable, or disable drop zone
 
-## import: uploaded: delete entry
+## TODO: import: uploaded: delete entry
 
-## import: uploaded: btn tooltips / text on touch
+## todo: import: uploaded: btn tooltips / text on touch
 
-## import: uploaded: auto add entries to set ?
+## FRAGE: import: uploaded: auto add entries to set ?
 
 ## FRAGE: import: uploaded: meta-data: what is required / mandatory ?
 
 - appSettings ? or appSettings only required ?
 
-## import: end: collection entries show btn
+## TODO: import: end: collection entries show btn
 
 - highligh, more text, end of import
 - remove other process end concept
 
-## edit meta-data: kw search term individual
+## TODO: edit meta-data: kw search term individual
 
-## edit meta-data: kw search
+## todo: edit meta-data: kw search
 
 - case insensitiv
 - not finds Baustelle nor baustelle but stelle ?
 
-## add keyword ( also API )
+## todo: add keyword ( also API )
 
-## get meta-keys for edit and for view ( also API )
+## todo: get meta-keys for edit and for view ( also API )
 
-## delegations ( also API )
+## todo: delegations ( also API )
 
-## create kw API
+## todo: create kw API
 
-## create person API
+## todo: create person API
 
-## create group API
+## todo: create group API
 
-## delegations API
+## todo: delegations API
 
-## collection edit perms
-
-## collection edit meta-data
+## TODO: collection edit perms
 
 ## BUGS
-
-## TODO 28 + 5
-
-## TODO BUGS 0
-
-## DONE 17
 
 ## TODOs DONE
 
@@ -135,6 +127,7 @@
 - DONE: import: defaults: hide title in md import defaults edit
 - DONE import: hide title in md defaults edit
 - DONE: FRAGE: archive meta keys ?? no vocabulary -> permissions (wonder it works in madek webapp)
+- DONE: collection edit meta-data
 
 ## BUGS DONE
 
@@ -147,3 +140,9 @@
 - DONE Sets not shown in user hub: the query: sporadisch, reload prob
 - DONE sets not shown in user sets the query: sporadisch
 - DONE no previews for uploads with importer: alter import
+
+## todos 19
+
+## TODOs 11
+
+## DONE 21
