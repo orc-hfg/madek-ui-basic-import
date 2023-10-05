@@ -1,7 +1,7 @@
 <template>
   <div>
     <Panel
-      :header="'Eintrag: (von: ' + getUserPersonName(entry_perms.creator_id) + ')'"
+      :header="'Eintrag: (von: ' + userPersonNames.get(entry_perms.creator_id) + ')'"
       toggleable
     >
       <div class="flex flex-row flex-wrap bg-primary-50">
@@ -15,7 +15,7 @@
         <div class="flex align-items-center justify-content-left w-20rem h-4rem">
           <span>Verantwortlich:</span>
           &nbsp;
-          <Chip>{{ getUserPersonName(entry_perms.responsible_user_id) }}</Chip>
+          <Chip>{{ userPersonNames.get(entry_perms.responsible_user_id) }}</Chip>
 
           <Button
             @click.prevent="showSelectResponsibleUser = !showSelectResponsibleUser"
@@ -50,7 +50,7 @@
           </div>
 
           <div class="flex align-items-center justify-content-left w-15rem h-4rem">
-            <Chip>{{ getUserPersonName(user_perm.user_id) }}</Chip>
+            <Chip>{{ userPersonNames.get(user_perm.user_id) }}</Chip>
           </div>
 
           <div
@@ -135,6 +135,7 @@ import { iMediaEntry, iPerson, iGroup, iEntryUserPermission, iEntryGroupPermissi
 import { apiHelper } from '../../modules/api'
 import { madekHelper } from '../../modules/madek'
 import GroupSearch from '../people/GroupSearch.vue';
+import { MediaEntryPermsUserDetailData } from '../../generated/data-contracts';
 
 const { api, authParams } = apiHelper()
 const { getUser, getUserPerson } = madekHelper()
@@ -220,16 +221,22 @@ const updateData = () => {
 
             getUserPerson(entry_perms.value.creator_id, (p:iPerson) => {
                 creatorP.value = p
+                getUserPersonName(entry_perms.value.creator_id)
             })
 
             getUserPerson(entry_perms.value.responsible_user_id, (p:iPerson) => {
                 responsibleP.value = p
+                getUserPersonName(entry_perms.value.responsible_user_id)
             })
         })
 
     api.api.mediaEntryPermsUsersDetail(props.entry_id, authParams?.value)
         .then(resp =>{
             users_perms.value = resp.data
+            // TODO get user names
+            users_perms.value.forEach((elem: MediaEntryPermsUserDetailData) => {
+              getUserPersonName(elem.user_id)
+            })
         })
 
     api.api.mediaEntryPermsGroupsDetail(props.entry_id, authParams?.value)
@@ -239,9 +246,11 @@ const updateData = () => {
                 api.api.groupsList({id: gp.group_id, full_data: true}, authParams?.value)
                     .then(resp => {
                         const group = resp.data.groups[0]
+                        
                         groupsMap.value.set(group.id, group)
                     })
             })
+            // TODO get group names
 
         })
 }
