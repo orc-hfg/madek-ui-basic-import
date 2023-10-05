@@ -19,9 +19,10 @@ import {
   iKeyword,
   iPerson,
 } from '../../../api_resources'
+import OkOrError from '../../OkOrError.vue';
 
 const { api } = apiHelper()
-const { error_msg, handle_error, reset_error} = errorHelper()
+const { error_msg, ok_msg, timed_handle_ok, timed_handle_error } = errorHelper()
 
 const {
   madekLoading,
@@ -42,6 +43,11 @@ const {
     getContextML,
     getMetaKeyML,
 
+    createMDKeywords,
+    createMDPeople,
+    deleteMDKeywords,
+    deleteMDPeople,
+
     initMD,
     copyMDInto,
 
@@ -56,7 +62,8 @@ const props = defineProps(
     publish_result: { type: Boolean, required: false, default: true },
     show_descs: { type: Boolean, required: false, default: true },
     show_hints: { type: Boolean, required: false, default: true },
-    show_keys: { type: Boolean, required: false, default: true }
+    show_keys: { type: Boolean, required: false, default: true },
+    hide_meta_keys: { type: Map<String,Boolean>, required: false, default: {} }
   }
 )
 
@@ -141,14 +148,27 @@ const clickedSelectGroupShow = (meta_key_id:string) => {
   selectingPeopleMetaKeyId.value = meta_key_id
   showGroupSearch.value = true
 }
+
+const saveSelectedPerson = (mkid: string, person: iPerson) => {
+  createMDPeople(props.resource_key, props.resource_id,
+    mkid, person.id, () => {
+      console.log("Created MD people.")
+      timed_handle_ok("Meta-Datum Person angelegt.")
+    }, (error:any) => {
+      console.error("Could not create MD people: " + JSON.stringify(error))
+      timed_handle_error("Meta-Datum Person konnte nicht angelegt werden.",error)
+    })
+}
 const selectedPerson = (person: iPerson) => {
   const mkid = selectingPeopleMetaKeyId.value
   props.meta_data[mkid].selectedPeople.push(person)
+  saveSelectedPerson(mkid, person)
   showPersonSearch.value = false
 }
 const selectedGroup = (person: iPerson) => {
   const mkid = selectingPeopleMetaKeyId.value
   props.meta_data[mkid].selectedPeople.push(person)
+  saveSelectedPerson(mkid, person)
   showGroupSearch.value = false
 }
 const isPeopleAllowedPerson = (meta_key_id: string) => {
@@ -200,12 +220,27 @@ const addKeyword = (meta_key_id: string, kw: iKeyword) => {
     props.meta_data[meta_key_id].selectedKeywords = [] as iKeyword[]
   }
   props.meta_data[meta_key_id].selectedKeywords.push(kw)
+  createMDKeywords(props.resource_key, props.resource_id, meta_key_id, kw.id, () => {
+    console.log("created md keyword")
+    timed_handle_ok("Keyword Meta-Daten angelegt.")
+    
+  }, (error:any) => {
+    console.error("Could not create md keyword: " + JSON.stringify(error))
+    timed_handle_error("Keyword konnte nicht angelegt werden.", error)
+  })
   buildMetaData()
 }
 
 const removeKeyword = (meta_key_id: string, kwid: string) => {
   props.meta_data[meta_key_id].selectedKeywords =
     props.meta_data[meta_key_id].selectedKeywords.filter( (kw:iKeyword) => { return kw.id !== kwid})
+  deleteMDKeywords(props.resource_key, props.resource_id,meta_key_id, kwid, () => {
+    console.log("deleted md kw")
+    timed_handle_ok("Keyword Meta-Daten gelöscht.")
+  }, (error:any) => {
+    console.error("Could not delete md keyword: " + JSON.stringify(error))
+    timed_handle_error("Keyword konnte nicht gelöscht werden.", error)
+  })
   buildMetaData()
 }
 
@@ -215,23 +250,33 @@ const getMetaKeyFilteredKeywords = (meta_key_id: string, search: string) => {
   }
   return getMetaKeyKeywords(meta_key_id);
 }
+/*
 const addPerson = (meta_key_id: string, person: iPerson) => {
   if (!props.meta_data[meta_key_id].selectedPeople) {
     props.meta_data[meta_key_id].selectedPeople = [] as iPerson[]
   }
   props.meta_data[meta_key_id].selectedPeople.push(person)
   buildMetaData()
-}
+}*/
 
 const removePerson = (meta_key_id: string, pid: string) => {
   props.meta_data[meta_key_id].selectedPeople =
     props.meta_data[meta_key_id].selectedPeople.filter( (p:iPerson) => { return p.id !== pid})
+    deleteMDPeople(props.resource_key, props.resource_id,
+      meta_key_id, pid, () => {
+        console.log("removed md people")
+        timed_handle_ok("Meta-Datum People gelöscht.")
+      }, (error:any) => {
+        console.error("Could not delete md people: " + JSON.stringify(error))
+        timed_handle_error("Could not delete md people", error)
+      })
   buildMetaData()
 }
 </script>
 
 <template>
   <div class="mde-entry">
+    <OkOrError :error_msg="error_msg" :ok_msg="ok_msg" class="messages"/>
     <div>
       <TabView :scrollable="true">
         <TabPanel v-for="context_id in context_ids">
@@ -247,8 +292,13 @@ const removePerson = (meta_key_id: string, pid: string) => {
           <div
             v-for="contextKey in contextKeysMap.get(context_id)"
             class="border-1 surface-border pb-1"
+            
           >
+            <div v-if="hide_meta_keys && hide_meta_keys[contextKey.meta_key_id]
+              && hide_meta_keys[contextKey.meta_key_id] == true"></div>
+            <div v-else>
             <div
+              
               class="border-1 surface-border px-3 py-2 meta-header"
               :class="{ missing: isMissingKey(contextKey.meta_key_id) }"
             >
@@ -494,6 +544,8 @@ const removePerson = (meta_key_id: string, pid: string) => {
               </div>
               
             </div>
+
+            </div>
           </div>
         </TabPanel>
       </TabView>
@@ -555,5 +607,15 @@ const removePerson = (meta_key_id: string, pid: string) => {
 .meta-kw-search {
   max-height: 10rem;
   overflow-y: auto;
+}
+.messages {
+  position: fixed;
+  bottom: 0.5rem;
+  right: 2rem;
+  
+  
+  z-index: 300;
+  
+
 }
 </style>

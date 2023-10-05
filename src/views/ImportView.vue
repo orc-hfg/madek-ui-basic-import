@@ -34,6 +34,7 @@
         :template="{}"
         :meta_data="mdUserDefaults"
         :context_ids="getContexts()"
+        :hide_meta_keys="hide_meta_keys_map"
         />
 
     </Dialog>
@@ -62,6 +63,7 @@
             :resource_key="'media_entry_id'"
             :resource_id="edit_entry_id"
             :context_ids="getContexts()"
+            :hide_meta_keys="hide_meta_keys_map"
           />
 
       </div>
@@ -139,6 +141,7 @@
                 <TemplateEntryMetaDataEdit 
                   :meta_data="mdImportDefaults"
                   :context_ids="getContexts()"
+                  :hide_meta_keys="hide_meta_keys_map"
                   />
               </div>
           </div>
@@ -454,6 +457,9 @@ const uploadedEntries = ref(new Array<iMediaEntry>())
 const uploadedEntriesMD = ref({} as object)
 
 const uploadedMDShowMode = ref('showCore' as string)
+
+const hide_meta_keys_map = {"madek_core:title": true }
+
 
 const getContexts = () => {
   return madek_store.appSettings.contexts_for_entry_validation
