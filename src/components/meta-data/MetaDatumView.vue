@@ -1,21 +1,21 @@
 <template>
   <div class="metaDatumView">
-    <div v-if="isMetaKeyObjectType('MetaDatum::Text')">
-      <span>{{ getMetaDataValueText() }}</span>
+    <div v-if="isMetaKeyObjectType(metaKey.id, MD_TYPE_TEXT)">
+      <span>{{ metaData.string }}</span>
     </div>
 
-    <div v-else-if="isMetaKeyObjectType('MetaDatum::TextDate')">
-      <span>{{ getMetaDataValueText() }}</span>
+    <div v-else-if="isMetaKeyObjectType(metaKey.id, MD_TYPE_TEXT_DATE)">
+      <span>{{ metaData.string }}</span>
     </div>
 
-    <div v-else-if="isMetaKeyObjectType('MetaDatum::JSON')">
-      <JsonViewer :value="getMetaDataValueJson()" />
-      <br />
-      <span>{{ getMetaDataValueJson() }}</span>
+    <div v-else-if="isMetaKeyObjectType(metaKey.id, MD_TYPE_JSON)">
+      <JsonViewer :value="metaData.json" />
+      <!--<br />
+      <span>{{ metaData.json }}</span>-->
     </div>
 
-    <div v-else-if="isMetaKeyObjectType('MetaDatum::People')">
-      <Chip v-for="person in getMetaDataPeopleData()">
+    <div v-else-if="isMetaKeyObjectType(metaKey.id, MD_TYPE_PEOPLE)">
+      <Chip v-for="person in metaDataExtended[MD_PEOPLE]">
         <span>{{ person.first_name }}</span>
         &nbsp;
         <span>{{ person.last_name }}</span>
@@ -23,13 +23,13 @@
       &nbsp;
     </div>
 
-    <div v-else-if="isMetaKeyObjectType('MetaDatum::Keywords')">
-      <Chip v-for="kw in getMetaDataKeywordData()">
+    <div v-else-if="isMetaKeyObjectType(metaKey.id, MD_TYPE_KEYWORDS)">
+      <Chip v-for="kw in metaDataExtended[MD_KEYWORDS]">
         <span>{{ kw.term }}</span>
       </Chip>
     </div>
 
-    <div v-else-if="isMetaKeyObjectType('MetaDatum::Roles')">
+    <div v-else-if="isMetaKeyObjectType(metaKey.id, MD_TYPE_ROLES)">
       <p>TODO Roles view</p>
     </div>
 
@@ -37,12 +37,36 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { hasOwn } from "@vue/shared";
-import { iMLObj } from "../../api_resources";
+<script setup lang="ts">
 import Chip from "primevue/chip";
+import { madekHelper } from "../../modules/madek";
+import { errorHelper } from "../../modules/error";
 
+const {
+  MD_KEYWORDS,
+  MD_PEOPLE,
+  
+  MD_TYPE_TEXT,
+  MD_TYPE_TEXT_DATE,
+  MD_TYPE_JSON,
+  MD_TYPE_KEYWORDS,
+  MD_TYPE_PEOPLE,
+  MD_TYPE_ROLES,
+
+  isMetaKeyObjectType,
+
+} = madekHelper()
+
+const props = defineProps({
+  default_locale: { type: String, required: true },
+
+  metaKey: { type: Object, required: true },
+  metaData: { type: Object, required: true },
+  metaDataExtended: { type: Object, required: true },
+
+  mode: { type: String, required: false },
+})
+/*
 export default defineComponent({
   name: "MetaDatumView",
   props: {
@@ -123,6 +147,7 @@ export default defineComponent({
     },
   },
 });
+*/
 </script>
 <style scoped>
 .metaDatumView {

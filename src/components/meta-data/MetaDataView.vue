@@ -150,7 +150,7 @@ import {
 import MetaDatumView from './MetaDatumView.vue'
 import Panel from 'primevue/panel'
 import { useMadekStore } from '../../stores/madek_store'
-import { MetaDataDetailData } from '../../generated/data-contracts'
+import { MediaEntryMetaDataRelatedDetailData, MetaDataDetailData } from '../../generated/data-contracts'
 
 
 const { api, authParams } = apiHelper()
@@ -158,6 +158,8 @@ const { error_msg, handle_error, reset_error} = errorHelper()
 
 
 const {
+    MD_KEYWORDS,
+    MD_PEOPLE,
     MD_TYPE_KEYWORDS,
     MD_TYPE_PEOPLE,
 
@@ -172,6 +174,7 @@ const {
     getMetaKey,
 
     getMetaData,
+    getMetaDataRelated,
     getMetaDataExtended,
     isMetaKeyObjectType,
     getMetaKeyObjectType
@@ -215,41 +218,38 @@ const getCoreContexts = () => {
     }
 }
 
-const EXT_DATA_TYPE = [MD_TYPE_KEYWORDS, MD_TYPE_PEOPLE]
-const onMetaDataExtended = (resp) => {
-  
-  metaDataExtendedMap.value.set(resp['meta_data'].meta_key_id, resp)
-}
 const onError = (error:any) => {
   console.error("got error: " + JSON.stringify(error))
 }
-const onMetaData = (resp) => {
-  
-  const colMD = resp['meta-data']
-  colMD.forEach((md: MetaDataDetailData) => {
-    metaDataMap.value.set(md.meta_key_id, md)
-    const oType = getMetaKeyObjectType(md.meta_key_id)
-
-    if (oType && EXT_DATA_TYPE.includes(oType)) {
-      if (resp.collection_id) {
-        getMetaDataExtended('collection_id', resp.collection_id, md.meta_key_id, onMetaDataExtended, onError)
-      } else if (resp.media_entry_id) {
-        getMetaDataExtended('media_entry_id', resp.media_entry_id, md.meta_key_id, onMetaDataExtended, onError)
-      }
-      
-    }
+const onMetaData = (resp: MediaEntryMetaDataRelatedDetailData) => {
+  resp.forEach((elem: any) => {
     
-  }) 
+    const md = elem.meta_data
+    metaDataMap.value.set(md.meta_key_id,md)
+    metaDataExtendedMap.value.set(md.meta_key_id, elem)
+    if (isMetaKeyObjectType(md.meta_key_id, MD_TYPE_PEOPLE)) {
+    } else if (isMetaKeyObjectType(md.meta_key_id, MD_TYPE_KEYWORDS)) {
+    } else {
+      //TODO roles
+    }
+  })
 }
 const updateData =() => {
   metaDataMap.value.clear()
   metaDataExtendedMap.value.clear()
+  let resKey = ''
+  let resId = ''
   if (props.collectionId) {
-    getMetaData('collection_id', props.collectionId, onMetaData)
-    
+    resKey = 'collection_id'
+    resId = props.collectionId
   } else if (props.entryId) {
-    getMetaData('media_entry_id', props.entryId, onMetaData)
+    resKey = 'media_entry_id'
+    resId = props.entryId
+  } else {
+    console.error("MetaDataView: ABORT: invalid entry or collection id.")
+    return
   }
+  getMetaDataRelated(resKey, resId , onMetaData, onError)
 }
 
 watch(props, () => {

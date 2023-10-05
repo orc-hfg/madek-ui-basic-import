@@ -1228,9 +1228,11 @@ export const madekHelper = () => {
         getEntryMetaDataText,
 
         getMetaData,
-        getMetaDataText,
+        getMetaDataRelated,
         getMetaDataExtended,
 
+        getMetaDataText,
+        
         getCollectionTitle,
         getEntryTitle,
 

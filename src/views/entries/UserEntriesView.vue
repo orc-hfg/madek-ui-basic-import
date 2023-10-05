@@ -24,28 +24,44 @@
       @clickedDelete="clickedDelete"
     />
 
-    <Dialog v-model:visible="askAddShow">
-      <p>
-        <span>Select Collection to add to:</span>
-      </p>
+    <Dialog v-model:visible="askAddShow" class="">
       
-      
-      <div v-if="add2CollectionResult">
-        <p>
-            <span>Result:</span>
-            <br/>
-            {{ add2CollectionResult }}
-        </p>
-        
-        <Button label="Show Collection" @click="clickedShowCollection()"/>
+      <div class="ask_dialog">
+        <div v-if="add2CollectionResult">
+          <p>
+              <span>Add to collection result:</span>
+              <br/>
+              <span>
+              {{ add2CollectionResult }}
+              </span>
+          </p>
+          
+          <Button label="Show Collection" @click="clickedShowCollection()"/>
+        </div>
+
+        <div v-else-if="add2CollectionError">
+          <p>
+              <span>Add to collection error:</span>
+              <br/>
+              <span>
+              {{ add2CollectionError }}
+              </span>
+          </p>
+          <Button label="OK" @click="askAddShow = !askAddShow"/>
+        </div>
+
+        <div v-else>
+          <p>
+            <span>Select Collection to add to:</span>
+          </p>
+          <CollectionSelect 
+            :collection_list="collection_list"
+            @selected-collection-id="addSelectedCollection"/>
+        </div>
       </div>
-      <CollectionSelect 
-        v-else
-        :collection_list="collection_list"
-        @selected-collection-id="addSelectedCollection"/>
     </Dialog>
 
-    <Dialog v-model:visible="askDeleteShow">
+    <Dialog v-model:visible="askDeleteShow" class="ask_dialog">
             <div v-if="deleteResult">
                 <h4>Deleted Media Entry:</h4>
                 <p>ID: {{ askDeleteEntryId }}</p>
@@ -175,14 +191,17 @@ const updateCollectionList = () => {
 
 const clickedAdd = (entryId: string) => {
   console.log("UEV clickedEdit: " + entryId);
-  debugger
   updateCollectionList()
   addResult.value = ""
   addError.value = ""
   askAddEntryId.value = entryId
   askAddShow.value = true
+  add2CollectionError.value = ''
+  add2CollectionResult.value = ''
+  add2CollectionId.value = ''
 };
 
+const add2CollectionError = ref('' as string)
 const add2CollectionResult = ref('' as string)
 const add2CollectionId = ref('' as string)
 
@@ -206,16 +225,11 @@ const addSelectedCollection = (id:string) => {
 		console.log(msg)
         add2CollectionResult.value = msg
 	}).catch(error => {
-        error.text().then(error_text => {
-            const msg = "Could not add media entry to collection: " + error_text
-            add2CollectionResult.value = msg
-		    handle_error(msg,error)    
-        })
-    /*
-        const msg = "Could not add media entry to collection: " + error.text()
-        add2CollectionResult.value = msg
-		handle_error(msg,error)
-        */
+          const parsed = JSON.stringify(error.error.message)
+            const msg = "Could not add media entry to collection: " + parsed
+            add2CollectionError.value = msg
+		      handle_error(msg,error)    
+        
 	})
 
     //showCollectionList.value = false
@@ -231,12 +245,15 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style >
 input {
   width: 24em;
 }
 img {
   width: 10em;
   height: auto;
+}
+.p-dialog .ask_dialog {
+  width: 70vw;
 }
 </style>
