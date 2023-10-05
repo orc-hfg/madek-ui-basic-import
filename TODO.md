@@ -26,6 +26,8 @@
 
 ## loading times
 
+## responsiveness
+
 ## design: layout, gaps, colors, fonts
 
 ## Wanted: user hub ultra compact view
@@ -34,9 +36,9 @@
 
 ## Paging / Pager
 
-## FRAGE: only required fields of contexts_for_entry_validation ??
+## TODO: only required fields of contexts_for_entry_validation ??
 
-## which groups are searchable ?
+## FRAGE: which groups are searchable ?
 
 - die durch den meta-key zugelassenen
 - Person / PeopleGroup ,  könnte auch P-Inst-Group sein
@@ -46,13 +48,7 @@
 
 - sql problem
 
-## hide hidden meta-keys
-
-
 ## permission edit: feedback for immediate action
-
-
-## import: hide title in md defaults edit
 
 ## import: next btn top right
 
@@ -68,15 +64,13 @@
 
 ## import: defaults: no md save for collection
 
-## import: defaults: hide title in md import defaults edit
-
 ## import: upload: drop zone: list view ?
 
 ## import: upload: drop zone preview
 
 ## import: upload: disable all nav btns during upload
 
-## import: upload: dropzone (vs. api)
+## BUG: import: upload: dropzone (vs. api)
 
 - File upload, drop-zone still active, drop another file, no upload possible
 - enable, or disable drop zone
@@ -109,13 +103,13 @@
 
 ## delegations ( also API )
 
-## create kw
+## create kw API
 
-## create person
+## create person API
 
-## create group
+## create group API
 
-## delegations
+## delegations API
 
 ## collection edit perms
 
@@ -123,28 +117,11 @@
 
 ## BUGS
 
-## archive meta keys ??
+## TODO 28 + 5
 
-- no vocabulary -> permissions (wonder it works in madek webapp)
+## TODO BUGS 0
 
-### Sets not shown in user hub
-
-- the query
-
-### sets not shown in user sets
-
-### no meta-data-defaults editor
-
-### meta-data-view: mode-select-btn: z-index with top nav
-
-### meta-data-view: mode-select-btn: double click on core
-
-- cannot read props of null reading value
-- nicht reproduzierbar
-
-### no previews for uploads with importer
-
-Wann könnte das gewesen sein ? Jetzt immer noch ?
+## DONE 17
 
 ## TODOs DONE
 
@@ -155,7 +132,18 @@ Wann könnte das gewesen sein ? Jetzt immer noch ?
 - DONE: import: upload: next btn only if all uploaded ( failed or ok ),
 - DONE: permission edit: do not edit unpublished entries
 - DONE: mark not complete state in entry editor
+- DONE: import: defaults: hide title in md import defaults edit
+- DONE import: hide title in md defaults edit
+- DONE: FRAGE: archive meta keys ?? no vocabulary -> permissions (wonder it works in madek webapp)
 
 ## BUGS DONE
 
 - DONE: meta-data of previous shown entry is in empty meta-data places
+- DONE: no meta-data-defaults editor
+- DONE meta-data-view: mode-select-btn: z-index with top nav
+- DONE meta-data-view: mode-select-btn: double click on core
+- 1. cannot read props of null reading value: nicht reproduzierbar
+
+- DONE Sets not shown in user hub: the query: sporadisch, reload prob
+- DONE sets not shown in user sets the query: sporadisch
+- DONE no previews for uploads with importer: alter import
