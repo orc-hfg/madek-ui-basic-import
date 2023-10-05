@@ -9,6 +9,11 @@
  * ---------------------------------------------------------------
  */
 
+export enum MetaKeysListParamsScopeEnum {
+  Use = "use",
+  View = "view",
+}
+
 export enum PeopleSubtypeEnum {
   PeopleInstitutionalGroup = "PeopleInstitutionalGroup",
   Person = "Person",
@@ -25,6 +30,12 @@ export enum SubtypeEnum {
   PeopleInstitutionalGroup = "PeopleInstitutionalGroup",
   Person = "Person",
   PeopleGroup = "PeopleGroup",
+}
+
+export enum CollectionsDefaultResourceTypeEnum {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
 }
 
 export enum CollectionsLayoutEnum {
@@ -44,6 +55,12 @@ export enum CollectionsSortingEnum {
   LastChange = "last_change",
 }
 
+export enum DefaultResourceTypeEnum {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
+}
+
 export enum LayoutEnum {
   List = "list",
   Grid = "grid",
@@ -59,6 +76,12 @@ export enum SortingEnum {
   TitleDESC = "title DESC",
   CreatedAtASC = "created_at ASC",
   LastChange = "last_change",
+}
+
+export enum CollectionCreatePayloadDefaultResourceTypeEnum {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
 }
 
 export enum CollectionCreatePayloadLayoutEnum {
@@ -79,16 +102,25 @@ export enum CollectionCreatePayloadSortingEnum {
 }
 
 export interface CollectionCreatePayload {
+  default_resource_type?: CollectionCreatePayloadDefaultResourceTypeEnum;
   get_metadata_and_previews?: boolean;
-  layout?: CollectionCreatePayloadLayoutEnum;
   is_master?: boolean;
-  sorting?: CollectionCreatePayloadSortingEnum;
   /** @format uuid */
   default_context_id?: string | null;
+  layout?: CollectionCreatePayloadLayoutEnum;
   /** @format uuid */
-  responsible_user_id?: string;
+  responsible_delegation_id?: string | null;
+  sorting?: CollectionCreatePayloadSortingEnum;
   /** @format uuid */
   workflow_id?: string | null;
+  /** @format uuid */
+  responsible_user_id?: string;
+}
+
+export enum DefaultResourceTypeEnum1 {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
 }
 
 export enum LayoutEnum1 {
@@ -106,6 +138,12 @@ export enum SortingEnum1 {
   TitleDESC = "title DESC",
   CreatedAtASC = "created_at ASC",
   LastChange = "last_change",
+}
+
+export enum DefaultResourceTypeEnum2 {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
 }
 
 export enum LayoutEnum2 {
@@ -142,6 +180,12 @@ export enum CollectionUpdatePayloadSortingEnum {
   LastChange = "last_change",
 }
 
+export enum CollectionUpdatePayloadDefaultResourceTypeEnum {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
+}
+
 export interface CollectionUpdatePayload {
   layout?: CollectionUpdatePayloadLayoutEnum;
   is_master?: boolean;
@@ -150,6 +194,13 @@ export interface CollectionUpdatePayload {
   default_context_id?: string | null;
   /** @format uuid */
   workflow_id?: string | null;
+  default_resource_type?: CollectionUpdatePayloadDefaultResourceTypeEnum;
+}
+
+export enum DefaultResourceTypeEnum3 {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
 }
 
 export enum LayoutEnum3 {
@@ -562,7 +613,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           /** @format uuid */
           teaser_set_id?: string | null;
           /** @format int32 */
-          id: number;
+          id?: number;
           contexts_for_entry_extra?: string[];
           provenance_notices?: {
             de?: string | null;
@@ -883,6 +934,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         meta_datum_object_type?: string;
         is_enabled_for_collections?: boolean;
         is_enabled_for_media_entries?: boolean;
+        scope?: MetaKeysListParamsScopeEnum;
         /** @format int32 */
         page?: number;
         /** @format int32 */
@@ -1121,7 +1173,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<
         {
           collections: {
-            default_resource_type?: any;
+            default_resource_type?: CollectionsDefaultResourceTypeEnum;
             get_metadata_and_previews?: boolean;
             edit_session_updated_at?: any;
             is_master?: boolean;
@@ -1166,7 +1218,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     collectionCreate: (body: CollectionCreatePayload, params: RequestParams = {}) =>
       this.request<
         {
-          default_resource_type?: any;
+          default_resource_type?: DefaultResourceTypeEnum;
           get_metadata_and_previews?: boolean;
           edit_session_updated_at?: any;
           is_master?: boolean;
@@ -1210,7 +1262,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     collectionDetail: (collectionId: string, params: RequestParams = {}) =>
       this.request<
         {
-          default_resource_type?: any;
+          default_resource_type?: DefaultResourceTypeEnum1;
           get_metadata_and_previews?: boolean;
           edit_session_updated_at?: any;
           is_master?: boolean;
@@ -1253,7 +1305,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     collectionUpdate: (collectionId: string, body: CollectionUpdatePayload, params: RequestParams = {}) =>
       this.request<
         {
-          default_resource_type?: any;
+          default_resource_type?: DefaultResourceTypeEnum2;
           get_metadata_and_previews?: boolean;
           edit_session_updated_at?: any;
           is_master?: boolean;
@@ -1297,7 +1349,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     collectionDelete: (collectionId: string, params: RequestParams = {}) =>
       this.request<
         {
-          default_resource_type?: any;
+          default_resource_type?: DefaultResourceTypeEnum3;
           get_metadata_and_previews?: boolean;
           edit_session_updated_at?: any;
           is_master?: boolean;
@@ -1346,6 +1398,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<any, any>({
         path: `/api/collection/${collectionId}/meta-data`,
+        method: "GET",
+        query: query,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CollectionMetaDataRelatedDetail
+     * @summary Get meta-data for collection.
+     * @request GET:/api/collection/{collection_id}/meta-data-related
+     */
+    collectionMetaDataRelatedDetail: (
+      collectionId: string,
+      query?: {
+        updated_after?: string;
+        meta_keys?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<any, any>({
+        path: `/api/collection/${collectionId}/meta-data-related`,
         method: "GET",
         query: query,
         type: ContentType.Json,
@@ -3110,9 +3186,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           }[];
           previews: {
             /** @format int32 */
-            width: number;
+            width?: number | null;
             /** @format int32 */
-            height: number;
+            height?: number | null;
             /** @format uuid */
             id: string;
             thumbnail: string;
@@ -3293,11 +3369,31 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<any, void>({
+      this.request<
+        {
+          /** @format int32 */
+          width?: number | null;
+          /** @format int32 */
+          height?: number | null;
+          /** @format uuid */
+          id: string;
+          thumbnail: string;
+          updated_at: any;
+          media_type: string;
+          conversion_profile?: string | null;
+          created_at: any;
+          /** @format uuid */
+          media_file_id: string;
+          content_type: string;
+          filename: string;
+        },
+        any
+      >({
         path: `/api/media-entry/${mediaEntryId}/preview`,
         method: "GET",
         query: query,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
@@ -3340,6 +3436,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<any, any>({
         path: `/api/media-entry/${mediaEntryId}/meta-data`,
+        method: "GET",
+        query: query,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name MediaEntryMetaDataRelatedDetail
+     * @summary Get meta-data for media-entry.
+     * @request GET:/api/media-entry/{media_entry_id}/meta-data-related
+     */
+    mediaEntryMetaDataRelatedDetail: (
+      mediaEntryId: string,
+      query?: {
+        updated_after?: string;
+        meta_keys?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<any, any>({
+        path: `/api/media-entry/${mediaEntryId}/meta-data-related`,
         method: "GET",
         query: query,
         type: ContentType.Json,
@@ -5002,7 +5122,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           person_id?: string | null;
           searchable?: string;
         },
-        string
+        any
       >({
         path: `/api/groups/${id}`,
         method: "GET",

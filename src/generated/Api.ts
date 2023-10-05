@@ -36,6 +36,8 @@ import {
   CollectionMediaEntryArcsListParams,
   CollectionMetaDataDetailData,
   CollectionMetaDataDetailParams,
+  CollectionMetaDataRelatedDetailData,
+  CollectionMetaDataRelatedDetailParams,
   CollectionMetaDatumDeleteData,
   CollectionMetaDatumDetailData,
   CollectionMetaDatumJsonCreateData,
@@ -110,6 +112,8 @@ import {
   MediaEntryMediaFileDetailData,
   MediaEntryMetaDataDetailData,
   MediaEntryMetaDataDetailParams,
+  MediaEntryMetaDataRelatedDetailData,
+  MediaEntryMetaDataRelatedDetailParams,
   MediaEntryMetaDatumDeleteData,
   MediaEntryMetaDatumDetailData,
   MediaEntryMetaDatumJsonCreateData,
@@ -148,6 +152,7 @@ import {
   MediaEntryPermsUserUpdateParamsEnum,
   MediaEntryPermsUsersDetailData,
   MediaEntryPreviewDataStreamDetailParams,
+  MediaEntryPreviewDetailData,
   MediaEntryPreviewDetailParams,
   MediaEntryPublishUpdateData,
   MediaFileDetailData,
@@ -442,6 +447,24 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   collectionMetaDataDetail = ({ collectionId, ...query }: CollectionMetaDataDetailParams, params: RequestParams = {}) =>
     this.request<CollectionMetaDataDetailData, any>({
       path: `/api/collection/${collectionId}/meta-data`,
+      method: "GET",
+      query: query,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name CollectionMetaDataRelatedDetail
+   * @summary Get meta-data for collection.
+   * @request GET:/api/collection/{collection_id}/meta-data-related
+   */
+  collectionMetaDataRelatedDetail = (
+    { collectionId, ...query }: CollectionMetaDataRelatedDetailParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<CollectionMetaDataRelatedDetailData, any>({
+      path: `/api/collection/${collectionId}/meta-data-related`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1609,7 +1632,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/media-entry/{media_entry_id}/preview
    */
   mediaEntryPreviewDetail = ({ mediaEntryId, ...query }: MediaEntryPreviewDetailParams, params: RequestParams = {}) =>
-    this.request<any, void>({
+    this.request<MediaEntryPreviewDetailData, any>({
       path: `/api/media-entry/${mediaEntryId}/preview`,
       method: "GET",
       query: query,
@@ -1644,6 +1667,24 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   mediaEntryMetaDataDetail = ({ mediaEntryId, ...query }: MediaEntryMetaDataDetailParams, params: RequestParams = {}) =>
     this.request<MediaEntryMetaDataDetailData, any>({
       path: `/api/media-entry/${mediaEntryId}/meta-data`,
+      method: "GET",
+      query: query,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name MediaEntryMetaDataRelatedDetail
+   * @summary Get meta-data for media-entry.
+   * @request GET:/api/media-entry/{media_entry_id}/meta-data-related
+   */
+  mediaEntryMetaDataRelatedDetail = (
+    { mediaEntryId, ...query }: MediaEntryMetaDataRelatedDetailParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<MediaEntryMetaDataRelatedDetailData, any>({
+      path: `/api/media-entry/${mediaEntryId}/meta-data-related`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -2616,7 +2657,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/groups/{id}
    */
   groupsDetail = (id: string, params: RequestParams = {}) =>
-    this.request<GroupsDetailData, string>({
+    this.request<GroupsDetailData, any>({
       path: `/api/groups/${id}`,
       method: "GET",
       type: ContentType.Json,

@@ -30,7 +30,7 @@ export interface AppSettingsListData {
   /** @format uuid */
   teaser_set_id?: string | null;
   /** @format int32 */
-  id: number;
+  id?: number;
   contexts_for_entry_extra?: string[];
   provenance_notices?: {
     de?: string | null;
@@ -229,10 +229,16 @@ export interface MetaKeysListParams {
   meta_datum_object_type?: string;
   is_enabled_for_collections?: boolean;
   is_enabled_for_media_entries?: boolean;
+  scope?: ScopeEnum;
   /** @format int32 */
   page?: number;
   /** @format int32 */
   count?: number;
+}
+
+export enum ScopeEnum {
+  Use = "use",
+  View = "view",
 }
 
 export interface MetaKeysListData {
@@ -274,6 +280,11 @@ export interface MetaKeysListData {
     io_mappings?: any;
     enabled_for_public_use?: boolean;
   }[];
+}
+
+export enum MetaKeysListParams1ScopeEnum {
+  Use = "use",
+  View = "view",
 }
 
 export interface MetaKeysDetailData {
@@ -389,6 +400,12 @@ export interface PeopleDetailData {
   description?: string | null;
 }
 
+export enum CollectionsDefaultResourceTypeEnum {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
+}
+
 export enum CollectionsLayoutEnum {
   List = "list",
   Grid = "grid",
@@ -432,7 +449,7 @@ export interface CollectionsListParams {
 
 export interface CollectionsListData {
   collections: {
-    default_resource_type?: any;
+    default_resource_type?: CollectionsDefaultResourceTypeEnum;
     get_metadata_and_previews?: boolean;
     edit_session_updated_at?: any;
     is_master?: boolean;
@@ -458,6 +475,12 @@ export interface CollectionsListData {
   }[];
 }
 
+export enum DefaultResourceTypeEnum {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
+}
+
 export enum LayoutEnum {
   List = "list",
   Grid = "grid",
@@ -473,6 +496,12 @@ export enum SortingEnum {
   TitleDESC = "title DESC",
   CreatedAtASC = "created_at ASC",
   LastChange = "last_change",
+}
+
+export enum CollectionCreatePayloadDefaultResourceTypeEnum {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
 }
 
 export enum CollectionCreatePayloadLayoutEnum {
@@ -493,20 +522,23 @@ export enum CollectionCreatePayloadSortingEnum {
 }
 
 export interface CollectionCreatePayload {
+  default_resource_type?: CollectionCreatePayloadDefaultResourceTypeEnum;
   get_metadata_and_previews?: boolean;
-  layout?: CollectionCreatePayloadLayoutEnum;
   is_master?: boolean;
-  sorting?: CollectionCreatePayloadSortingEnum;
   /** @format uuid */
   default_context_id?: string | null;
+  layout?: CollectionCreatePayloadLayoutEnum;
   /** @format uuid */
-  responsible_user_id?: string;
+  responsible_delegation_id?: string | null;
+  sorting?: CollectionCreatePayloadSortingEnum;
   /** @format uuid */
   workflow_id?: string | null;
+  /** @format uuid */
+  responsible_user_id?: string;
 }
 
 export interface CollectionCreateData {
-  default_resource_type?: any;
+  default_resource_type?: DefaultResourceTypeEnum;
   get_metadata_and_previews?: boolean;
   edit_session_updated_at?: any;
   is_master?: boolean;
@@ -531,6 +563,12 @@ export interface CollectionCreateData {
   creator_id?: string;
 }
 
+export enum DefaultResourceTypeEnum1 {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
+}
+
 export enum LayoutEnum1 {
   List = "list",
   Grid = "grid",
@@ -549,7 +587,7 @@ export enum SortingEnum1 {
 }
 
 export interface CollectionDetailData {
-  default_resource_type?: any;
+  default_resource_type?: DefaultResourceTypeEnum1;
   get_metadata_and_previews?: boolean;
   edit_session_updated_at?: any;
   is_master?: boolean;
@@ -572,6 +610,12 @@ export interface CollectionDetailData {
   responsible_user_id?: string | null;
   /** @format uuid */
   creator_id?: string;
+}
+
+export enum DefaultResourceTypeEnum2 {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
 }
 
 export enum LayoutEnum2 {
@@ -608,6 +652,12 @@ export enum CollectionUpdatePayloadSortingEnum {
   LastChange = "last_change",
 }
 
+export enum CollectionUpdatePayloadDefaultResourceTypeEnum {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
+}
+
 export interface CollectionUpdatePayload {
   layout?: CollectionUpdatePayloadLayoutEnum;
   is_master?: boolean;
@@ -616,10 +666,11 @@ export interface CollectionUpdatePayload {
   default_context_id?: string | null;
   /** @format uuid */
   workflow_id?: string | null;
+  default_resource_type?: CollectionUpdatePayloadDefaultResourceTypeEnum;
 }
 
 export interface CollectionUpdateData {
-  default_resource_type?: any;
+  default_resource_type?: DefaultResourceTypeEnum2;
   get_metadata_and_previews?: boolean;
   edit_session_updated_at?: any;
   is_master?: boolean;
@@ -644,6 +695,12 @@ export interface CollectionUpdateData {
   creator_id?: string;
 }
 
+export enum DefaultResourceTypeEnum3 {
+  Collection = "collection",
+  Entries = "entries",
+  All = "all",
+}
+
 export enum LayoutEnum3 {
   List = "list",
   Grid = "grid",
@@ -662,7 +719,7 @@ export enum SortingEnum3 {
 }
 
 export interface CollectionDeleteData {
-  default_resource_type?: any;
+  default_resource_type?: DefaultResourceTypeEnum3;
   get_metadata_and_previews?: boolean;
   edit_session_updated_at?: any;
   is_master?: boolean;
@@ -694,6 +751,14 @@ export interface CollectionMetaDataDetailParams {
 }
 
 export type CollectionMetaDataDetailData = any;
+
+export interface CollectionMetaDataRelatedDetailParams {
+  updated_after?: string;
+  meta_keys?: string;
+  collectionId: string;
+}
+
+export type CollectionMetaDataRelatedDetailData = any;
 
 export type CollectionMetaDatumDetailData = any;
 
@@ -1335,9 +1400,9 @@ export interface MediaEntriesRelatedDataListData {
   }[];
   previews: {
     /** @format int32 */
-    width: number;
+    width?: number | null;
     /** @format int32 */
-    height: number;
+    height?: number | null;
     /** @format uuid */
     id: string;
     thumbnail: string;
@@ -1435,6 +1500,24 @@ export interface MediaEntryPreviewDetailParams {
   mediaEntryId: string;
 }
 
+export interface MediaEntryPreviewDetailData {
+  /** @format int32 */
+  width?: number | null;
+  /** @format int32 */
+  height?: number | null;
+  /** @format uuid */
+  id: string;
+  thumbnail: string;
+  updated_at: any;
+  media_type: string;
+  conversion_profile?: string | null;
+  created_at: any;
+  /** @format uuid */
+  media_file_id: string;
+  content_type: string;
+  filename: string;
+}
+
 export interface MediaEntryPreviewDataStreamDetailParams {
   size?: string;
   mediaEntryId: string;
@@ -1447,6 +1530,14 @@ export interface MediaEntryMetaDataDetailParams {
 }
 
 export type MediaEntryMetaDataDetailData = any;
+
+export interface MediaEntryMetaDataRelatedDetailParams {
+  updated_after?: string;
+  meta_keys?: string;
+  mediaEntryId: string;
+}
+
+export type MediaEntryMetaDataRelatedDetailData = any;
 
 export type MediaEntryMetaDatumDetailData = any;
 
