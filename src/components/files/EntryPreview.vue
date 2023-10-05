@@ -40,6 +40,10 @@ const download_file = ref({} as iMediaFile);
 //const imgData = ref();
 
 const update = () => {
+  cssProps.value = {}
+  preview_file.value = {}
+  download_file.value = {}
+
   if (!props.entry_data || !props.entry_data.id) {
     return;
   }
