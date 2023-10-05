@@ -28,6 +28,7 @@ const appDataLoaded = ref(false as boolean)
 initMadek().then(() => {
     console.log("madek loaded")
     appDataLoaded.value = true
+    ok_msg.value = "Alles fertig!"
   })
 
 const login = () => {
@@ -92,7 +93,7 @@ onMounted(() => {
   
 </template>
 
-<style >
+<style>
 #app {
   padding: 0px;
   position: fixed;
@@ -100,33 +101,17 @@ onMounted(() => {
   left: 0px;
   width: 100vw;
   height: 100vh;
+}
 
-}
-/*
-.nav-left {
-  position: fixed;
-  padding: 1rem;
-  left: 0px;
-  top: 0px;
-  height: 100vh;
-  width: 15vw;
-  border: 1px solid gray;
-}
-*/
 .nav-top {
- 
   width: 100vw;
   background-color: var(--surface-200);
   z-index: 1000;
 }
-.nav-top-left {
-  
-  
-}
-.nav-top-right {
-  float: right;
-  
-}
+
+.nav-top-left { }
+.nav-top-right { }
+
 .router-view {
   position:relative;
   
@@ -134,22 +119,6 @@ onMounted(() => {
   top: 0px;
   height: 90vh;
   overflow-y: auto;
-  /*right: 0px;
-  height: 100vh;
-  border: 1px solid gray;
-  
-*/
 }
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+
 </style>

@@ -22,14 +22,16 @@ export const errorHelper = () => {
     const reset_error = () => { error_msg.value = '' }
     const reset_ok = () => { ok_msg.value = '' }
 
-    const timed_handle_error = (msg: string, error: any, msecs:number = defaultResetTime) => {
+    const timed_handle_error = (msg: string, error: any, msecs?:number) => {
+        msecs = msecs || defaultResetTime
         handle_error(msg, error)
         setTimeout(() => {
             reset_error()
         },msecs) 
     }
 
-    const timed_handle_ok = (msg: string, msecs:number = defaultResetTime) => {
+    const timed_handle_ok = (msg: string, msecs?:number) => {
+        msecs = msecs || defaultResetTime
         ok_msg.value = msg
         setTimeout(() => {
             reset_ok()

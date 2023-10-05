@@ -9,6 +9,7 @@ defineProps({
 })
 </script>
 <template>
+    <div>
     <div class="bg-pink-400 h-3rem border-1 surface-border border-rounded my-1"
         v-if="error_msg">
         <div class="px-3 py-3">{{ error_msg }}</div>
@@ -18,5 +19,5 @@ defineProps({
         <div class="px-3 py-3">{{ ok_msg }}</div>
         
     </div>
-
+</div>
 </template>
