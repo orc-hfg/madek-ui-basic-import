@@ -4,22 +4,31 @@ import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { errorHelper } from './modules/error'
-import { apiHelper } from './modules/api'
 import { authHelper } from './modules/auth'
-import Chip from 'primevue/chip'
+
 import { useMadekStore } from './stores/madek_store'
 import { madekHelper } from './modules/madek'
-//const { api, apiLogin, apiLogout } = apiHelper()
+import OkOrError from './components/OkOrError.vue'
+
+const { error_msg, ok_msg, handleError } = errorHelper()
 
 const { initMadek, checkAllLoaded } = madekHelper()
 const { user } = authHelper()
 
 const store = useMadekStore()
-
+/*
 store.initPublic()
 if (user?.value && user.value.id) {
   store.initAuthed()
 }
+*/
+
+const appDataLoaded = ref(false as boolean)
+
+initMadek().then(() => {
+    console.log("madek loaded")
+    appDataLoaded.value = true
+  })
 
 const login = () => {
     const router = useRouter()
@@ -32,48 +41,49 @@ watch([user?.value], () => {
   if (user?.value && user.value.id) {
     store.initAuthed()
   }
+  else {
+    // TODO clean priv. data
+  }
 })
 
-const appDataLoaded = ref(false as boolean)
 
 onMounted(() => {
   
-  initMadek().then(() => {
-    console.log("madek loaded")
-    appDataLoaded.value = true
-  })
+  
 })
 </script>
 <template>
 
-  <div class="nav-top">
-    <div class="nav-top-left">
-      <router-link to="/">
-        <Button text raised label="Start" icon="pi pi-home" />
-      </router-link>
-      &nbsp;
-      <router-link to="/import" v-if="user?.id">
-        <Button text raised label="Import" icon="pi pi-upload" />
-      </router-link>
-      &nbsp;
-      <router-link to="/collection/userList" v-if="user?.id">
-        <Button text raised label="Deine Sets" />
-      </router-link> 
-      &nbsp;
-      <router-link to="/mediaEntry/userList" v-if="user?.id">
-        <Button text raised label="Deine Einträge" />
-      </router-link>
-      
-      
+  <div class="nav-top flex flex-wrap ">
+    <div class="col-12 md:col-8 flex px-3 py-2 gap-2 nav-top-left ">
+      <div class="flex">
+        <router-link to="/">
+          <Button text raised label="Start" icon="pi pi-home" />
+        </router-link>
+      </div>
+      <div class="flex">
+        <router-link to="/import" v-if="user?.id">
+          <Button text raised label="Import" icon="pi pi-upload" />
+        </router-link>
+      </div>
+      <div class="flex">
+        <router-link to="/collection/userList" v-if="user?.id">
+          <Button text raised label="Deine Sets" />
+        </router-link> 
+      </div>
+      <div class="flex">
+        <router-link to="/mediaEntry/userList" v-if="user?.id">
+          <Button text raised label="Deine Einträge" />
+        </router-link>
+      </div>
     </div>
-    <div class="nav-top-right">
-      <LoginInfo />
-    </div>
-    
+    <LoginInfo class="col-12 md:col-4 flex justify-content-end px-3 py-2 nav-top-right"/>
   </div>
-  <div class="router-view">
+
+  <div class="router-view px-3 py-3">
     <div v-if="appDataLoaded == false">
       Lade Madek Anwendungsdaten...
+      <OkOrError :error_msg="error_msg" :ok_msg="ok_msg"/>
     </div>
     <div v-else-if="appDataLoaded == true">
       <router-view/>
@@ -82,7 +92,16 @@ onMounted(() => {
   
 </template>
 
-<style scoped>
+<style >
+#app {
+  padding: 0px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+
+}
 /*
 .nav-left {
   position: fixed;
@@ -95,32 +114,30 @@ onMounted(() => {
 }
 */
 .nav-top {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  
-  background-color: #f6f6f6;
-  z-index: 1;
+ 
+  width: 100vw;
+  background-color: var(--surface-200);
+  z-index: 1000;
 }
 .nav-top-left {
-  padding: 1rem;
-  float: left;
-  background-color: #e6e6e6;
+  
+  
 }
 .nav-top-right {
-  padding: 1rem;
   float: right;
+  
 }
 .router-view {
   position:relative;
-  padding: 1rem;
+  
   left: 0px;
-  top: 5rem;
+  top: 0px;
+  height: 90vh;
+  overflow-y: auto;
   /*right: 0px;
   height: 100vh;
   border: 1px solid gray;
-  overflow-y: scroll;
+  
 */
 }
 .logo {

@@ -63,42 +63,7 @@
 
       </div>
     </div>
-      
-    
-<!--    
-   
-
-
-    <h3>Authenticator Login</h3>
-    <p>TODO</p>
-
-
-    <p>
-      <hr/>
-      <span>DEBUG</span>
-      <br/>
-      <span>Loading: {{ loading }}</span>
-      <br/>
-
-      <span>authParams:</span>
-      <br/>
-      <JsonViewer :value="authParams"/>
-      <br/>
-      <span>Error: {{ error }}</span>
-      <br/>
-      <span>Login: {{ login }}</span>
-      <br/>
-   
-      <span>State User:</span>
-      <br/>
-      <JsonViewer :value="user" />
-      <br/>
-      <span>State Person:</span>
-      <br/>
-      <JsonViewer :value="person" />
-      <br/>
-    </p>
--->
+     
   </div>
 </template>
 
