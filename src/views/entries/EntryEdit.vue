@@ -87,11 +87,15 @@ const loadMetaData = () => {
 }
 
 const saveMetaData = () => {
-  saveResourceMetaData('media_entry_id', mediaEntryId.value,
-    editMetaData.value, loadedMetaData.value, () => {
-      console.log("finished md save")
-      updateData()
-    })
+  const loaded = {} as GenMetaData
+  loadResourceMetaData('media_entry_id', mediaEntryId.value, loaded, () => {
+  
+    saveResourceMetaData('media_entry_id', mediaEntryId.value,
+      editMetaData.value, loaded, () => {
+        console.log("finished md save")
+        updateData()
+      })
+  })
 }
 const updateData = () => {
     reset_error()
@@ -239,6 +243,8 @@ onMounted(() => {
 
 
               <TemplateEntryMetaDataEdit
+                resource_key="media_entry_id"
+                :resource_id="mediaEntryId"
                 :context_ids="getEditContexts()"
                 :meta_data="editMetaData"
                 :publish_result="publish_result"

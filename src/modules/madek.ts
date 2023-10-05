@@ -633,7 +633,27 @@ export const madekHelper = () => {
     }
 
     const saveResourceMetaData = (resKey:string, resId:string, meta_data: object, old_meta_data: object, cbFinished: any) => {
-      
+        const getIdDiffs = (kws_before: any[], kws_after: any[]) => {
+
+            const toDelete = new Array<string>()
+            const toAdd = new Array<string>()
+    
+            kws_after.forEach((kwa:iPerson) => {
+                const hadkw = kws_before.find(kw => { return kw.id === kwa.id})
+                if (!hadkw || !hadkw.id) {
+                  toAdd.push(kwa.id)
+                }
+            })
+    
+            kws_before.forEach((kwb:iPerson) => {
+                const hadkw = kws_after.find(kw => { return kw.id === kwb.id})
+                if (!hadkw || !hadkw.id) {
+                  toDelete.push(kwb.id)
+                }
+            })
+            return [ toDelete, toAdd ]
+        }
+        
         let loading = 0
         
         const onFinished = (loading:number) => {
@@ -662,86 +682,103 @@ export const madekHelper = () => {
               const data = meta_data[meta_key_id]
               const oldData = old_meta_data[meta_key_id]
               console.log("saveAll: mk-id: " + meta_key_id 
-                + "\n data: " + JSON.stringify(data)
-                + "\n old data: " + JSON.stringify(oldData))
+              + "\n type: " + getMetaKeyObjectType(meta_key_id)
+              + "\n old data: " + JSON.stringify(oldData)
+              + "\n new data: " + JSON.stringify(data)
+                )
       
-              if (isMetaKeyObjectType(meta_key_id, 'MetaDatum::Text')
-                && data.string) {
+              if (isMetaKeyObjectType(meta_key_id, MD_TYPE_TEXT)) {
                   
-                  if (!oldData) {
+                  if ((!oldData || !oldData.string) && data?.string && data?.string.length !== 0) {
                     loading++
                     createMetaDataText(resKey, resId, meta_key_id, data.string, onOk, onError)
                   }
-                  else {
-                    loading++
-                    updateMetaDataText(resKey, resId, meta_key_id, data.string, onOk, onError)
-                  }
-              }
-              else if (isMetaKeyObjectType(meta_key_id, 'MetaDatum::TextDate')
-                && data.string) {
-      
-                  if (!oldData) {
-                    loading++
-                    createMetaDataTextDate(resKey, resId, meta_key_id, data.string, onOk)
-                  }
-                  else {
-                    loading++
-                    updateMetaDataTextDate(resKey, resId, meta_key_id, data.string, onOk)
-                  }
-              }
-              else if (isMetaKeyObjectType(meta_key_id, 'MetaDatum::JSON')) {
-                // TODO md json
-              }
-              else if (isMetaKeyObjectType(meta_key_id, MD_TYPE_KEYWORDS)
-                && data.selectedKeywords && data.selectedKeywords.length !== 0) {
-      
+                  else if (!!oldData && oldData.string === data.string) {
+                    console.log("nothing changed for: " + meta_key_id)
+                  } 
+                  else if (data.string){
+                    if (data.string.length !== 0) {
+                        console.log(" string empty TODO delete md ")
+                        //TODO
+                        //loading++
+                        //api.api.mediaEntryMetaDatumDelete(resId, meta_key_id, authParams?.value)
+                    } else {
+                        loading++
+                        updateMetaDataText(resKey, resId, meta_key_id, data.string, onOk, onError)
+                    }
                     
+                  }
+              }
+              else if (isMetaKeyObjectType(meta_key_id, MD_TYPE_TEXT_DATE)) {
+      
+                  if ((!oldData || !oldData.string) && data.string) {
+                    loading++
+                    createMetaDataTextDate(resKey, resId, meta_key_id, data.string, onOk, onError)
+                  }
+                  else if (!!oldData && oldData.string === data.string) {
+                    console.log("nothing changed for: " + meta_key_id)
+                  } 
+                  else if (data.string){
+                    if (data.string.length !== 0) {
+                        console.log(" string empty TODO delete md ")
+                        //TODO
+                        //loading++
+                        //api.api.mediaEntryMetaDatumDelete(resId, meta_key_id, authParams?.value)
+                    } else {
+                        loading++
+                        updateMetaDataTextDate(resKey, resId, meta_key_id, data.string, onOk, onError)
+                    }
                     
-                  if (!oldData || !oldData.selectedKeywords) {
-                    data.selectedKeywords.forEach( (kw:iKeyword) => {
-                        loading++
-                        createMDKeywords(resKey, resId, meta_key_id, kw.id, onOk, onError)
-                    })
                   }
-                  else {
-
-                    /*oldData.selectedKeywords.forEach( (kw:iKeyword) => {
-                        loading++
-                        deleteMDKeywords(resKey, resId, meta_key_id, kw.id, onOk, onError)
-                    })
-                    */
-                    data.selectedKeywords.forEach( (kw:iKeyword) => {
-                        loading++
-                        createMDKeywords(resKey, resId, meta_key_id, kw.id, onOk, onError)
-                    })
-                  }
-                  // TODO else: del and add
                   
               }
-              else if (isMetaKeyObjectType(meta_key_id, MD_TYPE_PEOPLE)
-                && data.selectedPeople && data.selectedPeople.length !== 0) {
-      
-                  if (!oldData || !oldData.selectedPeople) {
-                    data.selectedPeople.forEach( (p:iPerson) => {
-                        loading++
-                        createMDPeople(resKey, resId, meta_key_id, p.id, onOk, onError)
-                    })
-                  } else {
-                    oldData.selectedPeople.forEach( (p:iPerson) => {
-                        loading++
-                        deleteMDPeople(resKey, resId, meta_key_id, p.id, onOk, onError)
-                    })
-                    data.selectedPeople.forEach( (p:iPerson) => {
-                        loading++
-                        createMDPeople(resKey, resId, meta_key_id, p.id, onOk, onError)
-                    })
-                  }
-                  // TODO else: del and add
+              else if (isMetaKeyObjectType(meta_key_id, MD_TYPE_JSON)) {
+                // TODO md json
+              }
+              else if (isMetaKeyObjectType(meta_key_id, MD_TYPE_KEYWORDS)) {
+                
+                const oldIds = oldData?.selectedKeywords || []
+                const newIds = data?.selectedKeywords || []
+                const [ toDelete, toAdd ] = getIdDiffs(oldIds, newIds)
+
+                console.log("doUpdate: \n"
+                + "\nAdd:\n" + JSON.stringify(toAdd) 
+                + "\nDelete:\n" + JSON.stringify(toDelete))
+
+                toDelete.forEach( (kwid) => {
+                    loading++
+                    deleteMDKeywords(resKey, resId, meta_key_id, kwid, onOk, onError)
+                })
+                
+                toAdd.forEach( (kwid) => {
+                    loading++
+                    createMDKeywords(resKey, resId, meta_key_id, kwid, onOk, onError)
+                })
+                  
+              }
+              else if (isMetaKeyObjectType(meta_key_id, MD_TYPE_PEOPLE)) {
+                
+                const oldIds = oldData?.selectedPeople || []
+                const newIds = data?.selectedPeople || []
+                const [ toDelete, toAdd ] = getIdDiffs(oldIds, newIds)
+
+                console.log("doUpdate: \n"
+                + "\nAdd:\n" + JSON.stringify(toAdd) 
+                + "\nDelete:\n" + JSON.stringify(toDelete))
+
+                toDelete.forEach( (pid) => {
+                    loading++
+                    deleteMDPeople(resKey, resId, meta_key_id, pid, onOk, onError)
+                })
+                toAdd.forEach( (pid) => {
+                    loading++
+                    createMDPeople(resKey, resId, meta_key_id, pid, onOk, onError)
+                })
                   
               }
               // TODO md roles
               else {
-                console.log("unsupported md type")
+                console.log("unsupported md type: " + getMetaKeyObjectType(meta_key_id))
             }
         }
     }
@@ -978,8 +1015,6 @@ export const madekHelper = () => {
                 const nar = new Array()
                 data.selectedPeople.forEach(elem => nar.push(elem))
                 result_meta_data[meta_key_id].selectedPeople = nar
-                    
-                    
             }
 
 
@@ -992,6 +1027,8 @@ export const madekHelper = () => {
                 result_meta_data[meta_key_id].selectedKeywords = nar
                     
             }
+
+            //TODO roles
             
         }
     }
