@@ -100,17 +100,21 @@ export const useMadekStore = defineStore('madek', {
                 return
             }
 
-            const metaKeys = (await api.api.metaKeysList({}, authParams?.value)).data['meta-keys']
-            metaKeys?.map((m: MetaKeysDetailData) => {
-                this.userMetaKeysMap.set(m.id, m)
-            })
+            try {
+                const metaKeys = (await api.api.metaKeysList({}, authParams?.value)).data['meta-keys']
+                metaKeys?.map((m: MetaKeysDetailData) => {
+                    this.userMetaKeysMap.set(m.id, m)
+                })
 
-            const vocabs = (await api.api.vocabulariesList({}, authParams?.value)).data.vocabularies
-            vocabs?.map((v: VocabulariesDetailData) => {
-                this.userVocabularies.set(v.id, v)
-            })
-
-            this.loaded = true
+                const vocabs = (await api.api.vocabulariesList({}, authParams?.value)).data.vocabularies
+                vocabs?.map((v: VocabulariesDetailData) => {
+                    this.userVocabularies.set(v.id, v)
+                })
+                this.loaded = true
+            } catch(ex) {
+                console.error("Could not load authed app settings." + JSON.stringify(ex))
+            }
+        
         }
 
 

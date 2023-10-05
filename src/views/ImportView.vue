@@ -399,17 +399,9 @@ const { api, authParams, user } = apiHelper()
 
 const madek_store = useMadekStore()
 const { 
-  
-  MD_PEOPLE,
-  MD_KEYWORDS,
-  MD_PEOPLE_DATA,
-  MD_KEYWORDS_DATA,
 
   MKEY_TITLE,
-  
-  checkAllLoaded,
 
-  getMetaKey,
   getCollectionTitle,
 
   storeMDDefaults,
@@ -420,16 +412,8 @@ const {
   saveResourceMetaData,
   loadResourceMetaData,
 
-  getMetaDataText,
-  getMetaDataExtended,
   createMetaDataText,
-  createMetaDataTextDate,
-  updateMetaDataText,
-  updateMetaDataTextDate,
-  createMDKeywords,
-  createMDPeople,
-  deleteMDKeywords,
-  deleteMDPeople
+  
 } = madekHelper();
 
 const showCollectionList = ref(false as boolean)

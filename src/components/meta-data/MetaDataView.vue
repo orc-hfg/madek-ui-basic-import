@@ -218,7 +218,10 @@ const getCoreContexts = () => {
 const EXT_DATA_TYPE = [MD_TYPE_KEYWORDS, MD_TYPE_PEOPLE]
 const onMetaDataExtended = (resp) => {
   
-  metaDataExtendedMap.value.set(resp['meta-data'].meta_key_id, resp)
+  metaDataExtendedMap.value.set(resp['meta_data'].meta_key_id, resp)
+}
+const onError = (error:any) => {
+  console.error("got error: " + JSON.stringify(error))
 }
 const onMetaData = (resp) => {
   
@@ -229,9 +232,9 @@ const onMetaData = (resp) => {
 
     if (oType && EXT_DATA_TYPE.includes(oType)) {
       if (resp.collection_id) {
-        getMetaDataExtended('collection_id', resp.collection_id, md.meta_key_id, onMetaDataExtended)
+        getMetaDataExtended('collection_id', resp.collection_id, md.meta_key_id, onMetaDataExtended, onError)
       } else if (resp.media_entry_id) {
-        getMetaDataExtended('media_entry_id', resp.media_entry_id, md.meta_key_id, onMetaDataExtended)
+        getMetaDataExtended('media_entry_id', resp.media_entry_id, md.meta_key_id, onMetaDataExtended, onError)
       }
       
     }

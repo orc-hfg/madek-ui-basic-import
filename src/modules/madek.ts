@@ -109,8 +109,14 @@ export const madekHelper = () => {
     const initMadek = async () => {
 
         const madek_store = useMadekStore()
-        await madek_store.initPublic()
-        await madek_store.initAuthed()
+        try {
+            await madek_store.initPublic()
+            await madek_store.initAuthed()
+        }
+        catch(ex) {
+            console.error("Could not load app settings")
+            handle_error("Could not load app settings",ex)
+        }
     }
 
     const getContext = (context_id: string) => {
@@ -344,6 +350,32 @@ export const madekHelper = () => {
         }
     }
 
+    const getMetaDataRelated = (resKey: string, resId: string, cbOk:any, cbError: any) => {
+        if (!resId) {
+            console.log("getMetaDataRelated: ABORT: invalid resource id.")
+            cbOk(null)
+            return
+        }
+        if (resKey === 'collection_id') {
+            api.api.collectionMetaDataRelatedDetail(resId, {}, authParams?.value)
+            .then(resp => cbOk(resp.data))
+            .catch(error => {
+                handle_error('getMetaDataRelated:', error)
+                cbError(error)
+            })
+        }
+        else if (resKey === 'media_entry_id') {
+            api.api.mediaEntryMetaDataRelatedDetail(resId, {}, authParams?.value)
+            .then(resp => cbOk(resp.data))
+            .catch(error => {
+                handle_error('getMetaDataRelated:', error)
+                cbError(error)
+            })
+        }
+        else {
+            console.error("getMetaDataRelated: unsupported resource key.")
+        }
+    }
     const getCollectionMetaDataText = (col_id: string, meta_key_id: string, cbOK: any) => {
         const mkid = encodeURIComponent(meta_key_id)
         api.api.collectionMetaDatumDetail(col_id, mkid, authParams?.value)
@@ -509,12 +541,16 @@ export const madekHelper = () => {
         if (resource_key === 'collection_id') {
             api.api.collectionMetaDatumTextDateUpdate(resource_id, mkid ,body, authParams?.value)
               .then(resp => cbOK(resp.data))
-              .catch(error => onError(error))
+              .catch(error => {
+                if (onError) onError(error) 
+            })
           }
           else if (resource_key === 'media_entry_id') {
             api.api.mediaEntryMetaDatumTextDateUpdate(resource_id, mkid ,body, authParams?.value)
               .then(resp => cbOK(resp.data))
-              .catch(error => onError(error))
+              .catch(error => {
+                if (onError) onError(error) 
+            })
           }
           else {
             console.error("Unsupported resource type")
@@ -529,12 +565,16 @@ export const madekHelper = () => {
         if (resourceKey === 'collection_id') {
             api.api.collectionMetaDatumDetail(resourceId, mkid, authParams?.value)
                 .then(resp => cbOk(resp.data))
-                .catch(error => onError(error))
+                .catch(error => {
+                    if (onError) onError(error) 
+                })
         }
         else if (resourceKey === 'media_entry_id') {
             api.api.mediaEntryMetaDatumDetail(resourceId, mkid, authParams?.value)
                 .then(resp => cbOk(resp.data))
-                .catch(error => onError(error))
+                .catch(error => {
+                    if (onError) onError(error) 
+                })
         }
         else {
             console.error("Invalid resource key")
@@ -665,11 +705,11 @@ export const madekHelper = () => {
             }
         }
 
-        const onOk = (json) => {
+        const onOk = (json:any) => {
             onFinished(--loading)
         }
 
-        const onError = (json) => {
+        const onError = (json:any) => {
             onFinished(--loading)
         }
       
@@ -783,7 +823,32 @@ export const madekHelper = () => {
         }
     }
 
+    
 
+    const loadResourceMetaData = (resKey:string, resId:string, into_meta_data: any, cbFinished:any) => {
+        getMetaDataRelated(resKey, resId, (json) => {
+            console.log("got meta data related: " + JSON.stringify(json))
+            
+            json.forEach(mdMap => {
+                const md = mdMap.meta_data
+                into_meta_data[md.meta_key_id] = md
+                if (isMetaKeyObjectType( md.meta_key_id, MD_TYPE_PEOPLE)) {
+                    const mdpeople = mdMap[MD_PEOPLE]
+                    into_meta_data[md.meta_key_id].selectedPeople = mdpeople
+                }
+                else if (isMetaKeyObjectType( md.meta_key_id, MD_TYPE_KEYWORDS)) {
+                    const mdkws = mdMap[MD_KEYWORDS]
+                    into_meta_data[md.meta_key_id].selectedKeywords = mdkws
+                }
+                // TODO roles
+            });
+            console.log("got meta data related: into: " + JSON.stringify(into_meta_data))
+            if (cbFinished) cbFinished()
+        }, (error:any) => {
+            console.error("Could not get meta data related: " + JSON.stringify(error))
+        })
+    }
+    /*
     const loadResourceMetaData = (resKey:string, resId:string, into_meta_data: any, cbFinished:any) => {
         let loading = 1
         
@@ -792,7 +857,7 @@ export const madekHelper = () => {
 
             if (loading == 0) {
                 console.log("finished: All" + loading)
-                if (cbFinished) cbFinished()
+                
             }
         }
         
@@ -846,7 +911,7 @@ export const madekHelper = () => {
         
         })
     }
-
+*/
     const createGenMetaData = () => {
         const md : GenMetaData = {
            //data: new Map<string, GenMetaDatum>()
@@ -935,6 +1000,10 @@ export const madekHelper = () => {
 
 
     const initMD = (context_ids: string[], meta_data: GenMetaData) => {
+        if (!context_ids) {
+            console.error("initMD: ABORT: invalid context ids")
+            return
+        }
         context_ids.forEach(cid => {
           getContextKeysForContext(cid as string).forEach((ck:ContextKeysDetailData) => {
   
