@@ -380,7 +380,7 @@ export const madekHelper = () => {
         const mkid = encodeURIComponent(meta_key_id)
         api.api.collectionMetaDatumDetail(col_id, mkid, authParams?.value)
             .then(resp => {
-                const val = resp.data["meta-data"].string
+                const val = resp.data.meta_data.string
                 cbOK(val)
             })
             .catch(error => handle_error('getCollectionMetaDataText', error))
@@ -391,7 +391,7 @@ export const madekHelper = () => {
         const mkid = encodeURIComponent(meta_key_id)
         api.api.mediaEntryMetaDatumDetail(e_id, mkid, authParams?.value)
             .then(resp => {
-                const val = resp.data["meta-data"].string
+                const val = resp.data.meta_data.string
                 cbOK(val)
             })
             .catch(error => handle_error('getEntryMetaDataText', error))
