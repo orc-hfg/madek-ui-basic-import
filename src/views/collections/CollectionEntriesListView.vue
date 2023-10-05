@@ -25,6 +25,16 @@
             <div class="flex justify-content-right gap-2">
               <Button label="Wähle anderes..." @click.prevent="toggleCollectionSearch()" style="float:right"/>
             </div>
+            <div class="flex justify-content-right gap-2">
+              <Button label="Edit"
+                severity="secondary"
+                @click.prevent="clickedEditCol">
+                <i class="pi pi-pencil"/>
+                &nbsp;
+                <i class="pi pi-caret-right"/>
+              
+              </Button>
+            </div>
           </div>
           <br/>
             
@@ -249,6 +259,10 @@ export default defineComponent({
     clickedView (entryId: string) {
       console.log("clickedView: " + entryId)
       this.$router.push({ path: `/entry/view/${entryId}`})
+    },
+    clickedEditCol() {
+      console.log("clickedEditCol: ")
+      this.$router.push({ path: `/collection/edit/${this.collectionId}`})
     },
     clickedEdit (entryId: string) {
       console.log("clickedEdit: " + entryId)
