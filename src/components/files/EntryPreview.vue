@@ -1,46 +1,42 @@
 <template>
-    <div class="entry_preview_bg"
-      v-if="preview_file.media_type === 'image'"
-      :style="cssProps">
-    </div>
-    <div class="entry_preview_bg"
-      v-else-if="download_file.media_type !== 'image'">
-<!--
+  <div
+    class="entry_preview_bg"
+    v-if="preview_file.media_type === 'image'"
+    :style="cssProps"
+  ></div>
+  <div class="entry_preview_bg" v-else-if="download_file.media_type !== 'image'">
+    <!--
       P {{ preview_file }}
       D {{ download_file }}
       <span class="pi pi-file-excel"></span>
       <span class="pi pi-file-word"></span>
       -->
-      <div class="flex flex-column align-items-center justify-content-between py-6">
+    <div class="flex flex-column align-items-center justify-content-between py-6">
+      <i class="pi pi-file" />
+      <br />
 
-        <i class="pi pi-file"/>
-        <br/>
-      
-        <span>{{ download_file.content_type }}</span>
-      </div>
+      <span>{{ download_file.content_type }}</span>
     </div>
-
+  </div>
 </template>
 <script setup lang="ts">
-
 import { watch, ref, onMounted } from "vue";
 import { apiHelper } from "../../modules/api";
 import { madekHelper } from "../../modules/madek";
 import { iMediaFile, iPreview } from "../../api_resources";
 
-const { asyncApplyPreviewData } = madekHelper()
+const { asyncApplyPreviewData } = madekHelper();
 const { api, authParams } = apiHelper();
 
 const props = defineProps({
   entry_data: { type: Object, required: false },
-  size: {type: String, default: 'small', required: false }
+  size: { type: String, default: "small", required: false },
 });
 
-
-const cssProps = ref()
+const cssProps = ref();
 const entry_id = ref("" as string);
-const preview_file = ref({} as iPreview)
-const download_file = ref({} as iMediaFile)
+const preview_file = ref({} as iPreview);
+const download_file = ref({} as iMediaFile);
 //const imgData = ref();
 
 const update = () => {
@@ -49,47 +45,45 @@ const update = () => {
   }
   entry_id.value = props.entry_data?.id;
 
-  const onImgData = (objUrl) => {
-//    imgData.value = objUrl
-    cssProps.value = { backgroundImage: `url('${objUrl}')` }
-  }
-  const onPreviewData = (jsondata) => {
-    preview_file.value = jsondata
-    asyncApplyPreviewData(entry_id.value, onImgData, props.size)
-  }
+  const onImgData = (objUrl: any) => {
+    //    imgData.value = objUrl
+    cssProps.value = { backgroundImage: `url('${objUrl}')` };
+  };
+
+  const onPreviewData = (jsondata: any) => {
+    preview_file.value = jsondata;
+    asyncApplyPreviewData(entry_id.value, onImgData, props.size);
+  };
 
   const onPreviewError = (error) => {
-    console.error("Could not get preview data for entry: " + entry_id.value)
+    console.error("Could not get preview data for entry: " + entry_id.value);
 
-    api.api.mediaEntryMediaFileDetail(
-      entry_id.value,
-      authParams?.value)
-        .then(resp => {
-          download_file.value = resp.data
-        }).catch((error) => {
-          console.error("Could not get file data for entry: " + entry_id.value)
-        })
-  }
+    api.api
+      .mediaEntryMediaFileDetail(entry_id.value, authParams?.value)
+      .then((resp) => {
+        download_file.value = resp.data;
+      })
+      .catch((error) => {
+        console.error("Could not get file data for entry: " + entry_id.value);
+      });
+  };
 
-  api.api.mediaEntryPreviewDetail(
-    entry_id.value,
-    { size: props.size },
-    authParams?.value)
-      .then(resp => resp.json())
-      .then(onPreviewData).catch(onPreviewError)
-  
-    
+  api.api
+    .mediaEntryPreviewDetail(entry_id.value, { size: props.size }, authParams?.value)
+    .then((resp) => {
+      onPreviewData(resp.data);
+    })
+    .catch(onPreviewError);
 };
 
 watch(entry_id.value, () => {
-  console.error("entry_id changed");
+  console.error("EntryPreview: entry_id changed");
 });
 watch(props, () => {
-  console.error("entry_data changed");
+  console.error("EntryPreview: entry_data changed");
 
   update();
 });
-
 
 onMounted(() => {
   update();
