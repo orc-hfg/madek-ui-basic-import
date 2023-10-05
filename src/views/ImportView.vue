@@ -2,6 +2,8 @@
   <div class="import_hub">
     <h3>Starte den Import Wizard</h3>
 
+    <OkOrError :error_msg="error_msg" :ok_msg="ok_msg" class="messages" />
+
     <Button
       label="Basis Import"
       icon="pi pi-external-link"
@@ -113,7 +115,7 @@
               <Button v-if="uploadedEntries.length > 0"
                 icon="pi pi-caret-right"
                 style="float: right;"
-                @click="showStep = 3" />
+                @click="showStep = 2" />
               <h4>Wähle Dateien aus</h4>
               <p>
                 <!--
@@ -128,11 +130,18 @@
           </div>
           <div v-if="showStep == 2">
             <div>
+              
               <Button
                   icon="pi pi-caret-right"
                   severity="secondary"
-                  @click="selectStep(2)"
+                  @click="selectStep(3)"
                   style="float: right;" />
+              
+              <Button label="Apply Defaults to all"
+                severity="secondary"
+                style="float: right;"
+                icon="pi pi-edit" 
+                @click.prevent="clickedApplyDefaultsAll()"/>
 
               <h4>Lege die Import-Default-Werte fest:</h4>
               <p>Set defaults to be applied to all imports</p>
@@ -151,11 +160,13 @@
             </div> 
 
             <div class="flex flex-wrap justify-content-end py-2">
-              <Button label="Apply Defaults to all"
-                severity="secondary"
-                
-                icon="pi pi-edit" 
-                @click.prevent="clickedApplyDefaultsAll()"/>
+              
+              &nbsp;
+                <Button
+                  icon="pi pi-caret-right"
+                  severity="secondary"
+                  @click="selectStep(4)"
+                  style="float: right;" />
             </div>
 
             <EntriesGrid
@@ -288,7 +299,7 @@
                 <br/>
                 <span>ID: <Chip> {{collection_id }} </Chip></span>
                 <br/>
-                <Button label="Reset" @click.prevent="collection_id = ''"/>
+                <Button label="Andere Auswahl..." @click.prevent="collection_id = ''"/>
               </p>
             </div>
 
@@ -297,12 +308,12 @@
                 v-if="collection_id"
                 icon="pi pi-edit"
                 @click.prevent="clickedAddToCollectionAll()"/>
-
+<!--
             <Button
               v-if="collection_id"
               label="Speichere die Meta-Daten für das Set"
               @click="saveCollectionMD()"/>
-
+-->
 
             <h3>Vollständige Einträge:</h3>
 
@@ -364,9 +375,9 @@ import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 import Chip from "primevue/chip";
 import Badge from "primevue/badge";
+import OkOrError from "../components/OkOrError.vue";
 
 
-import { authHelper } from "../modules/auth";
 import { apiHelper } from "../modules/api";
 import { errorHelper } from "../modules/error";
 import { GenMetaData, madekHelper } from "../modules/madek";
@@ -393,7 +404,7 @@ import { useMadekStore } from "../stores/madek_store";
 
 
 const router = useRouter()
-const { error_msg, ok_msg, handle_error } = errorHelper()
+const { error_msg, ok_msg, reset_error, timed_handle_ok, timed_handle_error } = errorHelper()
 
 const { api, authParams, user } = apiHelper()
 
@@ -452,7 +463,8 @@ const getContexts = () => {
 
 //TODO loaded and uploaded entries MD
 const clickedApplyDefaults = (me_id:string) => {
-  
+  reset_error()
+
   const upme = uploadedEntries.value.find( (me) => { return me.id === me_id })
 
   if (!upme || !upme.id || !upme.media_file || !upme.media_file.filename) {
@@ -464,6 +476,7 @@ const clickedApplyDefaults = (me_id:string) => {
 }
 
 const clickedEdit = (me_id:string) => {
+  reset_error()
   
   const upme = uploadedEntries.value.find( (me) => { return me.id === me_id })
 
@@ -492,6 +505,7 @@ const clickedEdit = (me_id:string) => {
 const uploadedEntriesShow = ref(true as boolean)
 
 const uploadedEntriesReload = () => {
+  reset_error()
   uploadedEntriesShow.value = false
   setTimeout( () => {
     uploadedEntriesShow.value = true
@@ -499,6 +513,7 @@ const uploadedEntriesReload = () => {
 }
 
 const onClickedEditEntrySave = () => {
+  reset_error()
   console.log("onClickedEditEntrySave: ")
 
   //editInterface.build()
@@ -515,6 +530,10 @@ const onClickedEditEntrySave = () => {
           console.log("saved meta data")
           uploadedEntriesErrorMap.value[resId] = "saved"
 
+          
+          edit_entry_id.value = ''
+          showEditEntry.value = false
+
           tryPublish(resId, (result) => {
             console.log("tried publish MD: " + JSON.stringify(result))
             uploadedEntriesErrorMap.value[resId] = "vollständig"
@@ -524,9 +543,7 @@ const onClickedEditEntrySave = () => {
               uploadedEntriesMD.value[resId] = loadedMD
             })
             
-            uploadedEntriesReload()
-            edit_entry_id.value = ''
-            showEditEntry.value = false
+            uploadedEntriesReload()  
           })
           /*
           loadResourceMetaData(resKey, resId, loadedMD, () => {
@@ -546,6 +563,7 @@ const onClickedEditEntrySave = () => {
 }
 
 const saveCollectionMD = () => {
+  reset_error()
   console.log("saveCollectionMD: ")
   //TODO overwrite flag ?!?
 
@@ -564,6 +582,7 @@ const saveCollectionMD = () => {
 
 
 const mediaEntrySaveMetaData = (meId: string, meta_data: any, cbOK:any) => {
+  reset_error()
   const loadedMD = {}
   
   loadResourceMetaData('media_entry_id', meId, loadedMD, () => {
@@ -582,6 +601,7 @@ const mediaEntrySaveMetaData = (meId: string, meta_data: any, cbOK:any) => {
 }
 
 const tryPublish = (me_id: string, cbOK: any) => {
+  reset_error()
   api.api.mediaEntryPublishUpdate(me_id, authParams?.value)
       .then(resp => {
           console.log("publish result: " + me_id + "\n data:\n " + JSON.stringify(resp.data))
@@ -591,7 +611,7 @@ const tryPublish = (me_id: string, cbOK: any) => {
       })
 }
 const mediaEntryApplyDefaultsAndSave = (upme:any) => {
-
+  reset_error()
   
   if (!upme || !upme.id || !upme.media_file || !upme.media_file.filename) {
     console.error("mediaEntryApplyDefaultsAndSave: invalid upload")
@@ -628,6 +648,7 @@ const mediaEntryApplyDefaultsAndSave = (upme:any) => {
 
 
 const clickedAddToCollectionAll = () => {
+  reset_error()
   uploadedEntries.value.forEach((me) => {
     const me_id = me.id
     addToCollection(collection_id.value, me_id)
@@ -635,7 +656,7 @@ const clickedAddToCollectionAll = () => {
 }
 
 const clickedApplyDefaultsAll = () => {
-  
+  reset_error()
   uploadedEntries.value.forEach((me) => {
     mediaEntryApplyDefaultsAndSave(me)
   })
@@ -656,7 +677,7 @@ function addToCollection(collectionId: string, me_id:string) {
     uploadedEntriesErrorMap.value[me_id] = "Added to collection"
 	}).catch(error => {
     uploadedEntriesErrorMap.value[me_id] = "Could not add to collection"
-    handle_error("Could not add media entry " + me_id + " to collection: " + collectionId, error)
+    timed_handle_error("Could not add to collection : "  , error.error.message)
 		//console.error("Could not add media entry " + me_id + " to collection: " + collectionId + " error: " + JSON.stringify(error))
 	})
 }
@@ -666,7 +687,7 @@ const selectedFilesStatus = ref([] as any[])
 const isAllUploaded = () => {
   let result = true
   if (!!selectedFilesStatus.value) {
-    debugger
+    
     const found = selectedFilesStatus.value.find(file => { 
       console.log("file status: " + file.status)
       return !file.status
@@ -685,6 +706,8 @@ const isAllUploaded = () => {
 }
 const onUploadChanged = (entryId: string, files:any) => {
   console.log("onUploadChanged: " + entryId + ":" + files)
+
+  reset_error()
 
   selectedFilesStatus.value = files
   isAllUploaded()
@@ -710,7 +733,7 @@ const onUploadChanged = (entryId: string, files:any) => {
 }
 
 const onSelectedFiles = (files: any) => {
-  debugger
+  reset_error()
   console.log("onSelectedFiles: " + JSON.stringify(files))
   selectedFilesStatus.value = files
 }
@@ -724,13 +747,14 @@ const updateCollectionTitle = () => {
 }
 
 const selectStep = (n: number) => {
+  reset_error()
   showStep.value = n
   
 }
 
 
 const clickedCreateCollection = (newTitle: string) => {
-  
+  reset_error()
   api.api.collectionCreate({},authParams?.value)
     .then(resp => {
       collection_id.value = resp.data.id
@@ -743,6 +767,7 @@ const clickedCreateCollection = (newTitle: string) => {
         },
         (error:any) => {
           console.error("Could not apply new collection title: " + error)
+          timed_handle_error("Could not apply new collection title: ", error)
         })
     })
 }
@@ -764,11 +789,13 @@ const updateCollectionList = () => {
 }
 
 const clickedShowCollectionList = () => {
+  reset_error()
   updateCollectionList()
   showCollectionList.value = true
 }
 
 const selectCollection = (colId: string) => {
+  reset_error()
   console.log("selectCollection: " + colId)
   collection_id.value = colId
   updateCollectionTitle()
@@ -776,20 +803,22 @@ const selectCollection = (colId: string) => {
 }
 
 
-
-
-
 const onSaveMDDefaults = () => {
-  
+  reset_error()
   storeMDDefaults(mdUserDefaults.value)
+  showDefaultsEdit.value = false
+  timed_handle_ok("Defaults gespeichert.")
+  
 }    
 
 const gotoCollectionEntries = (colId:string) => {
-  debugger
+  //debugger
   router.push({ path: `/collection/entryList/${colId}`})
+  
 }
 
 const startBasicImport = () => {
+  reset_error()
   showBasicImport.value = true
   copyMDInto(mdUserDefaults.value, mdImportDefaults.value, true)
 }
@@ -855,5 +884,11 @@ onMounted(() => {
 }
 .p-dialog .dialogEditClientDefaults {
   width: 40rem;
+}
+.messages {
+  position: fixed;
+  bottom: 0.5rem;
+  right: 2rem;
+  z-index: 300;
 }
 </style>

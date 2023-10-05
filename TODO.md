@@ -56,13 +56,7 @@
 
 ## TODO: import: collection: wording
 
-## TODO: import: create collection: reset to delete collection ?!?
-
-- besser vielleicht: andere Auswahl / Auswahl zurücksetzen.
-
 ## TODO: import: defaults: wording
-
-## TODO: import: defaults: no md save for collection
 
 ## todo: import: upload: drop zone: list view ?
 
@@ -128,6 +122,9 @@
 - DONE import: hide title in md defaults edit
 - DONE: FRAGE: archive meta keys ?? no vocabulary -> permissions (wonder it works in madek webapp)
 - DONE: collection edit meta-data
+- DONE: import: create collection: reset to delete collection ?!?
+- 1. besser vielleicht: andere Auswahl / Auswahl zurücksetzen.
+- DONE: import: defaults: no md save for collection
 
 ## BUGS DONE
 
@@ -143,6 +140,6 @@
 
 ## todos 19
 
-## TODOs 11
+## TODOs 9
 
-## DONE 21
+## DONE 23
