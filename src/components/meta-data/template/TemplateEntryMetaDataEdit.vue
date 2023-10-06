@@ -314,7 +314,7 @@ const removePerson = (meta_key_id: string, pid: string) => {
                 v-if="isMissingKey(contextKey.meta_key_id)"
               />
 
-              <span v-if="show_keys">[{{ context_id }}]</span>
+              <span v-if="show_keys">[{{ contextKey.meta_key_id }}]</span>
               <!--<span>{{ isMissingKey(contextKey.meta_key_id) && 'Missing!' || '' }}</span>-->
             </div>
 
