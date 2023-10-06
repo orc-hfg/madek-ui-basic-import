@@ -13,43 +13,59 @@
     <br/>
     <br/>
     <hr/>
+    <Message severity="info">
+    Allgemeine Metadaten können bei jedem Import automatisch an alle Medieneinträge vergeben werden. Du kannst Deine Medieneinträge später individuell anpassen.
+    </Message>
+
     <br />
     <Button
-      label="Setze Client-Defaults"
+      label="Setze Allgemeine Meta-Daten"
       icon="pi pi-save"
       @click.prevent="showDefaultsEdit = !showDefaultsEdit"
       size="large"
     />
     <br/>
+    <Message severity="warn">
+      Hinweis: die allgemeinen Metadaten werden in Deinem Browser-Cookie gespeichert. Wenn Du Deine Cookies löschst, gehen die Einstellungen verloren.
+    </Message>
+    <p></p>
 
-    <Dialog v-model:visible="showDefaultsEdit" class="dialogEditClientDefaults">
+    <Dialog 
+      header="Setze die allgemeinen Metadaten:"
+      modal
+      v-model:visible="showDefaultsEdit" 
+      class="dialogEditClientDefaults">
 
-      <h3>Setze die Meta-Daten-Defaults:</h3>
-      <Button
-        icon="pi pi-save"
-        label="Speichere Defaults im Browser/Client"
-        @click="onSaveMDDefaults()"/>
-      <br/>
-      <br/>
 
       <TemplateEntryMetaDataEdit 
         :template="{}"
         :meta_data="mdUserDefaults"
         :context_ids="getContexts()"
+        :show_keys="false"
         :hide_meta_keys="hide_meta_keys_map"
         />
+      <br/>
 
+      <Button
+        icon="pi pi-save"
+        style="float: right;"
+        label="Allgemeine Metadaten speichern"
+        @click="onSaveMDDefaults()"/>
+
+      <br/>
     </Dialog>
 
-    <Dialog v-model:visible="showCollectionList">
-          <p>
-            <span>Wähle ein Set:</span>
-          </p>
-          <CollectionSelect :collection_list="collectionList" @selected-collection-id="selectCollection"/>
+    <Dialog v-model:visible="showCollectionList"
+      header="Wähle ein Set"
+      modal>
+      
+      <CollectionSelect :collection_list="collectionList" @selected-collection-id="selectCollection"/>
     </Dialog>
 
 
-    <Dialog v-model:visible="showEditEntry">
+    <Dialog v-model:visible="showEditEntry"
+      modal
+      header="Metadaten bearbeiten">
 
       <h4>Meta-Data</h4>
       <Button icon="pi pi-save" @click="onClickedEditEntrySave()"/>
@@ -73,39 +89,45 @@
     </Dialog>
 
 
-    <Dialog v-model:visible="showBasicImport" class="basicImporterDialog" style="width: 85vw;">
-      <h3>Basis Import - Schritt {{ showStep }} / 5</h3>
+    <Dialog 
+      v-model:visible="showBasicImport"
+      maximizable modal 
+      class="basicImporterDialog" style="width: 85vw;"
+      :header="'Basis Import - Schritt ' + showStep + ' / 4'">
+      
       <div class="importMain">
         <OkOrError :error_msg="error_msg" :ok_msg="ok_msg"/>
-        <div class="importNav">
+        <div class="flex flex-row flex-wrap gap-2 importNav">
           <Button @click="selectStep(1)" :disabled="!isEnabledStep(1)">
             <Badge value="1 " />
             &nbsp;
             <span>Dateiauswahl</span>
           </Button>
-          &nbsp;
 
           <Button @click="selectStep(2)" :disabled="!isEnabledStep(2)">
             <Badge value="2 " />
             &nbsp;
             <span>Defaults</span>
           </Button>
-          &nbsp;
 
           <Button @click="selectStep(3)" :disabled="!isEnabledStep(3)">
             <Badge value="3 " />
             &nbsp;
             <span>Meta-Daten</span>
           </Button>
-          &nbsp;
 
           <Button @click="selectStep(4)" :disabled="!isEnabledStep(4)">
             <Badge value="4 " />
             &nbsp;
             <span>Projekt / Set</span>
           </Button>
-          &nbsp;
-
+          
+          <Button @click="selectStep(5)" :disabled="!isEnabledStep(5)">
+            <Badge value="5 " />
+            &nbsp;
+            <span>Fertig</span>
+          </Button>
+          
         </div>
 
         <div class="importView">
@@ -132,19 +154,29 @@
             <div>
               
               <Button
-                  icon="pi pi-caret-right"
-                  severity="secondary"
+                  severity="primary"
                   @click="selectStep(3)"
-                  style="float: right;" />
+                  style="float: right;" >
+                  individuelle Metadaten...
+                  <i class="pi pi-caret-right"/>
+              </Button>
               
               <Button label="Apply Defaults to all"
                 severity="secondary"
                 style="float: right;"
-                icon="pi pi-edit" 
-                @click.prevent="clickedApplyDefaultsAll()"/>
+                v-if="uploadedEntries.length !== 0"
+                
+                @click.prevent="clickedApplyDefaultsAll()">
+
+                Allgemeine Metadaten zuweisen...
+                <i class="pi pi-caret-right"/>
+              </Button>
 
               <h4>Lege die Import-Default-Werte fest:</h4>
-              <p>Set defaults to be applied to all imports</p>
+              <Message severity="info">
+                Du kannst allgemeine Metadaten für diesen Import anpassen, die allen, oder auch einzelnen Medieneinträgen zugewiesen werden können.
+              </Message>
+              
                 
                
                 <TemplateEntryMetaDataEdit 
@@ -156,15 +188,20 @@
           </div>
           <div v-else-if="showStep == 3">
             <div class="flex flex-wrap">
-              <h3>Uploaded Entries:</h3>
-            </div> 
+              <h4>Importierte Medieneinträge:</h4>
+            </div>
+            <Message severity="info">
+              Gezeigt werden Deine importierten Medieneinträge mit den zugewiesenen Metadaten.
+              Einzelne Einträge können individuell angepasst werden,
+              oder mit den zuvor definierten Default-Werten überschrieben werden.
+            </Message>
 
             <div class="flex flex-wrap justify-content-end py-2">
               
               &nbsp;
                 <Button
                   icon="pi pi-caret-right"
-                  severity="secondary"
+                  severity="primary"
                   @click="selectStep(4)"
                   style="float: right;" />
             </div>
@@ -182,132 +219,72 @@
 
 
           </div>
-          <!--
+       
           <div v-else-if="showStep == 4">
 
-            <h4>Show Uploads</h4>
-            <p>
+            <div v-if="!collection_id"
+              class="flex flex-column">
+              <div class="flex flex-column">
+                <h4>Neues Projekt erstellen</h4>
+                <Message severity="info">
+                  Du kannst ein neues Projekt für diesen Import anlegen. Dadurch wird ein neues Set erstellt und kann mit Deinen hochgeladenen Dateien verknüpft werden.
+                </Message>
+              </div>
 
-              <Button label="Apply Defaults to all"
-                severity="secondary"
-                icon="pi pi-edit" 
-                @click.prevent="clickedApplyDefaultsAll()"/>
-                &nbsp;
+              <div class="flex flex-row">
+                <div class="flex py-0">
+                  <InputText v-model="newColTitle"
+                    placeholder="Name des Projekts"/>
+                </div>
+                <div class="flex px-2">
+                  <Button
+                    v-if="newColTitle && newColTitle.length != 0"
+                    label="Neues Projekt anlegen" 
+                    @click.prevent="clickedCreateCollection(newColTitle)" />
+                </div>
+              </div>
 
-              <Button label="Add all to collection"
-                severity="secondary"
-                v-if="collection_id"
-                icon="pi pi-edit"
-                @click.prevent="clickedAddToCollectionAll()"/>
-              <br/>
-              <br/>
+              <div class="flex flex-column">
+                <h4>Vorhandenes Set wählen</h4>
+                <Message severity="info">
+                  Alternativ kannst Du ein vorhandenes Set auswählen. Deine hochgeladenen Dateien können dann mit diesem Set verknüpft werden.
+                </Message>
+                <div class="">
+                  <Button label="Set auswählen..." @click.prevent="clickedShowCollectionList()"/>
+                </div>
+              </div>
 
-              <DataTable 
-                v-if="uploadedEntriesShow"
-                :value="uploadedEntries"
-                tableStyle="min-width: 50rem">
-                <template #header>
-                    <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-                        <span class="text-xl text-900 font-bold">New Media Entries</span>
-                        
-                    </div>
-                </template>
-
-                <Column header="Action">
-                    <template #body="slotProps">
-                        <div class="flex flex-col">
-
-                            <Button icon="pi pi-pencil" @click.prevent="clickedEdit(slotProps.data.id)"/>
-                            <Button icon="pi pi-save" @click.prevent="mediaEntryApplyDefaultsAndSave(slotProps.data)"/>
-
-                            <Button icon="pi pi-plus"
-                              v-if="collection_id"
-                              @click.prevent="addToCollection(collection_id, slotProps.data.id)"/>
-                        </div>
-                    </template>
-                </Column>
-
-                <Column header="Entry / File">
-                    <template #body="slotProps">
-
-                      <span>Published:&nbsp;<Chip>{{ slotProps.data.is_published }}</Chip></span>
-                      <br/>
-                      <EntryPublishInfo
-                          :entry_id="slotProps.data.id" />
-
-                    </template>
-                </Column>
-
-                <Column header="MetaData">
-                    <template #body="slotProps">
-
-                        <MetaDataView                    
-                          :entryId="slotProps.data.id"
-                          :mode="uploadedMDShowMode"
-                        />
-                        
-                    </template>
-                </Column>
-
-                <Column header="Download">
-                    <template #body="slotProps">
-                        <FileView :entry_data="slotProps.data"/>
-                        
-                    </template>
-                </Column>
-
-                <template #footer> In total there are {{ uploadedEntries ? uploadedEntries.length : 0 }} entries. </template>
-                </DataTable>
-
-              <hr/>
-            
-            </p>
-
-
-          </div>
-          -->
-          <div v-else-if="showStep == 4">
-            <h4>Optionales Import Projekt:</h4>
-            <p>Lege ein neues Set an, dem die Uploads hinzugefügt werde.</p>
-            
-            <div v-if="!collection_id">
-              <p>
-                <span>Titel für neues Set:</span>
-                &nbsp;
-                <InputText v-model="newColTitle"/>
-                &nbsp;
-                <Button
-                  label="Set anlegen" 
-                  @click.prevent="clickedCreateCollection(newColTitle)" />
-              </p>
-              <br/>
-
-              <p>
-                <span>Oder wähle ein existierendes:</span>
-                <br/>
-                <br/>
-                <Button label="Set auswählen..." @click.prevent="clickedShowCollectionList()"/>
-              </p>
-              <br/>
             </div>
             
-            <div v-if="collection_id">
-              <p>
-                <span>Ausgewählt:</span>
-                <br/>
-                <span>Titel: <Chip> {{collectionTitle}} </Chip></span>
-                <br/>
-                <span>ID: <Chip> {{collection_id }} </Chip></span>
-                <br/>
-                <Button label="Andere Auswahl..." @click.prevent="collection_id = ''"/>
-              </p>
+            
+            <div v-if="collection_id"
+              class="flex flex-column">
+              <div class="flex flex-column">
+                <h4>Gewähltes Set:</h4>
+              </div>
+              <div class="flex flex-row py-1 gap-3">
+
+                <div class="py-2"><span>Titel:</span>&nbsp;<Chip class="col-chip">{{collectionTitle}} </Chip></div>
+                <div class="py-2"><span>ID:</span>&nbsp;<Chip class="col-chip">{{collection_id }} </Chip></div>
+                <div class="py-0">
+                  <Button label="Andere Auswahl..." @click.prevent="collection_id = ''"/>
+                </div>
+                <div class="py-0">
+                  <Button 
+                    style="float: right;"
+                    severity="secondary"
+                    v-if="collection_id && uploadedEntries.length !== 0"
+                    
+                    @click.prevent="clickedAddToCollectionAll()">
+                    Zum Set Hinzufügen
+
+                    <i class="pi pi-caret-right"/>
+                  </Button>
+                </div>
+              </div>
+              
             </div>
 
-            <Button label="Add all to collection"
-                severity="secondary"
-                v-if="collection_id"
-                icon="pi pi-edit"
-                @click.prevent="clickedAddToCollectionAll()"/>
 <!--
             <Button
               v-if="collection_id"
@@ -331,36 +308,60 @@
 
               <br/>
             <hr/>
-            <div v-if="collection_id"
-              class="flex flex-row justify-content-between">
-              <div class="flex">
-                <h3>Entries in the Collection:</h3>
-              </div>
-              <div class="flex justify-content-end">
-                <p>Title:</p>
-                <Chip>{{  collectionTitle }}</Chip>
-              </div>
-              <div class="flex justify-content-end">
-                <p>ID:</p>
-                <Chip>{{ collection_id }}</Chip>
-              </div>
-              <div class="flex justify-content-end">
-                <Button icon="pi pi-eye" @click.prevent="gotoCollectionEntries(collection_id)" />
-              </div>
-
-            
-            </div>
+           
             <br/>
             
             
+          
+
+          </div>
+          <div v-else-if="showStep == 5">
+            <h4>Fertig</h4>
+            <div class="flex flex-column gap-3">
+              <div class="flex flex-wrap">
+                <Button @click.prevent="gotoUserEntries()">
+                  <i class="pi pi-eye"/>
+                  &nbsp;
+                  Fertig, gehe zur Liste Deiner Medieneinträge für weitere Aktionen.
+                  &nbsp;
+                  <i class="pi pi-caret-right"/>
+                </Button>
+              </div>
+              <div class="flex flex-wrap">
+                <Button @click.prevent="gotoCollectionEntries(collection_id)">
+                  <i class="pi pi-eye"/>
+                  &nbsp;
+                  Fertig, oder gehe zum Set mit den importierten Medieneinträgen...
+                  &nbsp;
+                  <i class="pi pi-caret-right"/>
+                </Button>
+              </div>
+            </div>
+            <hr/>
+            <br/>
+
+
+            <div v-if="collection_id"
+              class="flex flex-column justify-content-between">
+              <div class="flex flex-wrap">
+                <h4>Medieneinträge im Set:</h4>
+              </div>
+              <div class="flex flex-row justify-content-start gap-3 py-3">
+                <div class="py-4">Title:</div>
+                <Chip class="col-chip">{{  collectionTitle }}</Chip>
+                <div class="py-4">ID:</div>
+                <Chip class="col-chip">{{ collection_id }}</Chip>
+              </div>
+              
+            </div>
+
             <CollectionEntriesGrid
               v-if="collection_id && uploadedEntriesShow == true"
               :show_actions="false"
               :show_preview="true"
               :collection_id="collection_id"/>
-
           </div>
-          <div v-else></div>
+          <!--<div v-else>Invalid importer state. {{ showStep }}</div>-->
         </div>
       </div>
     </Dialog>
@@ -376,7 +377,7 @@ import Button from "primevue/button";
 import Chip from "primevue/chip";
 import Badge from "primevue/badge";
 import OkOrError from "../components/OkOrError.vue";
-
+import Message from "primevue/message";
 
 import { apiHelper } from "../modules/api";
 import { errorHelper } from "../modules/error";
@@ -491,10 +492,14 @@ const clickedEdit = (me_id:string) => {
 
   mdEditEntry.value = {} as GenMetaData
   copyMDInto(uploadedEntriesMD.value[me_id], mdEditEntry.value)
+  if (!mdEditEntry.value[MKEY_TITLE]
+    || !mdEditEntry.value[MKEY_TITLE].string
+    || mdEditEntry.value[MKEY_TITLE].string.length == 0) {
 
-  copyMDInto(mdImportDefaults.value, mdEditEntry.value)
-
-  mdEditEntry.value[MKEY_TITLE].string = upme.media_file.filename
+    copyMDInto(mdImportDefaults.value, mdEditEntry.value)
+    mdEditEntry.value[MKEY_TITLE].string = upme.media_file.filename
+  }
+  
   
   //uploadedEntriesMD.value[me_id] = mdEditEntry.value
 
@@ -516,7 +521,6 @@ const onClickedEditEntrySave = () => {
   reset_error()
   console.log("onClickedEditEntrySave: ")
 
-  //editInterface.build()
 
   
   const resKey = 'media_entry_id'
@@ -525,11 +529,13 @@ const onClickedEditEntrySave = () => {
   const loadedMD = {}//uploadedEntriesMD.value[resId]
   
   loadResourceMetaData(resKey, resId, loadedMD, () => {
+    debugger
       console.log("loaded before save resource md: " + JSON.stringify(loadedMD))
       saveResourceMetaData(resKey, resId, meta_data, loadedMD, () => {
           console.log("saved meta data")
+          debugger
           uploadedEntriesErrorMap.value[resId] = "saved"
-
+          timed_handle_ok("Metadaten gespeichert.")
           
           edit_entry_id.value = ''
           showEditEntry.value = false
@@ -660,6 +666,7 @@ const clickedApplyDefaultsAll = () => {
   uploadedEntries.value.forEach((me) => {
     mediaEntryApplyDefaultsAndSave(me)
   })
+  showStep.value = 3
 }
 
 const uploadedEntriesErrorMap = ref({})
@@ -812,11 +819,11 @@ const onSaveMDDefaults = () => {
 }    
 
 const gotoCollectionEntries = (colId:string) => {
-  //debugger
   router.push({ path: `/collection/entryList/${colId}`})
-  
 }
-
+const gotoUserEntries = () => {
+  router.push({ path: '/mediaEntry/userList'})
+}
 const startBasicImport = () => {
   reset_error()
   showBasicImport.value = true
@@ -824,18 +831,29 @@ const startBasicImport = () => {
 }
 
 const isEnabledStep = (step:number) => {
+  
+  if (step == showStep.value) {
+    return false
+  }
+  if (isAllUploaded() !== true) {
+    return false
+  }
+  if (step > 1) {
+    if (uploadedEntries.value.length == 0) {
+      return false
+    }
+  }
   switch (step) {
     case 1:
-      return (showStep.value != 1)
       return true
     case 2:
-      return (showStep.value != 2)
       return true
     case 3:
-      return (showStep.value != 3)
+      return true
     case 4:
-      return (showStep.value != 4)
-  
+      return true
+    case 5:
+      return true
     default:
       return true;
   }
