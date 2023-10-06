@@ -3,8 +3,7 @@
         <div v-if="error_msg" >ERROR: {{ error_msg }}</div>
 
         <Paging 
-            :page="pagingPage"
-            :count="pagingCount"
+            :paging="paging"
             @changed="pagingChanged" />
             
         <CollectionsGrid
@@ -62,6 +61,7 @@ import { iCollection } from '../../api_resources';
 import CollectionsGrid from '../../components/collections/CollectionsGrid.vue'
 import Dialog from 'primevue/dialog';
 import Paging from '../../components/Paging.vue';
+import { iPagingState } from '../../api_resources';
 
 const { 
     
@@ -80,12 +80,16 @@ const props = defineProps({
 })
 
 const show_paging = ref(true)
-const pagingPage = ref(1)
-const pagingCount = ref(10)
+const default_paging : iPagingState = {
+    page: 1,
+    count: 8
+}
+const paging = ref(default_paging)
+
 const allCollections = ref([] as iCollection[])
 
 watch(props, () => {
-    pagingCount.value = props.max_count
+    paging.value.count = props.max_count
 })
 const updateData = () => {
     reset_error()
@@ -97,8 +101,8 @@ const updateData = () => {
         creator_id: userId,
     }
     if (show_paging.value == true) {
-        iquery.page = pagingPage.value -1
-        iquery.count = pagingCount.value
+        iquery.page = paging.value.page -1
+        iquery.count = paging.value.count
     }
     
     api.api.collectionsList(iquery, authParams?.value)
@@ -113,9 +117,9 @@ const updateData = () => {
         .catch(error => handle_error('get collectionList', error))
 }
 
-const pagingChanged = (data) => {
-    pagingPage.value = data.page
-    pagingCount.value = data.count
+const pagingChanged = (data:iPagingState) => {
+    paging.value.page = data.page
+    paging.value.count = data.count
     updateData()
 }
 const clickedEdit = (colId: string) => {
@@ -169,7 +173,7 @@ const clickedDeleteConfirm = (colId: string) => {
 };
 
 onMounted(() => {
-    pagingCount.value = props.max_count
+    paging.value.count = props.max_count
   
   updateData()
 })

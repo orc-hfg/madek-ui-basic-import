@@ -5,45 +5,66 @@
             <span>Seitenauswahl</span>
             &nbsp;
             <Button icon="pi pi-caret-left" @click.prevent="pagePrev()"/>
-            <InputText type="number" v-model.lazy.trim="pagingPage" style="width: 4rem"/>
+            <!---<InputText type="number" 
+                @change="pageChanged"
+                v-model.lazy.trim="pagingPage"
+                style="width: 4rem"/>-->
+
+            <InputText type="number" 
+                @change="pageChanged"
+                v-model.lazy.trim="paging.page"
+                style="width: 4rem"/>
+
             <Button icon="pi pi-caret-right" @click.prevent="pageNext()"/>
             &nbsp;
             <span>von</span>
             &nbsp;
-            <InputText type="number" v-model.lazy.trim="pagingCount" style="width: 4rem"/>
+            <InputText type="number"
+                @change="pageChanged"
+                v-model.lazy.trim="paging.count"
+                style="width: 4rem"/>
+            <!--<InputText type="number"
+                @change="pageChanged"
+                v-model.lazy.trim="pagingCount"
+                style="width: 4rem"/>-->
             &nbsp;
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { watch, ref, onMounted } from 'vue'
+import { watch, ref, onMounted, PropType } from 'vue'
+import { iPagingState } from '../api_resources';
+
+const default_paging : iPagingState = {
+    page: 1,
+    count: 8
+}
 
 const props = defineProps({
-    page: { type: Number, default: 1, required: true},
-    count: { type: Number, default: 20, required: true},
+//    page: { type: Number, default: 1, required: true},
+//    count: { type: Number, default: 20, required: true},
+    paging: { type: Object as PropType<iPagingState>, default: {page:1, count:8}, required: false }
 })
 const emit = defineEmits(['changed'])
 
-const pagingPage = ref(1)
-const pagingCount = ref(20)
 
-const changed = () => {
+const pageChanged = () => {
     emit('changed',
      {
-        page: pagingPage.value,
-        count: pagingCount.value
+        page: props.paging.page,
+        count: props.paging.count
     })
 }
 const pagePrev = () => {
-    pagingPage.value--
-    if (pagingPage.value < 1) pagingPage.value = 1
-    changed()
+    props.paging.page--
+    if (props.paging.page < 1) props.paging.page = 1
+    pageChanged()
 }
 const pageNext = () => {
-    pagingPage.value++
-    changed()
+    props.paging.page++
+    pageChanged()
 }
-
+/*
 watch(props, () => {
     pagingPage.value = props.page
     pagingCount.value = props.count
@@ -51,7 +72,7 @@ watch(props, () => {
 onMounted(() => {
     pagingPage.value = props.page
     pagingCount.value = props.count
-})
+})*/
 
 </script>
 <style scoped>

@@ -274,3 +274,8 @@ export interface iEntryGroupPermission {
   get_full_size: boolean
   edit_metadata: boolean
 }
+
+export interface iPagingState {
+  page: number
+  count: number
+}

@@ -1,8 +1,7 @@
 <template>
     <div>
         <Paging 
-            :page="pagingPage"
-            :count="pagingCount"
+            :paging="paging"
             @changed="pagingChanged" />
         <EntriesGrid 
             :entriesList="entriesList"
@@ -24,7 +23,7 @@ import { errorHelper } from '../../modules/error'
 import {
     iMediaEntry,
     iMediaEntriesQuery,
-
+    iPagingState
 } from '../../api_resources'
 
 import EntriesGrid from '../entries/EntriesGrid.vue'
@@ -40,8 +39,12 @@ const props = defineProps({
     collection_id: { type: String, default: undefined, required: true }
 })
 
-const pagingPage = ref(1)
-const pagingCount = ref(10)
+const default_paging : iPagingState = {
+    page: 1,
+    count: 8
+}
+const paging = ref(default_paging)
+
 const entriesList = ref([] as iMediaEntry[])
 const queryResult = ref({})
 
@@ -56,8 +59,8 @@ const updateData = (show_published: boolean) => {
         order: 'desc'
     }
     if (props.show_paging == true) {
-        iquery.page = pagingPage.value -1
-        iquery.count = pagingCount.value
+        iquery.page = paging.value.page -1
+        iquery.count = paging.value.count
     }
 
     api.api.mediaEntriesList(iquery, authParams?.value)
@@ -68,9 +71,9 @@ const updateData = (show_published: boolean) => {
         .catch(error => handle_error("get mediaEntriesList: ", error));
 }
 
-const pagingChanged = (data) => {
-    pagingPage.value = data.page
-    pagingCount.value = data.count
+const pagingChanged = (data:iPagingState) => {
+    paging.value.page = data.page
+    paging.value.count = data.count
     updateData(props.show_published)
 }
 

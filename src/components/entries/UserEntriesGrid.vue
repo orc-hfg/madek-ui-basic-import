@@ -9,8 +9,7 @@
     </p>
 
     <Paging 
-        :page="pagingPage"
-        :count="pagingCount"
+        :paging="paging"
         @changed="pagingChanged" />
     <EntriesGrid
         :entriesList="entriesList"
@@ -35,18 +34,15 @@ import { apiHelper } from '../../modules/api'
 import { madekHelper } from '../../modules/madek'
 import Paging from '../Paging.vue'
 import {
-    iMediaFile,
     iMediaEntry,
-    iPreview,
     iMediaEntriesQuery,
     iMediaEntriesQueryFilterBy,
     iMediaEntriesQueryFilterByMediaEntry,
-    buildMEQuery
+    buildMEQuery,
+    iPagingState
  } from '../../api_resources'
-//import router from '../../router'
 
-const { user, person, authParams } = authHelper()
-const { api } = apiHelper()
+const { api, user, authParams } = apiHelper()
 
 interface Action {
     name: string
@@ -67,8 +63,12 @@ const props = defineProps({
     max_count: { type: Number, default: 10, required: false},
 })
 
-const pagingPage = ref(1)
-const pagingCount = ref(10)
+const default_paging : iPagingState = {
+    page: 1,
+    count: 8
+}
+const paging = ref(default_paging)
+
 const error_msg = ref('' as string)
 const entriesList = ref([] as iMediaEntry[])
 
@@ -97,8 +97,8 @@ const updateData = (show_published: boolean) => {
         order: 'desc'
     }
     if (props.show_paging == true) {
-        iquery.page = pagingPage.value -1
-        iquery.count = pagingCount.value
+        iquery.page = paging.value.page -1
+        iquery.count = paging.value.count
     }
     buildMEQuery(iquery)
     
@@ -119,9 +119,9 @@ const updateData = (show_published: boolean) => {
             .catch(error => handle_error("get mediaEntriesList: ", error));
 }
 
-const pagingChanged = (data) => {
-    pagingPage.value = data.page
-    pagingCount.value = data.count
+const pagingChanged = (data: iPagingState) => {
+    paging.value.page = data.page
+    paging.value.count = data.count
     updateData(props.show_published)
 }
 const clickedEdit = (entryId: string) => {
@@ -151,7 +151,7 @@ watch(props, () => {
 })
 
 onMounted(() => {
-    pagingCount.value = props.max_count
+    paging.value.count = props.max_count
     updateData(props.show_published)
 })
 

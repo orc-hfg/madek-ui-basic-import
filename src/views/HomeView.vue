@@ -20,8 +20,8 @@
 
         <h4>Deine Sets / Collections</h4>
         <UserCollectionsView
-          :show_actions="false"
-          :max_count="5"
+          :show_actions="true"
+          :max_count="4"
           />
           
 
@@ -32,9 +32,9 @@
           :show_preview="true"
           :show_published="true"
           :show_actions="false"
-          :max_count="5"
+          :max_count="4"
           />
-
+<!--
         <h3>Your incomplete entries:</h3>
         <UserEntriesGrid
           :show_preview="true"
@@ -42,7 +42,7 @@
           :show_actions="false"
           :max_count="5"
           />
-
+-->
       </div>
       <div v-else>
         <h3>Public HUB</h3>
