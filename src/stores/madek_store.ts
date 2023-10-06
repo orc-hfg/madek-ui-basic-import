@@ -90,6 +90,7 @@ export const useMadekStore = defineStore('madek', {
                 this.loaded = true
             } catch(ex) {
                 console.error("Could not load madek app settings." + JSON.stringify(ex))
+                throw ex
             }
         },
         async initAuthed() {
@@ -113,6 +114,7 @@ export const useMadekStore = defineStore('madek', {
                 this.loaded = true
             } catch(ex) {
                 console.error("Could not load authed app settings." + JSON.stringify(ex))
+                throw ex
             }
         
         }

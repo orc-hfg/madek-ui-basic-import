@@ -10,12 +10,13 @@ import { useMadekStore } from './stores/madek_store'
 import { madekHelper } from './modules/madek'
 import OkOrError from './components/OkOrError.vue'
 
-const { error_msg, ok_msg, handleError } = errorHelper()
+const { error_msg, ok_msg, reset_error } = errorHelper()
 
 const { initMadek, checkAllLoaded } = madekHelper()
 const { user } = authHelper()
 
 const store = useMadekStore()
+const router = useRouter()
 /*
 store.initPublic()
 if (user?.value && user.value.id) {
@@ -25,17 +26,33 @@ if (user?.value && user.value.id) {
 
 const appDataLoaded = ref(false as boolean)
 
-initMadek().then(() => {
+const initApp = () => {
+  initMadek().then(() => {
     console.log("madek loaded")
-    appDataLoaded.value = true
-    ok_msg.value = "Alles fertig!"
+    const loaded = checkAllLoaded()
+    appDataLoaded.value = loaded
+    if (loaded == true) {
+      ok_msg.value = "Alles fertig!"
+    } else {
+      error_msg.value = 'Keine Verbidung zur Madek-Api. \
+      Versuchen Sie es später noch einmal, oder kontaktieren sie Ihren Administrator.'
+    }
+      
   })
 
+}
+
+initApp()
 const login = () => {
     const router = useRouter()
     router.push({name: 'login'})
 }
 
+const reloadApp = () => {
+  reset_error()
+  initApp()
+  router.push({path: '/#'})
+}
 watch([user?.value], () => {
   console.log("APP User changed: " + JSON.stringify(user))
   debugger
@@ -85,6 +102,11 @@ onMounted(() => {
     <div v-if="appDataLoaded == false">
       Lade Madek Anwendungsdaten...
       <OkOrError :error_msg="error_msg" :ok_msg="ok_msg"/>
+      <Button v-if="error_msg" 
+        label="Neu versuchen..."
+        icon="pi pi-refresh"
+        @click.prevent="reloadApp()"
+        />
     </div>
     <div v-else-if="appDataLoaded == true">
       <router-view/>
