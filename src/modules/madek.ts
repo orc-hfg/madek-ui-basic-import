@@ -729,7 +729,7 @@ export const madekHelper = () => {
       
               if (isMetaKeyObjectType(meta_key_id, MD_TYPE_TEXT)) {
                   
-                  if ((!oldData || !oldData.string) && data?.string && data?.string.length !== 0) {
+                  if ((!oldData) && data?.string && data?.string.length !== 0) {
                     loading++
                     createMetaDataText(resKey, resId, meta_key_id, data.string, onOk, onError)
                   }
@@ -737,7 +737,7 @@ export const madekHelper = () => {
                     console.log("nothing changed for: " + meta_key_id)
                   } 
                   else if (data.string){
-                    if (data.string.length !== 0) {
+                    if (data.string.length == 0) {
                         console.log(" string empty TODO delete md ")
                         //TODO
                         //loading++
@@ -751,7 +751,7 @@ export const madekHelper = () => {
               }
               else if (isMetaKeyObjectType(meta_key_id, MD_TYPE_TEXT_DATE)) {
       
-                  if ((!oldData || !oldData.string) && data.string) {
+                  if ((!oldData) && data.string) {
                     loading++
                     createMetaDataTextDate(resKey, resId, meta_key_id, data.string, onOk, onError)
                   }
@@ -759,7 +759,7 @@ export const madekHelper = () => {
                     console.log("nothing changed for: " + meta_key_id)
                   } 
                   else if (data.string){
-                    if (data.string.length !== 0) {
+                    if (data.string.length == 0) {
                         console.log(" string empty TODO delete md ")
                         //TODO
                         //loading++
@@ -820,7 +820,10 @@ export const madekHelper = () => {
               else {
                 console.log("unsupported md type: " + getMetaKeyObjectType(meta_key_id))
             }
+
+
         }
+        onFinished(loading)
     }
 
     
