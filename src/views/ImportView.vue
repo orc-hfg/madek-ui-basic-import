@@ -133,12 +133,12 @@
         <div class="importView">
           <div v-if="showStep == 1">
             <div>
-                IAU {{ isAllUploaded() }}
+              <!--  IAU {{ isAllUploaded() }}-->
               <Button v-if="uploadedEntries.length > 0"
                 icon="pi pi-caret-right"
                 style="float: right;"
                 @click="showStep = 2" />
-              <h4>Wähle Dateien aus</h4>
+              <h4>Wähle Dateien für den Import aus</h4>
               <p>
                 <!--
                  <UploadView

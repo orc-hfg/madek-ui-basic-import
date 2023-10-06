@@ -11,13 +11,13 @@
 		<DropZone class="drop-area" @files-dropped="addFiles" #default="{ dropZoneActive }">
 			<label for="file-input">
 				<span v-if="dropZoneActive">
-					<span>Drop Them Here</span>
-					<span class="smaller">to add them</span>
+					<span>Lege sie hier ab</span>
+					<span class="smaller">um sie hinzuzufügen</span>
 				</span>
 				<span v-else>
-					<span>Drag Your Files Here</span>
+					<span>Ziehe Deine Dateien hierher</span>
 					<span class="smaller">
-						or <strong><em>click here</em></strong> to select files
+						oder <strong><em>klicke hier</em></strong> für die Dateiauswahl
 					</span>
 				</span>
 
