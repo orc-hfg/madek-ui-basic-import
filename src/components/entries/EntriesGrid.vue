@@ -253,11 +253,21 @@ const updateData = (show_published: boolean) => {
     
     props.entriesList.forEach(element => {
         const entryId = element.id;
-        console.log("EntriesGrid: get media entry and file for " + entryId);
-        //getMediaEntry(entryId);
-        entriesMap.value.set(entryId, element);
-        getMediaFile(entryId);
-        getTitle(entryId);
+        if (props.show_published && props.show_published == true) {
+            if (element.is_published == true) {
+                console.log("EntriesGrid: get media entry and file for " + entryId);
+                entriesMap.value.set(entryId, element);
+                getMediaFile(entryId);
+                getTitle(entryId);        
+            }
+        }
+        else {
+            console.log("EntriesGrid: get media entry and file for " + entryId);
+            entriesMap.value.set(entryId, element);
+            getMediaFile(entryId);
+            getTitle(entryId);
+        }
+        
     });
 
 }
