@@ -25,6 +25,9 @@ export const useMadekStore = defineStore('madek', {
     
         userMetaKeysMap: new Map<string, MetaKeysDetailData>(),
         userVocabularies: new Map<string, VocabulariesDetailData>(),
+
+        userUseMetaKeysMap: new Map<string, MetaKeysDetailData>(),
+        userUseVocabularies: new Map<string, VocabulariesDetailData>(),
     }),
     getters: {
 
@@ -46,6 +49,8 @@ export const useMadekStore = defineStore('madek', {
             this.keywords.length = 0
             this.keywordsMap.clear()
             this.keywordsByMetaKeyMap.clear()
+            this.userUseMetaKeysMap.clear()
+            this.userUseVocabularies.clear()
         },
         async initPublic() {
             this.reset()

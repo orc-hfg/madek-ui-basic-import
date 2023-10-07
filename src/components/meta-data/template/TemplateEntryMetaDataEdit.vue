@@ -11,7 +11,7 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 
 import { apiHelper } from '../../../modules/api';
-import { madekHelper, GenMetaData, GenMetaDatum } from '../../../modules/madek';
+import { madekHelper, iGenMetaData, iGenMetaDatum } from '../../../modules/madek';
 import { errorHelper } from '../../../modules/error'
 
 import {
@@ -55,7 +55,7 @@ const {
 
 const props = defineProps(
   {
-    meta_data:  { type: Object as PropType<GenMetaData>, default: {}, required: true},
+    meta_data:  { type: Object as PropType<iGenMetaData>, default: {}, required: true},
     context_ids: { type: Array<String>, required: true},
     resource_id: { type: String, required: false },
     resource_key: { type: String, required: false },
@@ -67,8 +67,8 @@ const props = defineProps(
   }
 )
 
-//meta_data:  { type: Object as PropType<GenMetaData>, default: {}, required: true},
-//const meta_data = ref({} as GenMetaData)
+//meta_data:  { type: Object as PropType<iGenMetaData>, default: {}, required: true},
+//const meta_data = ref({} as iGenMetaData)
 
 const buildMetaData = () => {
   //copyMDInto(meta_data.value, props.result_meta_data, true)

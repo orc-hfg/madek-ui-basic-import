@@ -7,7 +7,7 @@ import TabPanel from 'primevue/tabpanel'
 import EntryMetaDataEdit from '../../components/meta-data/EntryMetaDataEdit.vue'
 import Chip from 'primevue/chip'
 import SelectButton from 'primevue/selectbutton'
-import { GenMetaData, madekHelper } from '../../modules/madek'
+import { iGenMetaData, madekHelper } from '../../modules/madek'
 import { errorHelper } from '../../modules/error'
 import { iMediaEntry, iMetaData, iPerson, iPublishableResult, iUser } from '../../api_resources'
 import EntryPermView from '../../components/entries/EntryPermView.vue'
@@ -47,8 +47,8 @@ const metaDataMap = ref(new Map<string,iMetaData>)
 const show_descs = ref(false as boolean)
 const show_hints = ref(false as boolean)
 const show_keys = ref(false as boolean)
-const loadedMetaData = ref({} as GenMetaData)
-const editMetaData = ref({} as GenMetaData)
+const loadedMetaData = ref({} as iGenMetaData)
+const editMetaData = ref({} as iGenMetaData)
 
 const getEditContexts = () => {
   return madek_store.appSettings.contexts_for_entry_edit
@@ -87,7 +87,7 @@ const loadMetaData = () => {
 }
 
 const saveMetaData = () => {
-  const loaded = {} as GenMetaData
+  const loaded = {} as iGenMetaData
   loadResourceMetaData('media_entry_id', mediaEntryId.value, loaded, () => {
   
     saveResourceMetaData('media_entry_id', mediaEntryId.value,

@@ -1,4 +1,4 @@
-import { GenMetaData } from './madek';
+import { iGenMetaData } from './madek';
 import { MetaDataDetailData } from './../generated/API_fetch_xpbr';
    
 
@@ -40,11 +40,10 @@ export enum MLType {
 }
 
       
-export interface GenMetaData {
-    [key: string]: GenMetaDatum | undefined,
-    //data: Map<string, GenMetaDatum>
+export interface iGenMetaData {
+    [key: string]: iGenMetaDatum,
 }
-export interface GenMetaDatum {
+export interface iGenMetaDatum {
     meta_key_id: string,
     type: string,
     "string": string,
@@ -329,7 +328,7 @@ export const madekHelper = () => {
             .catch(error => handle_error('get mediaEntryMetaDataDetail', error))    
     }
 
-    const getMetaData = (resKey: string, resId: string, cbOk:any) => {
+    const getMetaData = (resKey: string, resId: string, cbOk:any, cbError: any) => {
         if (!resId) {
             console.log("ABORT: invalid resource id.")
             cbOk(null)
@@ -338,12 +337,18 @@ export const madekHelper = () => {
         if (resKey === 'collection_id') {
             api.api.collectionMetaDataDetail(resId, {}, authParams?.value)
             .then(resp => cbOk(resp.data))
-            .catch(error => handle_error('getMetaData:', error))    
+            .catch(error => {
+                handle_error('getMetaData:', error)
+                cbError(error)
+            })
         }
         else if (resKey === 'media_entry_id') {
             api.api.mediaEntryMetaDataDetail(resId, {}, authParams?.value)
             .then(resp => cbOk(resp.data))
-            .catch(error => handle_error('getMetaData:', error))    
+            .catch(error => {
+                handle_error('getMetaData:', error)
+                cbError(error)
+            })
         }
         else {
             console.error("getMetaData: unsupported resource key.")
@@ -851,73 +856,10 @@ export const madekHelper = () => {
             console.error("Could not get meta data related: " + JSON.stringify(error))
         })
     }
-    /*
-    const loadResourceMetaData = (resKey:string, resId:string, into_meta_data: any, cbFinished:any) => {
-        let loading = 1
-        
-        const onFinished = (loading:number) => {
-            console.log("finished: " + loading)
-
-            if (loading == 0) {
-                console.log("finished: All" + loading)
-                
-            }
-        }
-        
-
-        getMetaData(resKey, resId, (json) => {
-            //console.log("got meta data: " + JSON.stringify(json))
-            
-            const metaData = json['meta-data'] as iMetaData[]
-            
-            metaData.map((md:iMetaData) => {
-                
-                into_meta_data[md.meta_key_id] = md
-            
-                if (isMetaKeyObjectType( md.meta_key_id, MD_TYPE_PEOPLE)) {
-                    
-                    console.log("is md people")
-                    loading++
-                    getMetaDataExtended(resKey,resId, md.meta_key_id, (mdEx) => {
-                        console.log("got md people")
-                        const selectedList = new Array<iPerson>()
-                        mdEx[MD_PEOPLE].forEach((p:iPerson) => selectedList.push(p))
-                        into_meta_data[md.meta_key_id].selectedPeople = selectedList
-                        onFinished(--loading)
-                    }, () => {
-                        console.log("error get md people")
-                        onFinished(--loading)
-                    })
-                    into_meta_data[md.meta_key_id].selectedPeople = []
-                    
-                }
-                else if (isMetaKeyObjectType( md.meta_key_id, MD_TYPE_KEYWORDS)) {
-                    console.log("is md keywords")
-                    loading++
-                    getMetaDataExtended(resKey,resId, md.meta_key_id, (mdEx) => {
-                        console.log("got md keywords")
-                        const selectedList = new Array<iKeyword>()
-                        mdEx[MD_KEYWORDS].forEach((kw:iKeyword) => selectedList.push(kw))
-                        into_meta_data[md.meta_key_id].selectedKeywords = selectedList
-                        onFinished(--loading)
-                    }, () => {
-                        console.log("error get md keywords")
-                        onFinished(--loading)
-                    })
-                    into_meta_data[md.meta_key_id].selectedKeywords = []
-                    
-                }
-            // TODO roles
-            })
-
-            onFinished(--loading)
-        
-        })
-    }
-*/
-    const createGenMetaData = () => {
-        const md : GenMetaData = {
-           //data: new Map<string, GenMetaDatum>()
+   
+    const createiGenMetaData = () => {
+        const md : iGenMetaData = {
+           //data: new Map<string, iGenMetaDatum>()
         }
         return md
     }
@@ -933,7 +875,7 @@ export const madekHelper = () => {
             console.error("Could not read stored defaults:\n" + JSON.stringify(error))
         }
         console.log("getStoredMDDefaults: nothing stored: use app defaults")
-        const appDefaults = initEntryMetaDataDefaults(createGenMetaData())
+        const appDefaults = initEntryMetaDataDefaults(createiGenMetaData())
         return appDefaults
     }
 
@@ -941,7 +883,7 @@ export const madekHelper = () => {
         window.localStorage.setItem(DEFAULTS_ENTRY_MD_KEY, JSON.stringify(defaults_meta_data))
     }
        
-    const initEntryMetaDataDefaults = (defaults_meta_data: GenMetaData) => {
+    const initEntryMetaDataDefaults = (defaults_meta_data: iGenMetaData) => {
         // call initMadek to get appSettings before
         const madek = useMadekStore()
 
@@ -960,7 +902,7 @@ export const madekHelper = () => {
         defaults_meta_data[MKEY_TITLE] = {
             "meta_key_id": MKEY_TITLE,
             "string": "imported_" + Date.now() + ".bin"
-        } as GenMetaDatum
+        } as iGenMetaDatum
     
         const kw_license_id = madek.appSettings.media_entry_default_license_id
         const mkey_license = madek.appSettings.media_entry_default_license_meta_key
@@ -970,7 +912,7 @@ export const madekHelper = () => {
             defaults_meta_data[mkey_license] = {
                 "meta_key_id": mkey_license,
                 "selectedKeywords": [ kw_license]
-            } as GenMetaDatum
+            } as iGenMetaDatum
             
         }
         
@@ -980,21 +922,9 @@ export const madekHelper = () => {
             {
                 "meta_key_id": mkey_usage,
                 "string": madek.appSettings.media_entry_default_license_usage_text
-            } as GenMetaDatum
+            } as iGenMetaDatum
         }
 
-
-        // set default authors to current users person
-        /*
-        const mda = {
-            meta_key_id: MKEY_AUTHORS,
-            selectedPeople: new Array<PeopleDetailData>()
-        } as GenMetaDatum
-
-        mda.selectedPeople.push(person?.value)
-        defaults_meta_data[MKEY_AUTHORS] = mda
-    
-        */
 
         console.log("initEntryMetaDataDefaults: " + JSON.stringify(defaults_meta_data))
 
@@ -1002,7 +932,7 @@ export const madekHelper = () => {
     }
 
 
-    const initMD = (context_ids: string[], meta_data: GenMetaData) => {
+    const initMD = (context_ids: string[], meta_data: iGenMetaData) => {
         if (!context_ids) {
             console.error("initMD: ABORT: invalid context ids")
             return
@@ -1022,7 +952,7 @@ export const madekHelper = () => {
                     string: "",
                     json: "",
     
-                } as GenMetaDatum
+                } as iGenMetaDatum
                 if (isMetaKeyObjectType(mkid, MD_TYPE_KEYWORDS)) {
                     md.selectedKeywords = new Array<KeywordsDetailData>()
                 }
@@ -1042,7 +972,7 @@ export const madekHelper = () => {
 
     }
 
-    const copyMDInto = (meta_data:GenMetaData , result_meta_data: GenMetaData, overwrite?: boolean|false) => {
+    const copyMDInto = (meta_data:iGenMetaData , result_meta_data: iGenMetaData, overwrite?: boolean|false) => {
         for (var meta_key_id in meta_data) {
             const data = meta_data[meta_key_id]
             const result_data = result_meta_data[meta_key_id]
@@ -1077,7 +1007,7 @@ export const madekHelper = () => {
                 string: data?.string || cstring,
                 json: data?.json || cjson,
 
-            } as GenMetaDatum
+            } as iGenMetaDatum
 
             
             if (result_data?.selectedPeople && result_data.selectedPeople.length !== 0) {
@@ -1258,7 +1188,7 @@ export const madekHelper = () => {
         saveResourceMetaData,
         loadResourceMetaData,
 
-        createGenMetaData,
+        createiGenMetaData,
         getStoredMDDefaults,
         storeMDDefaults,
         initMD,

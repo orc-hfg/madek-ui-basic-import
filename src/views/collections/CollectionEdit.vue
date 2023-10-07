@@ -114,7 +114,7 @@ import OkOrError from '../../components/OkOrError.vue'
 
 import { apiHelper } from '../../modules/api'
 import { authHelper } from '../../modules/auth'
-import { GenMetaData, madekHelper } from '../../modules/madek'
+import { iGenMetaData, madekHelper } from '../../modules/madek'
 import { errorHelper } from '../../modules/error'
 
 import { useMadekStore } from '../../stores/madek_store'
@@ -140,8 +140,8 @@ const show_hints = ref(false as boolean)
 const show_keys = ref(false as boolean)
 const RES_KEY = 'collection_id'
 const collectionId = ref('' as string)
-const loadedMetaData = ref({} as GenMetaData)
-const editMetaData = ref({} as GenMetaData)
+const loadedMetaData = ref({} as iGenMetaData)
+const editMetaData = ref({} as iGenMetaData)
 
 
 const clickedView = () => {
@@ -164,7 +164,7 @@ const loadMetaData = () => {
 }
 
 const saveMetaData = () => {
-  const loaded = {} as GenMetaData
+  const loaded = {} as iGenMetaData
   loadResourceMetaData(RES_KEY, collectionId.value, loaded, () => {
   
     saveResourceMetaData(RES_KEY, collectionId.value,

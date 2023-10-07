@@ -35,14 +35,14 @@
       modal
       v-model:visible="showDefaultsEdit" 
       class="dialogEditClientDefaults">
-
-
+      
       <TemplateEntryMetaDataEdit 
+
         :template="{}"
         :meta_data="mdUserDefaults"
         :context_ids="getContexts()"
         :show_keys="false"
-        :hide_meta_keys="hide_meta_keys_map"
+        
         />
       <br/>
 
@@ -175,7 +175,23 @@
               <h4>Lege die Import-Default-Werte fest:</h4>
               <Message severity="info">
                 Du kannst allgemeine Metadaten für diesen Import anpassen, die allen, oder auch einzelnen Medieneinträgen zugewiesen werden können.
+                Du kann den Titel durch die importierten Dateinamen setzen lassen, oder einen gemeinsamen für alle Import-Elemente definieren.
               </Message>
+
+              <div class="py-2">
+                
+
+                <Button
+                  v-if="hide_meta_keys_map[MKEY_TITLE] != true"
+                  @click.prevent="hide_meta_keys_map[MKEY_TITLE] = true">
+                  Titel aus Dateinamen
+                </Button>
+                <Button
+                  v-if="hide_meta_keys_map[MKEY_TITLE] == true"
+                  @click.prevent="hide_meta_keys_map[MKEY_TITLE] = false">
+                  Titel vergeben
+                </Button>
+              </div>
               
                 
                
@@ -212,6 +228,7 @@
               :error_map="uploadedEntriesErrorMap"
               :show_actions="true"
               :show_action_list="['edit', 'save']"
+              :force-reload="true"
               :show_preview="true"
                 @clickedEdit="clickedEdit"
                 @clickedSave="clickedApplyDefaults"
@@ -278,7 +295,7 @@
                     @click.prevent="clickedAddToCollectionAll()">
                     Zum Set Hinzufügen
 
-                    <i class="pi pi-caret-right"/>
+                    <!--<i class="pi pi-caret-right"/>-->
                   </Button>
                 </div>
               </div>
@@ -293,6 +310,10 @@
 -->
 
             <h3>Vollständige Einträge:</h3>
+            <Message severity="info">
+            Nur vollständige Medieneinträge können zu einem Set hinzugefügt werden.
+            </Message>
+
 
             <EntriesGrid
               v-if="uploadedEntriesShow"
@@ -301,6 +322,7 @@
               :show_published="true"
               :show_actions="false"
               :show_preview="true"
+              force-reload="true"
                 @clickedDelete="resultClickedDelete"
                 @clickedEdit="resultClickedEdit"
                 @clickedView="resultClickedView"
@@ -381,7 +403,7 @@ import Message from "primevue/message";
 
 import { apiHelper } from "../modules/api";
 import { errorHelper } from "../modules/error";
-import { GenMetaData, madekHelper } from "../modules/madek";
+import { iGenMetaData, madekHelper } from "../modules/madek";
 import UploadView from '../components/upload_simple/UploadView.vue'
 import UploadViewWebApp from "../components/upload_simple/UploadViewWebApp.vue";
 import EntryPreview from '../components/files/EntryPreview.vue'
@@ -440,13 +462,12 @@ const collection_id = ref('' as string)
 const collectionTitle = ref('' as string)
 const newColTitle = ref('' as string)
 
-const defaults_meta_data = ref({} as GenMetaData)
+const defaults_meta_data = ref({} as iGenMetaData)
 
-const mdUserDefaults = ref({} as GenMetaData)
-const mdImportDefaults = ref({} as GenMetaData)
-const mdEditEntry = ref({} as GenMetaData)
+const mdUserDefaults = ref({} as iGenMetaData)
+const mdImportDefaults = ref({} as iGenMetaData)
+const mdEditEntry = ref({} as iGenMetaData)
 
-const me_meta_data = ref({} as GenMetaData)
 const edit_entry_id = ref('' as string)
 
 const uploadedEntries = ref(new Array<iMediaEntry>())
@@ -454,7 +475,7 @@ const uploadedEntriesMD = ref({} as object)
 
 const uploadedMDShowMode = ref('showCore' as string)
 
-const hide_meta_keys_map = {"madek_core:title": true }
+const hide_meta_keys_map = ref({})
 
 
 const getContexts = () => {
@@ -490,7 +511,7 @@ const clickedEdit = (me_id:string) => {
 
   edit_entry_id.value = me_id;
 
-  mdEditEntry.value = {} as GenMetaData
+  mdEditEntry.value = {} as iGenMetaData
   copyMDInto(uploadedEntriesMD.value[me_id], mdEditEntry.value)
   if (!mdEditEntry.value[MKEY_TITLE]
     || !mdEditEntry.value[MKEY_TITLE].string
@@ -631,7 +652,10 @@ const mediaEntryApplyDefaultsAndSave = (upme:any) => {
 
   const me_id = upme.id
 
-  meta_data[MKEY_TITLE].string = upme.media_file.filename
+  if (hide_meta_keys_map.value[MKEY_TITLE] == true) {
+    console.error("assign title from filename")
+    meta_data[MKEY_TITLE].string = upme.media_file.filename
+  }
 
   mediaEntrySaveMetaData(me_id, meta_data, () => {
     console.log("save MD")
