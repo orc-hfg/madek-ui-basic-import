@@ -118,10 +118,10 @@ import { iGenMetaData, madekHelper } from '../../modules/madek'
 import { errorHelper } from '../../modules/error'
 
 import { useMadekStore } from '../../stores/madek_store'
-
+import { useMetadataStore } from '../../stores/metadata_store'
 
 const { api, authParams } = apiHelper()
-const { error_msg, ok_msg } = errorHelper()
+const { error_msg, ok_msg, timed_handle_error } = errorHelper()
 
 const route = useRoute()
 const router = useRouter()
@@ -143,6 +143,8 @@ const collectionId = ref('' as string)
 const loadedMetaData = ref({} as iGenMetaData)
 const editMetaData = ref({} as iGenMetaData)
 
+const mdStore = useMetadataStore()
+
 
 const clickedView = () => {
   router.push({ path: `/collection/entryList/${collectionId.value}`})
@@ -156,23 +158,30 @@ const getEditContexts = () => {
 
 const loadMetaData = () => {
   initMD(getEditContexts(), editMetaData.value)
+  mdStore.getCachedMetaDataRelated(RES_KEY, collectionId.value, true, (data) => {
+    console.log("got meta data related: " + JSON.stringify(data))
+    loadedMetaData.value = data
+    copyMDInto(loadedMetaData.value, editMetaData.value, true)
+  }, (error) => timed_handle_error("Could not get meta data.", error))
+  /*
   loadResourceMetaData(RES_KEY, collectionId.value, loadedMetaData.value, () => {
       console.log("loaded meta-data")// + JSON.stringify(loadedMetaData.value))
       
       copyMDInto(loadedMetaData.value, editMetaData.value, true)
-  })
+  })*/
 }
 
 const saveMetaData = () => {
-  const loaded = {} as iGenMetaData
-  loadResourceMetaData(RES_KEY, collectionId.value, loaded, () => {
+  
+  //loadResourceMetaData(RES_KEY, collectionId.value, loaded, () => {
+  mdStore.getCachedMetaDataRelated(RES_KEY, collectionId.value, true, (loaded) => {
   
     saveResourceMetaData(RES_KEY, collectionId.value,
       editMetaData.value, loaded, () => {
         console.log("finished md save")
         updateData()
       })
-  })
+  }, (error) => timed_handle_error("Could not get meta data.", error))
 }
 
 collectionId.value = route.params.collection_id as string

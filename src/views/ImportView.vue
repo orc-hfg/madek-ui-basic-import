@@ -401,6 +401,7 @@ import Badge from "primevue/badge";
 import OkOrError from "../components/OkOrError.vue";
 import Message from "primevue/message";
 
+
 import { apiHelper } from "../modules/api";
 import { errorHelper } from "../modules/error";
 import { iGenMetaData, madekHelper } from "../modules/madek";
@@ -424,7 +425,7 @@ import EntryPublishInfo from "../components/entries/EntryPublishInfo.vue";
 import EntryInfo from "../components/entries/EntryInfo.vue";
 
 import { useMadekStore } from "../stores/madek_store";
-
+import { useMetadataStore } from "../stores/metadata_store";
 
 const router = useRouter()
 const { error_msg, ok_msg, reset_error, timed_handle_ok, timed_handle_error } = errorHelper()
@@ -529,6 +530,7 @@ const clickedEdit = (me_id:string) => {
 }
 
 const uploadedEntriesShow = ref(true as boolean)
+const mdStore = useMetadataStore()
 
 const uploadedEntriesReload = () => {
   reset_error()
@@ -547,8 +549,31 @@ const onClickedEditEntrySave = () => {
   const resKey = 'media_entry_id'
   const resId = edit_entry_id.value
   const meta_data = mdEditEntry.value//me_meta_data.value
-  const loadedMD = {}//uploadedEntriesMD.value[resId]
   
+  
+  mdStore.getCachedMetaDataRelated(resKey, resId, true, (data) => {
+    const loadedMD = data
+    console.log("loaded before save resource md: " + JSON.stringify(loadedMD))
+    debugger
+    saveResourceMetaData(resKey, resId, meta_data, loadedMD, () => {
+      debugger
+      console.log("saved meta data")
+
+      uploadedEntriesErrorMap.value[resId] = "saved"
+      timed_handle_ok("Metadaten gespeichert.")
+          
+      edit_entry_id.value = ''
+      showEditEntry.value = false
+
+      tryPublish(resId, (result) => {
+        console.log("tried publish MD: " + JSON.stringify(result))
+        uploadedEntriesErrorMap.value[resId] = "vollständig"
+      })
+            
+      uploadedEntriesReload()
+    })
+  }, (error) => timed_handle_error("could not get cached meta data.",error))
+/*
   loadResourceMetaData(resKey, resId, loadedMD, () => {
     debugger
       console.log("loaded before save resource md: " + JSON.stringify(loadedMD))
@@ -572,23 +597,13 @@ const onClickedEditEntrySave = () => {
             
             uploadedEntriesReload()  
           })
-          /*
-          loadResourceMetaData(resKey, resId, loadedMD, () => {
-              
-              console.log("reloaded resource md: " + JSON.stringify(loadedMD))
-              uploadedEntriesMD.value[resId] = loadedMD
-              
-              uploadedEntriesReload()
-              
-
-          })
-          */
+          
       })
   })
-  
+  */
 
 }
-
+/*
 const saveCollectionMD = () => {
   reset_error()
   console.log("saveCollectionMD: ")
@@ -606,12 +621,21 @@ const saveCollectionMD = () => {
     })
   })
 }
-
+*/
 
 const mediaEntrySaveMetaData = (meId: string, meta_data: any, cbOK:any) => {
   reset_error()
-  const loadedMD = {}
   
+  
+  mdStore.getCachedMetaDataRelated(resKey, resId, true, (loadedMD) => {
+    console.log("loaded resource md: " + JSON.stringify(loadedMD))
+    saveResourceMetaData('media_entry_id', meId, meta_data, loadedMD, () => {
+      console.log("saved resource md: " + meId)
+      uploadedMDShowMode.value = 'showCore'
+      if (cbOK) cbOK(meId)
+    })
+  }, (error) => timed_handle_error("could not get cached meta data", error))
+  /*
   loadResourceMetaData('media_entry_id', meId, loadedMD, () => {
     console.log("loaded resource md: " + JSON.stringify(loadedMD))
 
@@ -624,7 +648,8 @@ const mediaEntrySaveMetaData = (meId: string, meta_data: any, cbOK:any) => {
 
 
     })
-  })  
+  })
+  */  
 }
 
 const tryPublish = (me_id: string, cbOK: any) => {
@@ -664,12 +689,13 @@ const mediaEntryApplyDefaultsAndSave = (upme:any) => {
     tryPublish(me_id, (result) => {
       console.log("tried publish MD")
       uploadedEntriesErrorMap.value[me_id] = "vollständig"
+      /*
       const loadedMD = {}
       loadResourceMetaData('media_entry_id', me_id, loadedMD, () => {
         console.log("reloaded resource md: " + JSON.stringify(loadedMD))
         uploadedEntriesMD.value[me_id] = loadedMD
       })
-      
+      */
       uploadedEntriesReload()
     })
     
@@ -756,11 +782,12 @@ const onUploadChanged = (entryId: string, files:any) => {
         })
       
     })
+    /*
   const loadedMD = {}
   loadResourceMetaData('media_entry_id', me_id, loadedMD, () => {
     console.log("loaded resource: " + me_id + " md: " + JSON.stringify(loadedMD))
     uploadedEntriesMD.value[me_id] = loadedMD
-  })
+  })*/
 }
 
 const onSelectedFiles = (files: any) => {

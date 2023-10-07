@@ -15,6 +15,7 @@ import EntryPreview from '../../components/files/EntryPreview.vue'
 import EntryPublishInfo from '../../components/entries/EntryPublishInfo.vue'
 import TemplateEntryMetaDataEdit from '../../components/meta-data/template/TemplateEntryMetaDataEdit.vue'
 import { useMadekStore } from '../../stores/madek_store'
+import { useMetadataStore } from '../../stores/metadata_store'
 import OkOrError from '../../components/OkOrError.vue'
 
 const route = useRoute()
@@ -49,6 +50,8 @@ const show_hints = ref(false as boolean)
 const show_keys = ref(false as boolean)
 const loadedMetaData = ref({} as iGenMetaData)
 const editMetaData = ref({} as iGenMetaData)
+const mdStore = useMetadataStore()
+
 
 const getEditContexts = () => {
   return madek_store.appSettings.contexts_for_entry_edit
@@ -78,25 +81,31 @@ const updatePersonData = (entry: iMediaEntry) => {
 
 } 
 
+const RES_KEY = 'media_entry_id'
+
 const loadMetaData = () => {
-  loadResourceMetaData('media_entry_id', mediaEntryId.value, loadedMetaData.value, () => {
-      console.log("loaded meta-data")// + JSON.stringify(loadedMetaData.value))
-      initMD(getEditContexts(), editMetaData.value)
+  initMD(getEditContexts(), editMetaData.value)
+  mdStore.getCachedMetaDataRelated(RES_KEY, mediaEntryId.value, true, (data) => {
+  //loadResourceMetaData('media_entry_id', mediaEntryId.value, loadedMetaData.value, () => {
+      console.log("got meta-data")// + JSON.stringify(loadedMetaData.value))
+      loadedMetaData.value = data
       copyMDInto(loadedMetaData.value, editMetaData.value, true)
-  })
+  }, (error) => timed_handle_error("Could not get meta data.", error))
 }
 
 const saveMetaData = () => {
-  const loaded = {} as iGenMetaData
-  loadResourceMetaData('media_entry_id', mediaEntryId.value, loaded, () => {
+  //const loaded = {} as iGenMetaData
+  //loadResourceMetaData('media_entry_id', mediaEntryId.value, loaded, () => {
+  mdStore.getCachedMetaDataRelated(RES_KEY, mediaEntryId.value, true, (loaded) => {
   
     saveResourceMetaData('media_entry_id', mediaEntryId.value,
       editMetaData.value, loaded, () => {
         console.log("finished md save")
         updateData()
       })
-  })
+  }, (error) => timed_handle_error("Could not get meta data.", error))
 }
+
 const updateData = () => {
     reset_error()
     mediaEntryId.value = route.params.entry_id as string

@@ -32,6 +32,7 @@ import {
     MetaDataRoleDetailData,
     MediaEntryMetaDatumPeopleDetailData} from '../generated/data-contracts';
 import { useMadekStore } from '../stores/madek_store';
+import { useMetadataStore } from '../stores/metadata_store';
 
 export enum MLType {
     labels = 'labels',
@@ -834,6 +835,17 @@ export const madekHelper = () => {
     
 
     const loadResourceMetaData = (resKey:string, resId:string, into_meta_data: any, cbFinished:any) => {
+        /*
+        mdStore.getCachedMetaDataRelated(resKey, resId, true, (data) => {
+            console.log("got meta data related: " + JSON.stringify(data))
+            data.forEach(md => {
+                into_meta_data[md.meta_key_id] = md
+            })
+            debugger
+        }, (error) => {
+            console.error("Could not get meta data related: " + JSON.stringify(error))
+        })
+        */
         getMetaDataRelated(resKey, resId, (json) => {
             console.log("got meta data related: " + JSON.stringify(json))
             
@@ -855,6 +867,7 @@ export const madekHelper = () => {
         }, (error:any) => {
             console.error("Could not get meta data related: " + JSON.stringify(error))
         })
+        
     }
    
     const createiGenMetaData = () => {
