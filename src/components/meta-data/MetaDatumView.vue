@@ -15,7 +15,7 @@
     </div>
 
     <div v-else-if="isMetaKeyObjectType(metaKey.id, MD_TYPE_PEOPLE)">
-      <Chip v-for="person in metaDataExtended[MD_PEOPLE]">
+      <Chip v-for="person in metaData.selectedPeople">
         <span>{{ person.first_name }}</span>
         &nbsp;
         <span>{{ person.last_name }}</span>
@@ -24,7 +24,7 @@
     </div>
 
     <div v-else-if="isMetaKeyObjectType(metaKey.id, MD_TYPE_KEYWORDS)">
-      <Chip v-for="kw in metaDataExtended[MD_KEYWORDS]">
+      <Chip v-for="kw in metaData.selectedKeywords">
         <span>{{ kw.term }}</span>
       </Chip>
     </div>

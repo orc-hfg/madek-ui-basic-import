@@ -38,11 +38,10 @@
                 <div class="meta_hints" v-if="showMetaHints && getMetaKeyML( contextKey.meta_key_id, HINTS)">{{ getMetaKeyML( contextKey.meta_key_id, HINTS) }}</div>
 
                 <div class="meta_data">
-                  <div v-if="metaDataMap.get(contextKey.meta_key_id)">
+                  <div v-if="metaDataMap[contextKey.meta_key_id]">
                     <MetaDatumView
                       :meta-key="getMetaKey(contextKey.meta_key_id)"
-                      :meta-data="metaDataMap.get(contextKey.meta_key_id)"
-                      :meta-data-extended="metaDataExtendedMap.get(contextKey.meta_key_id)"
+                      :meta-data="metaDataMap[contextKey.meta_key_id]"
                       :default_locale="getDefaultLocale()"
                       >
                     </MetaDatumView>
@@ -70,27 +69,22 @@
 
               <div v-for="contextKey in getContextKeysForContext(context_id)" >
 
-                <div v-if="metaDataMap.get(contextKey.meta_key_id)">
+                <div v-if="metaDataMap[contextKey.meta_key_id]">
                   <div class="meta_header">
                     <span>{{ getMetaKeyML( contextKey.meta_key_id, LABELS) }}</span>
                     <span>{{ contextKey.is_required && '*' || '' }}</span>
                     &nbsp;
                   </div>
                   <MetaDatumView class="meta_data"
-                    :meta-data="metaDataMap.get(contextKey.meta_key_id)"
+                    :meta-data="metaDataMap[contextKey.meta_key_id]"
                     :meta-key="getMetaKey(contextKey.meta_key_id)"
-                    :meta-data-extended="metaDataExtendedMap.get(contextKey.meta_key_id)"
                     :default_locale="getDefaultLocale()"
                     >
                   </MetaDatumView>
 
-                  
-
                 </div>
               </div>
-
             </Panel>
-          
         </div>
        
       </div>
@@ -98,15 +92,14 @@
           <div v-for="context_id in getCoreContexts()">
             <div v-for="contextKey in getContextKeysForContext(context_id)" >
 
-                <div v-if="metaDataMap.get(contextKey.meta_key_id)">
+                <div v-if="metaDataMap[contextKey.meta_key_id]">
                   <p>
                     <span>{{ getMetaKeyML( contextKey.meta_key_id, LABELS) ||contextKey.meta_key_id }}:</span>
                     &nbsp;
 
                     <MetaDatumView class="meta_data"
-                      :meta-data="metaDataMap.get(contextKey.meta_key_id)"
+                      :meta-data="metaDataMap[contextKey.meta_key_id]"
                       :meta-key="getMetaKey(contextKey.meta_key_id)"
-                      :meta-data-extended="metaDataExtendedMap.get(contextKey.meta_key_id)"
                       :default_locale="getDefaultLocale()"
                       />
 
@@ -120,9 +113,8 @@
             <span>{{ getMetaKeyML( 'madek_core:title', LABELS) || 'madek_core:title' }}:</span>
             &nbsp;
             <MetaDatumView
-              :meta-data="metaDataMap.get('madek_core:title')"
+              :meta-data="metaDataMap[contextKey.meta_key_id]['madek_core:title']"
               :meta-key="getMetaKey('madek_core:title')"
-              :meta-data-extended="metaDataExtendedMap.get('madek_core:title')"
               :default_locale="getDefaultLocale()"
               />
         </p>
@@ -140,7 +132,7 @@ import { onMounted, watch, ref } from 'vue'
 import { apiHelper  } from '../../modules/api'
 import { errorHelper } from '../../modules/error'
 import { MLType, madekHelper } from '../../modules/madek'
-
+import { iGenMetaData } from '../../modules/madek'
 import { 
   iMetaData,
   
@@ -150,6 +142,7 @@ import {
 import MetaDatumView from './MetaDatumView.vue'
 import Panel from 'primevue/panel'
 import { useMadekStore } from '../../stores/madek_store'
+import { useMetadataStore } from '../../stores/metadata_store'
 import { MediaEntryMetaDataRelatedDetailData, MetaDataDetailData } from '../../generated/data-contracts'
 
 
@@ -185,16 +178,20 @@ const props = defineProps({
   entryId: { type: String, required: false},
   mode: { type: String, default: 'showCore', required: false},
   showMetaDesc: {type: Boolean, default: true},
-  showMetaHints: {type: Boolean, default: true}
+  showMetaHints: {type: Boolean, default: true},
+  forceReload: {type: Boolean, default: false}
 })
 
-const metaDataMap = ref(new Map<string, iMetaData>())
+//const metaDataMap = ref(new Map<string, iMetaData>())
+  const metaDataMap = ref({} as iGenMetaData)
 const metaDataExtendedMap= ref(new Map<string, {}>())
 const LABELS = MLType.labels
 const DESCR = MLType.descriptions
 const HINTS = MLType.hints
 
 const madekStore = useMadekStore()
+
+const mdStore = useMetadataStore()
 
 const checkLoaded = () => {
   let result = true;
@@ -217,7 +214,7 @@ const getCoreContexts = () => {
       return [ madekStore.appSettings.context_for_entry_summary ]
     }
 }
-
+/*
 const onError = (error:any) => {
   console.error("got error: " + JSON.stringify(error))
 }
@@ -234,9 +231,11 @@ const onMetaData = (resp: MediaEntryMetaDataRelatedDetailData) => {
     }
   })
 }
+*/
 const updateData =() => {
-  metaDataMap.value.clear()
-  metaDataExtendedMap.value.clear()
+  metaDataMap.value = {} as iGenMetaData
+ 
+  //metaDataExtendedMap.value.clear()
   let resKey = ''
   let resId = ''
   if (props.collectionId) {
@@ -249,7 +248,18 @@ const updateData =() => {
     console.error("MetaDataView: ABORT: invalid entry or collection id.")
     return
   }
-  getMetaDataRelated(resKey, resId , onMetaData, onError)
+  if (props.forceReload == true) {
+
+  }
+ 
+  //getMetaDataRelated(resKey, resId , onMetaData, onError)
+ 
+  mdStore.getCachedMetaDataRelated(resKey, resId, props.forceReload, (data) => {
+    console.error("got CachedMetaDataRelated: ")
+    metaDataMap.value = data
+  }, (error) => {
+    console.error("ERROR: getCachedMetaDataRelated: " + JSON.stringify(error))
+  })
 }
 
 watch(props, () => {

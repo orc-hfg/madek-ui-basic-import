@@ -50,15 +50,12 @@
                             <EntryPreview :entry_data="slotProps.data" :size="'medium'"/>
                         </div> 
                         
-<!--
-                        <img v-if="show_preview"
-                            class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
-                            :src="getPreviewDefaultUrl(slotProps.data.id)" :alt="'no download img'" />
--->
                         <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
                             
                             <div class="flex flex-column align-items-center sm:align-items-start gap-3 border-1 surface-border surface-card">
-                                <MetaDataView :entry-id="slotProps.data.id" mode="showSummary"/>
+                                <MetaDataView :entry-id="slotProps.data.id"
+                                    :force-reload="forceReload"
+                                    mode="showSummary"/>
                             </div>
 <!--
                             <div class="flex flex-column align-items-center sm:align-items-start gap-3">
@@ -77,13 +74,7 @@
                 <div class="col-6 xs:col-12 sm:col-6 lg:col-4 xl:col-3 p-2">
                     <div class="p-3 border-1 surface-border surface-card border-round">
                         <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-                        <!--
-                            <div class="flex align-items-center gap-2">
-                                <span class="font-semibold">{{ getTitle(slotProps.data.id) || 'Ohne Titel'}} </span>
-                            </div>
--->
-
-
+                        
                             <div v-if="error_map[slotProps.data.id]"
                                 class="flex align-items-center justify-content-end gap-2 py-2" style="width:100%">
                                 {{ error_map[slotProps.data.id] }}
@@ -130,17 +121,10 @@
                             style="height: 15rem">
                             <EntryPreview :entry_data="slotProps.data"/>
                         </div>
-<!--
-                        <div v-if="show_data_stream"
-                            class="flex flex-column align-items-center px-1 py-1 border-1 surface-border surface-card" 
-                            style="height: 18rem">
-                            <FileView :entry_data="slotProps.data" />
-                        </div>
--->
-                      
 
                         <div class="flex align-items-center justify-content-center " style="overflow-x: hidden;">
                             <MetaDataView :entry-id="slotProps.data.id" mode="showCore"
+                                :force-reload="forceReload"
                                 class="border-1 surface-border surface-card border-round px-3 py-3"
                                 style="max-width: 100%; width: 100%; margin-top: 1rem; overflow-x: hidden; "/>
                             <br/>
@@ -187,7 +171,7 @@ import FileView from '../files/FileView.vue'
 import EntryPreview from '../files/EntryPreview.vue'
 
 import { errorHelper } from '../../modules/error'
-const {error_msg, handleError} = errorHelper()
+const {error_msg, handle_error} = errorHelper()
 
 const { api, authParams } = apiHelper()
 
@@ -199,6 +183,7 @@ const props = defineProps({
     show_preview: { type: Boolean, default: true, required: false},
     show_published: { type: Boolean, default: true, required: false},
     show_actions: { type: Boolean, default: true, required: false},
+    forceReload: { type: Boolean, default: false, required: false},
     show_action_list: {type: Array<string>, default: ['add', 'view', 'edit', 'delete'], required: false },
     max_count: { type: Number, default: 100, required: false},
     error_map: { type: Object, default: {}  , required: false}
