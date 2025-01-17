@@ -84,21 +84,23 @@ export const useMetadataStore = defineStore('metadata', {
                 case RKEY_COLLECTION:
                     api.api.collectionMetaDataDetail(resId, {}, authParams?.value)
                     .then(resp => {
-                        cbOk(resp.data['meta-data'])
+                        cbOk(resp.data['meta-data']) // ['meta-data'])
                     })
                     .catch(error => {
                         handle_error('getMetaData:', error)
                         cbError(error)
                     })
+                    break;
                 case RKEY_ENTRY:
                     api.api.mediaEntryMetaDataDetail(resId, {}, authParams?.value)
                     .then(resp => {
-                        cbOk(resp.data['meta-data'])
+                        cbOk(resp.data['meta-data']) // ['meta-data'])
                     })
                     .catch(error => {
                         handle_error('getMetaData:', error)
                         cbError(error)
                     })
+                    break;
             }
         },
         getCachedMetaData(resKey: string, resId: string, cbOk:any, cbError:any) {
@@ -139,15 +141,18 @@ export const useMetadataStore = defineStore('metadata', {
                         handle_error('getMetaData:', error)
                         cbError(error)
                     })
+                    break;
                 case RKEY_ENTRY:
                     api.api.mediaEntryMetaDataRelatedDetail(resId, {}, authParams?.value)
                     .then(resp => {
+                        console.log("got entry md " + JSON.stringify(resp.data))
                         cbOk(resp.data)
                     })
                     .catch(error => {
                         handle_error('getMetaData:', error)
                         cbError(error)
                     })
+                    break;
             }
         },
         getCachedMetaDataRelated(resKey: string, resId: string, force: boolean, cbOk:any, cbError:any) {
@@ -160,7 +165,7 @@ export const useMetadataStore = defineStore('metadata', {
                 this.getApiMetaDataRelated(resKey, resId, (data) => {
 
                     data.forEach(mdMap => {
-                        const md = mdMap.meta_data
+                        const md = mdMap['meta-data']
                         this.metaDataRMap[resKey][resId][md.meta_key_id] = md
 
                         

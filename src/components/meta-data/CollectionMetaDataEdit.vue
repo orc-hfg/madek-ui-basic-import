@@ -251,7 +251,7 @@ export default defineComponent({
         this.reset_error()
         api.api.collectionMetaDataDetail(this.collectionId,{}, authParams?.value)
         .then(resp => {
-          const metaData = resp.data['meta-data']
+          const metaData = resp.data.meta_data //['meta-data']
           this.metaDataMap.clear()
           metaData.map(md => {
             this.metaDataMap.set(md.meta_key_id, md)

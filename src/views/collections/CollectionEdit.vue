@@ -73,7 +73,7 @@
               <template #header>
                 Berechtigungen
               </template>
-              <EntryPermView
+              <CollectionPermView
                :entry_id="collectionId" />
             </TabPanel>
           </TabView>
@@ -82,23 +82,7 @@
       LD: <JsonViewer :value="loadedMetaData" />
       ED: <JsonViewer :value="editMetaData" />
 -->
-          <!--
-        <div>
-          <CollectionMetaDataEdit
-            :collectionId="collectionId">
-          </CollectionMetaDataEdit>
-          <hr/>
-          <h4>Ergebnis-Ansicht:</h4>
-          <MetaDataView
-            :collectionId="($route.params.collection_id as string)"
-            :mode="'showSummary'">
-          </MetaDataView>
-          <hr/>
-          <br/>
-          <br/>
-          <br/>
-        </div>
-          -->
+    
     </div>
 </template>
 
@@ -107,7 +91,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TabView from 'primevue/tabview'
 import TabPanel from 'primevue/tabpanel'
-import CollectionMetaDataEdit from '../../components/meta-data/CollectionMetaDataEdit.vue'
+import CollectionPermView from '../../components/collections/CollectionPermView.vue'
 import TemplateEntryMetaDataEdit from '../../components/meta-data/template/TemplateEntryMetaDataEdit.vue'
 import MetaDataView from '../../components/meta-data/MetaDataView.vue'
 import OkOrError from '../../components/OkOrError.vue'

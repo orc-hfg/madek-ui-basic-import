@@ -82,13 +82,20 @@ export const useMadekStore = defineStore('madek', {
                     this.publicVocabularies.set(v.id, v)
                 })
 
-                const kws = (await api.api.keywordsList()).data.keywords
+                const kws = (await api.api.keywordsList({page: 1, size2: 10000})).data.keywords
                 this.keywords = kws
                 kws?.map((k: KeywordsDetailData) => {
                     this.keywordsMap.set(k.id, k)
                     if (!this.keywordsByMetaKeyMap.has(k.meta_key_id)) {
                         this.keywordsByMetaKeyMap.set(k.meta_key_id, new Array<KeywordsDetailData>())
                     }
+                    if (k.meta_key_id == 'rights:certificate') {
+                        //console.log("kW " + k.term + " for " + k.meta_key_id)
+                    }
+                    if (k.meta_key_id == 'rights:licence') {
+                        //console.log("kW " + k.term + " for " + k.meta_key_id)
+                    }
+                    //console.log("kW " + k.term + " for " + k.meta_key_id)
                     this.keywordsByMetaKeyMap.get(k.meta_key_id)?.push(k)
                 })
 
@@ -102,7 +109,7 @@ export const useMadekStore = defineStore('madek', {
             this.loaded = false
 
             if (!user?.value || !user.value?.id) {
-                console.log("ABORT: initAuthed: invalid user")
+                console.log("ABORT: initAuthed: invalid user" + JSON.stringify(user))
                 return
             }
 
@@ -116,6 +123,24 @@ export const useMadekStore = defineStore('madek', {
                 vocabs?.map((v: VocabulariesDetailData) => {
                     this.userVocabularies.set(v.id, v)
                 })
+/*
+                const kws = (await api.api.adminKeywordsList({page: 1, size2: 10000}, authParams?.value)).data.keywords
+                this.keywords = kws
+                kws?.map((k: KeywordsDetailData) => {
+                    this.keywordsMap.set(k.id, k)
+                    if (!this.keywordsByMetaKeyMap.has(k.meta_key_id)) {
+                        this.keywordsByMetaKeyMap.set(k.meta_key_id, new Array<KeywordsDetailData>())
+                    }
+                    if (k.meta_key_id == 'rights:certificate') {
+                        console.log("kW " + k.term + " for " + k.meta_key_id)
+                    }
+                    if (k.meta_key_id == 'rights:licence') {
+                        console.log("kW " + k.term + " for " + k.meta_key_id)
+                    }
+                    console.log("kW authed " + k.term + " for " + k.meta_key_id)
+                    this.keywordsByMetaKeyMap.get(k.meta_key_id)?.push(k)
+                })*/
+
                 this.loaded = true
             } catch(ex) {
                 console.error("Could not load authed app settings." + JSON.stringify(ex))

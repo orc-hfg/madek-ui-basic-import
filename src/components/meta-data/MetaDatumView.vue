@@ -62,92 +62,11 @@ const props = defineProps({
 
   metaKey: { type: Object, required: true },
   metaData: { type: Object, required: true },
-  metaDataExtended: { type: Object, required: true },
+//  metaDataExtended: { type: Object, required: true },
 
   mode: { type: String, required: false },
 })
-/*
-export default defineComponent({
-  name: "MetaDatumView",
-  props: {
-    default_locale: { type: String, required: true },
 
-    metaKey: { type: Object, required: true },
-    metaData: { type: Object, required: true },
-    metaDataExtended: { type: Object, required: true },
-
-    mode: { type: String, required: false },
-  },
-  components: {
-    Chip: Chip,
-  },
-  computed: {},
-  data() {
-    return {
-      error_msg: "" as string,
-      ready: false as boolean,
-    };
-  },
-  mounted() {},
-  methods: {
-    handle_error(msg: string, error: Response) {
-      const mmsg = "ERROR: " + msg + " status: " + error.status;
-      console.error(mmsg);
-      this.error_msg = mmsg;
-    },
-    reset_error() {
-      this.error_msg = "no error";
-    },
-
-    getMLText(obj: iMLObj) {
-      return obj[this.default_locale];
-    },
-
-    isMetaKeyObjectType(type: string) {
-      if (
-        this.metaKey &&
-        this.metaKey.meta_datum_object_type &&
-        this.metaKey.meta_datum_object_type === type
-      ) {
-        return true;
-      }
-      return false;
-    },
-    getMetaDataValueText() {
-      if (this.metaData && this.metaData.string) {
-        return this.metaData.string;
-      }
-      return "";
-    },
-    getMetaDataValueJson() {
-      if (this.metaData && this.metaData.json) {
-        return this.metaData.json;
-      }
-      return "";
-    },
-    getMetaDataPeopleData() {
-      if (this.metaDataExtended && this.metaDataExtended["people"]) {
-        return this.metaDataExtended["people"];
-      }
-      return [];
-    },
-    getMetaDataKeywordData() {
-      if (this.metaDataExtended && this.metaDataExtended["keywords"]) {
-        return this.metaDataExtended["keywords"];
-      }
-      return [];
-    },
-    checkLoaded() {
-      let result = true;
-      if (!hasOwn(this.metaData, "id")) {
-        result = false;
-      }
-      this.ready = result;
-      return result;
-    },
-  },
-});
-*/
 </script>
 <style scoped>
 .metaDatumView {

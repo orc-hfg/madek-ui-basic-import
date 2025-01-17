@@ -17,12 +17,6 @@ const { user } = authHelper()
 
 const store = useMadekStore()
 const router = useRouter()
-/*
-store.initPublic()
-if (user?.value && user.value.id) {
-  store.initAuthed()
-}
-*/
 
 const appDataLoaded = ref(false as boolean)
 

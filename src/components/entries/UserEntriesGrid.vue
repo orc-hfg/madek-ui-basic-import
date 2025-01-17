@@ -87,20 +87,27 @@ const handle_error = (msg: string, error: Response) => {
 const updateData = (show_published: boolean) => {
 
     const iquery : iMediaEntriesQuery = {
+        
         filter_by_data: {
             media_entry: {
                 responsible_user_id: user?.value?.id,
                 is_published: show_published ? true : false
-            } as iMediaEntriesQueryFilterByMediaEntry
-        } as iMediaEntriesQueryFilterBy,
+            }, // as iMediaEntriesQueryFilterByMediaEntry
+            //permissions: {
+                //responsible_user_id: user?.value?.id
+            //},
+        }, // as iMediaEntriesQueryFilterBy,
         //count: props.max_count,
+        
         order: 'desc'
     }
     if (props.show_paging == true) {
         iquery.page = paging.value.page -1
-        iquery.count = paging.value.count
+        iquery.size = paging.value.count
     }
     buildMEQuery(iquery)
+    console.log("transformed query")
+    console.dir(iquery)
     
     api.api.mediaEntriesList(iquery, authParams?.value)
         .then(resp => {

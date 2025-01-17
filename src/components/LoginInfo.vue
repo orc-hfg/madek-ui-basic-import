@@ -11,13 +11,12 @@
                 </Chip>
                 &nbsp;
                 <Button @click.prevent="apiLogout()">Logout</Button>
-                <!--
-                <Button @click.prevent="checkSession()">Check Session</Button>
-                -->
             </div>
         </div>
         <div v-else>
             <Button @click.prevent="login()">Login</Button>
+            <Button @click.prevent="loginAuth()">Login via auth</Button>
+            <Button @click.prevent="checkSession()">Check Session</Button>
         </div>
     </div>
 </template>
@@ -29,13 +28,20 @@ import { authHelper } from '../modules/auth'
 import Chip from 'primevue/chip'
 
 const { user, person } = authHelper()
-const { apiLogout, checkSession } = apiHelper(undefined)
+const { apiLogout, checkSession, apiConfig } = apiHelper(undefined)
 
 const router = useRouter()
 
 const login = () => {
     
     router.push({path: '/login'})
+}
+
+const loginAuth = () => {
+    location.href = apiConfig.baseUrl + '/auth/sign-in?return-to=%2Fimporter&lang=de'
+
+    //router.push({path: '/', beforeEnter: () => {
+    //}})
 }
 
 </script>

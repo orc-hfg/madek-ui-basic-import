@@ -1,5 +1,4 @@
-import { iGenMetaData } from './madek';
-import { MetaDataDetailData } from './../generated/API_fetch_xpbr';
+//import { MetaDataDetailData } from './../generated/API_fetch_xpbr';
    
 
 import { ref, reactive, toRefs } from 'vue'
@@ -316,7 +315,7 @@ export const madekHelper = () => {
         api.api.mediaEntryMetaDataDetail(e_id, {}, authParams?.value)
             .then(resp => {
                 
-                const metaData = resp.data['meta-data'] as iMetaData[]
+                const metaData = resp.data.meta_data //['meta-data'] as iMetaData[]
                 const metaDataMap = new Map<string, iMetaData>()
                 metaData.map(md => {
                     metaDataMap.set(md.meta_key_id, md)

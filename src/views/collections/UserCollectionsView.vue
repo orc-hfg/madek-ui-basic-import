@@ -102,7 +102,7 @@ const updateData = () => {
     }
     if (show_paging.value == true) {
         iquery.page = paging.value.page -1
-        iquery.count = paging.value.count
+        iquery.size = paging.value.count
     }
     
     api.api.collectionsList(iquery, authParams?.value)

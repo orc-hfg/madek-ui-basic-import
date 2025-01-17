@@ -120,7 +120,7 @@ const updateData = () => {
 
           api.api.mediaEntryMetaDataDetail(mediaEntryId.value, {}, authParams?.value)
             .then(result => {
-              const metaData = result.data['meta-data']
+              const metaData = result.data.meta_data; //['meta-data']
               metaDataMap.value.clear()
               metaData.map(md => {
                 metaDataMap.value.set(md.meta_key_id, md)

@@ -128,6 +128,8 @@ export interface iAppSettings {
     email: string
     person_id: string
     institutional_id: string
+    first_name: string
+    last_name: string
     searchable: string
     accepted_usage_terms_id: string
   }
@@ -244,6 +246,7 @@ export const buildMEQuery = (query: iMediaEntriesQuery) => {
       console.log("has filterBy data")
       
       query.filter_by = JSON.stringify(query.filter_by_data)
+      delete query.filter_by_data
       const { filter_by_data, ...result } = query
       return result
   }
@@ -275,6 +278,20 @@ export interface iEntryGroupPermission {
   edit_metadata: boolean
 }
 
+export interface iCollectionUserPermission {
+  id: string,
+  user_id: string,
+  get_metadata_and_previews: boolean,
+  edit_metadata_and_relations: boolean,
+  edit_permissions: boolean
+}
+
+export interface iCollectionGroupPermission {
+  id: string,
+  group_id: string,
+  get_metadata_and_previews: boolean,
+  edit_metadata_and_relations: boolean
+}
 export interface iPagingState {
   page: number
   count: number

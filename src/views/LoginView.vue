@@ -135,26 +135,7 @@ const doTokenLogin = () => {
 const doLogout = () => {
   apiLogout()
 }
-/*
-export default defineComponent({
-  setup() {
-    return {
-      ...toRefs(data),
-      login_mode,
-      login_mode_options,
-      user, person,
-      authParams,
-      
-      loading,
-      error,
-      doLogin,
-      doTokenLogin,
-      doLogout,
-      checkSession
-    }
-  }
-})
-*/
+
 </script>
 <style scoped>
 .login {

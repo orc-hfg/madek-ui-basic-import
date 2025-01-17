@@ -234,7 +234,7 @@ export default defineComponent({
           })
         api.api.mediaEntryMetaDataDetail(this.mediaEntryId, {}, authParams?.value)
         .then(result => {
-          const metaData = result.data['meta-data'] // as iMetaData[]
+          const metaData = result.data.meta_data // ['meta-data'] // as iMetaData[]
   
           this.metaDataMap.clear()
           metaData.map(md => {

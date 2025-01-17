@@ -211,7 +211,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    */
   appSettingsList = (params: RequestParams = {}) =>
     this.request<AppSettingsListData, any>({
-      path: `/api/app-settings`,
+      path: `/api/app-settings/`,
       method: "GET",
       type: ContentType.Json,
       ...params,

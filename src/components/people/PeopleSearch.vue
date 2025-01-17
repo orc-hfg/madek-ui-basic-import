@@ -40,7 +40,7 @@ const getPersonLabel = (person: iPerson) => {
         return person.first_name + ' ' + person.last_name
     }
     else if (person.subtype == 'PeopleGroup') {
-        return person.first_name + ' ' + (person.last_name ? person.last_name :'')
+        return (person.first_name ? person.first_name :'') + ' ' + (person.last_name ? person.last_name :'')
         
     }
     else if (person.subtype == 'PeopleInstitutionalGroup') {
@@ -71,7 +71,7 @@ subtype?: "PeopleInstitutionalGroup" | "Person" | "PeopleGroup";
 watch(searchValue, ()=> {
     console.log("changed search")
     const query = {
-        searchable: searchValue.value,
+        'search-term': searchValue.value,
         subtype: props.subtype,
         count: 50,
         page: 0,

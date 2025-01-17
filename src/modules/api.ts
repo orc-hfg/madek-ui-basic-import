@@ -21,6 +21,7 @@ export const apiHelper = (baseUrl?: string) => {
     
     const apiConfig = {
         baseUrl: baseUrl || 'https://dev.madek.hfg-karlsruhe.de'
+        //baseUrl: baseUrl || 'http://localhost:8080'
         //baseUrl: baseUrl || 'http://localhost:3104'
     }
 
@@ -80,7 +81,7 @@ export const apiHelper = (baseUrl?: string) => {
             .then(response => response.json())
             .then(json => {
                 
-                console.log("Auth info: " + JSON.stringify(json))
+                console.log("checkSession: Auth info: " + JSON.stringify(json))
                 
                 if (!json || !json.id) {
                     console.error("ABORT: checkSession: auth info without id")
@@ -95,8 +96,14 @@ export const apiHelper = (baseUrl?: string) => {
 
                  
                 authInfo.value = json
+                setUser(
+                    //json.user, json.person, 
+                    json, json,
+                    undefined,
+                    undefined,
+                    params)
                 const userId = json.id
-
+/*
                 api.api.usersDetail(userId, params)
                     .then(resp => {
                         //console.log("full user: " + JSON.stringify(json))
@@ -117,22 +124,20 @@ export const apiHelper = (baseUrl?: string) => {
                                 params)
                         })
                     })
-                 
+  */                             
             })
-                
+  
     }
 
+    checkSession()
 
     const apiLogin = (login: string, password: string, cb: any) => {
      
         const params = basicAuthParams(login, password);
         
-        console.log("call Auth info: " + JSON.stringify(params))
-
         api.api.authInfoList(params)
             .then(response => response.json())
             .then(json => {
-                //const json = response.data
                 console.log("Auth info: " + JSON.stringify(json))
                 
                 if (!json.id) {
@@ -141,6 +146,12 @@ export const apiHelper = (baseUrl?: string) => {
                 }
 
                 authInfo.value = json
+                /* setUser(
+                    json.user, json.person, 
+                    basicAuthHash(login,password),
+                    undefined,
+                    params) */
+                
                 const userId = authInfo?.value?.id
 
                 api.api.usersDetail(userId, params).then(uresp =>
@@ -185,7 +196,12 @@ export const apiHelper = (baseUrl?: string) => {
                 
 
                 authInfo.value = json
-
+                setUser(
+                    json.user, json.person, 
+                    undefined,
+                    token,
+                    params)
+/*
                 const userId = authInfo?.value?.id
 
                 api.api.usersDetail(userId, params)
@@ -207,7 +223,7 @@ export const apiHelper = (baseUrl?: string) => {
                                 params)
                         })
                     })
-                
+  */              
                 
                 
             }).catch(error => {

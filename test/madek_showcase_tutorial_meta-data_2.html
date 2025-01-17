@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Showcase</title>
+    <script>
+      const MADEK_URL = new URL("https://dev.madek.hfg-karlsruhe.de/api/");
+      const REQUEST_AUTH_OPTS = {
+        headers: {
+          "Authorization": "token 5FXBB5CHD48XE7HJKNXJ1VCCVHBDQ767"
+        }
+      };
+      const COLLECTION = "9dddd280-5544-4210-a8f8-8475913fb46d";//"7eb5a457-20d6-4069-912b-08f35e73f817";
+      // sehenswerte inhalte is only collection of collections...next tutorial step
+      //const COLLECTION = "f9519557-5a60-4f5e-8fb4-a39e7ef3f6fb";
+
+
+      const KEY_LIST = 
+      [
+        "madek_core:title",
+        "madek_core:description",
+        "madek_core:copyright_notice",
+        "madek_core:authors",
+        "madek_core:keywords"
+      ];
+      const SEARCH_KEYS = new URLSearchParams({meta_keys: JSON.stringify(KEY_LIST)});
+
+	  async function insert_img(id, frame, meta_data_map, keywordsMap, peopleMap) {
+		  const elim = document.createElement("img");
+      //download entry
+      //elim.src = new URL(`media-entry/${id}/media-file/data-stream`, MADEK_URL);
+      // preview entry
+      elim.src = new URL(`media-entry/${id}/preview/data-stream`, MADEK_URL);
+      frame.appendChild(elim);
+      
+
+      const elTitle = document.createElement("p");
+      frame.appendChild(elTitle);
+      const elDesc = document.createElement("p");
+      frame.appendChild(elDesc);
+      
+      const elAuthors = document.createElement("p");
+      frame.appendChild(elAuthors);
+      const elKeywords = document.createElement("p");
+      frame.appendChild(elKeywords);
+      const elCopy = document.createElement("p");
+      frame.appendChild(elCopy);
+
+      
+
+      elTitle.innerText = "Titel: -"
+      if (meta_data_map[id] && meta_data_map[id]["madek_core:title"]) {
+        elTitle.innerText = "Titel: " + meta_data_map[id]["madek_core:title"].string;
+      }
+
+      elDesc.innerText = "Beschreibung: -";
+      if (meta_data_map[id] && meta_data_map[id]["madek_core:description"]) {
+        const desc = meta_data_map[id]["madek_core:description"].string.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        elDesc.innerHTML = "Beschreibung: " + desc;
+      }
+
+      elCopy.innerText = "Copyright: -"
+      if (meta_data_map[id] && meta_data_map[id]["madek_core:copyright_notice"]) {
+        elCopy.innerText = "Copyright: " + meta_data_map[id]["madek_core:copyright_notice"].string;
+      }
+
+      elAuthors.innerText = "Autoren: -"
+      if (meta_data_map[id] && meta_data_map[id]["madek_core:authors"]) {
+        const mdid = meta_data_map[id]["madek_core:authors"].id;
+        const mdUrl = new URL(`meta-data/${mdid}`, MADEK_URL);
+        const mdd = await (await fetch(mdUrl)).json();
+        let textVal = "";
+        mdd.value.map((pid) => {
+          const person = peopleMap[pid.id];
+          if (!!person) {
+            textVal += person.first_name + " " + (person.last_name?person.last_name:"") + " ";
+          } else {
+            console.error("Invalid person id: " + pid);
+          }
+        })
+        elAuthors.innerText = "Autoren: " + textVal;
+      }
+
+      elKeywords.innerText = "Schlagwörter: -"
+      if (meta_data_map[id] && meta_data_map[id]["madek_core:keywords"]) {
+        const mdid = meta_data_map[id]["madek_core:keywords"].id
+        const mdUrl = new URL(`meta-data/${mdid}`, MADEK_URL);
+        const mdd = await (await fetch(mdUrl)).json()
+        let textVal = "";
+        mdd.value.map((kid) => {
+          const kw = keywordsMap[kid.id];
+          if (!!kw && kw.term) {
+            textVal += kw.term;
+          } else {
+            console.error("Invalid keyword id: " + kid);
+          }
+          
+          
+        })
+        elKeywords.innerText = "Schlagwörter: " + textVal;
+      }
+	  }
+
+    async function madek_init() {
+      const keywordsUrl = new URL(`keywords/`, MADEK_URL);
+      const keywordsData = await ( await fetch(keywordsUrl)).json();
+      const keywordsMap = {};
+      keywordsData.keywords.map((kw) => {
+        keywordsMap[kw.id] = kw;
+      })
+      const peopleUrl = new URL(`people/?count=10000`, MADEK_URL);
+      const peopleData = await ( await fetch(peopleUrl)).json();
+      const peopleMap = {};
+      peopleData.people.map((person) => {
+        peopleMap[person.id] = person;
+      })
+
+		  const url = new URL(`media-entries-related-data?` + new URLSearchParams({
+        collection_id: COLLECTION,
+        public_get_metadata_and_previews: true,
+        count: 400,
+        page: 0,
+      })
+        , MADEK_URL);
+	  	const cmes = await (await fetch(url, REQUEST_AUTH_OPTS)).json();
+	  	const frame = document.getElementById("frame");
+      
+      const meta_data_map = {}
+      cmes["meta_data"].map((memdl) => {
+        memdl.map((memd) => {
+          meta_data_map[memd.media_entry_id] = meta_data_map[memd.media_entry_id] || {};
+          meta_data_map[memd.media_entry_id][memd.meta_key_id] = memd;
+        })
+        
+      })
+      
+      
+    	cmes["media_entries"].map((e) => {
+        insert_img(e.id, frame, meta_data_map, keywordsMap, peopleMap);
+      })
+    }
+    </script>
+    <style>
+      img {
+        max-width: 300px;
+        width: 300px;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body onload="madek_init()">
+    <h1>Madek Showcase</h1>
+    <!--<h2>Collection: Sehenswerte Inhalte (f9519557-5a60-4f5e-8fb4-a39e7ef3f6fb)</h2>-->
+    <h2>Zeigt Collection: (7eb5a457-20d6-4069-912b-08f35e73f817)</h2>
+    
+    <div id="frame" />
+  </body>
+</html>

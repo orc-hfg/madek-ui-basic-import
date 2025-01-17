@@ -675,7 +675,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         },
         any
       >({
-        path: `/api/app-settings`,
+        path: `/api/app-settings/`,
         method: "GET",
         type: ContentType.Json,
         format: "json",
@@ -687,7 +687,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @name ContextKeysList
      * @summary PUBLIC Context: Query / List context_keys.
-     * @request GET:/api/context-keys/
+     * @request GET:/api/context-keys
      */
     contextKeysList: (
       query?: {
@@ -790,7 +790,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @name ContextsList
      * @summary USER Context: List contexts.
-     * @request GET:/api/contexts/
+     * @request GET:/api/contexts
      */
     contextsList: (params: RequestParams = {}) =>
       this.request<
@@ -848,7 +848,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @name KeywordsList
      * @summary PUBLIC Context: Query / list keywords.
-     * @request GET:/api/keywords/
+     * @request GET:/api/keywords
      */
     keywordsList: (
       query?: {
@@ -859,9 +859,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         description?: string;
         rdf_class?: string;
         /** @format int32 */
-        page?: number;
+        page: number;
         /** @format int32 */
-        count?: number;
+        size2: number;
+        /** @format int32 */
+        //size?: number;
       },
       params: RequestParams = {},
     ) =>
@@ -925,7 +927,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @name MetaKeysList
      * @summary PUBLIC/USER Context: Get all meta-key ids
-     * @request GET:/api/meta-keys/
+     * @request GET:/api/meta-keys
      */
     metaKeysList: (
       query?: {
@@ -1148,7 +1150,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query?: {
         me_edit_permission?: boolean;
         /** @format int32 */
-        count?: number;
+        size?: number;
         me_edit_metadata_and_relations?: boolean;
         me_get_metadata_and_previews?: boolean;
         collection_id?: string;
@@ -3389,6 +3391,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         },
         any
       >({
+        //path: `/api/media-entry/${mediaEntryId}/preview`,
         path: `/api/media-entry/${mediaEntryId}/preview`,
         method: "GET",
         query: query,
@@ -5198,7 +5201,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @name VocabulariesList
      * @summary Get list of vocabularies ids.
-     * @request GET:/api/vocabularies/
+     * @request GET:/api/vocabularies
      */
     vocabulariesList: (
       query?: {

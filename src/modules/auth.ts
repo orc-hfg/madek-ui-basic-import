@@ -1,6 +1,6 @@
 import { ref, reactive, toRefs } from 'vue'
 import { iPerson, iUser } from '../api_resources'
-import { RequestParams } from './../generated/API_fetch';
+import { RequestParams } from './../generated/API_fetch_xeio';
 
 const AUTH_KEY = "madek_api_demo_auth"
 
@@ -74,7 +74,6 @@ export const authHelper = () => {
     const setUser = (user: iUser, person: iPerson,
         hash:string|undefined,
         token: string|undefined,
-       // cookie: string|undefined,
         authParams: RequestParams):void => {
         state.user = user
         state.person = person

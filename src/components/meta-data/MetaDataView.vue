@@ -1,11 +1,11 @@
 <template>
   <div class="metaDataView">
-  
+<!--  
     <div v-if="!checkLoaded()">
       <p>Loading...</p>
     </div>
     <div v-if="checkLoaded()">
-
+-->
       <div v-if="mode === 'showAll'">
         <div v-for="context_id in getAllContexts()" class="context_panel allPanel">
           
@@ -123,7 +123,7 @@
       <div v-else>
         Invalid show mode!!
       </div>
-    </div>
+    <!--</div>-->
   </div>
 </template>
 
@@ -166,11 +166,6 @@ const {
     getMetaKeyML,
     getMetaKey,
 
-    getMetaData,
-    getMetaDataRelated,
-    getMetaDataExtended,
-    isMetaKeyObjectType,
-    getMetaKeyObjectType
   } = madekHelper()
 
 const props = defineProps({
@@ -255,7 +250,7 @@ const updateData =() => {
   //getMetaDataRelated(resKey, resId , onMetaData, onError)
  
   mdStore.getCachedMetaDataRelated(resKey, resId, props.forceReload, (data) => {
-    console.error("got CachedMetaDataRelated: ")
+    console.log("got CachedMetaDataRelated: ")
     metaDataMap.value = data
   }, (error) => {
     console.error("ERROR: getCachedMetaDataRelated: " + JSON.stringify(error))

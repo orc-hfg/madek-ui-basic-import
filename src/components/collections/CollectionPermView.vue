@@ -31,6 +31,7 @@
             @change="save('get_metadata_and_previews')"
           />
         </div>
+        <!--
         <div class="flex align-items-center justify-content-left w-15rem h-4rem">
           <span>Download:</span>
           &nbsp;
@@ -38,7 +39,7 @@
             v-model="entry_perms.get_full_size"
             @change="save('get_full_size')"
           />
-        </div>
+        </div>-->
       </div>
     </Panel>
 
@@ -132,14 +133,13 @@ import Card from 'primevue/card';
 import Panel from 'primevue/panel';
 import Dialog from 'primevue/dialog';
 import Tag from 'primevue/tag';
-import PeopleSearch from '../people/PeopleSearch.vue'
 import UserSearch from '../people/UserSearch.vue'
-import { iMediaEntry, iPerson, iGroup, iEntryUserPermission, iEntryGroupPermission, iUser } from '../../api_resources'
+import { iCollection, iPerson, iGroup, iCollectionUserPermission, iCollectionGroupPermission, iUser } from '../../api_resources'
 
 import { apiHelper } from '../../modules/api'
 import { madekHelper } from '../../modules/madek'
 import GroupSearch from '../people/GroupSearch.vue';
-import { MediaEntryPermsUserDetailData } from '../../generated/data-contracts';
+import { CollectionPermsUserDetailData } from '../../generated/data-contracts';
 
 const { api, authParams } = apiHelper()
 const { getUser, getUserPerson } = madekHelper()
@@ -150,21 +150,19 @@ const props = defineProps({
 
 const user_perm_options = [
     { label: "Öffentlich", value: 'get_metadata_and_previews', icon: "pi pi-globe"},
-    { label: "Download", value: 'get_full_size', icon: "pi pi-download"},
-    { label: "Bearbeiten", value: 'edit_metadata', icon: "pi pi-pencil"},
+    { label: "Bearbeiten", value: 'edit_metadata_and_relations', icon: "pi pi-pencil"},
     { label: "Berechtigungen", value: 'edit_permissions', icon: "pi pi-user-edit"},
 ]
 
 
 const group_perm_options = [
     { label: "Öffentlich", value: 'get_metadata_and_previews', icon: "pi pi-globe"},
-    { label: "Download", value: 'get_full_size', icon: "pi pi-download"},
-    { label: "Bearbeiten", value: 'edit_metadata', icon: "pi pi-pencil"},
+    { label: "Bearbeiten", value: 'edit_metadata_and_relations', icon: "pi pi-pencil"},
 ]
 
-const entry_perms = ref({} as iMediaEntry)
-const users_perms = ref([] as iEntryUserPermission[])
-const groups_perms = ref([] as iEntryGroupPermission[])
+const entry_perms = ref({} as iCollection)
+const users_perms = ref([] as iCollectionUserPermission[])
+const groups_perms = ref([] as iCollectionGroupPermission[])
 const creatorP = ref({} as iPerson)
 const responsibleP = ref({} as iPerson)
 
@@ -181,26 +179,7 @@ const getUserPersonName = (userId:string) => {
         return userPersonNames.value.get(userId)
     }
     else {
-      /*
-        getUserPerson(userId, (person:iPerson) => {
-            // TODO type
-            console.log("got user person: "  + userId + ":")
-            let result = ''
-            if (person.subtype == 'Person') {
-                result =  person.first_name + ' ' + person.last_name
-            }
-            if (person.subtype == 'PeopleGroup') {
-                result = person.first_name + ' ' + person.last_name
-            }
-            if (person.subtype == 'PeopleInstitutionalGroup') {
-                result = person.first_name + ' ' + person.last_name
-            }
-
-            userPersonNames.value.set(userId, result)
-
-
-        })
-        */
+    
        getUser(userId, (user: iUser) => {
           console.log("got user : "  + userId + ":")
           let result = user.first_name + ' ' + user.last_name
@@ -226,7 +205,7 @@ const getGroupPersonName = (groupId:string) => {
 const updateData = () => {
 
 
-    api.api.mediaEntryPermsResourcesDetail(props.entry_id, authParams?.value)
+    api.api.collectionPermsResourcesDetail(props.entry_id, authParams?.value)
         .then(resp => {
             entry_perms.value = resp.data
 
@@ -241,16 +220,16 @@ const updateData = () => {
             })
         })
 
-    api.api.mediaEntryPermsUsersDetail(props.entry_id, authParams?.value)
+    api.api.collectionPermsUsersDetail(props.entry_id, authParams?.value)
         .then(resp =>{
             users_perms.value = resp.data
             // TODO get user names
-            users_perms.value.forEach((elem: MediaEntryPermsUserDetailData) => {
+            users_perms.value.forEach((elem: CollectionPermsUserDetailData) => {
               getUserPersonName(elem.user_id)
             })
         })
 
-    api.api.mediaEntryPermsGroupsDetail(props.entry_id, authParams?.value)
+    api.api.collectionPermsGroupsDetail(props.entry_id, authParams?.value)
         .then(resp => {
             groups_perms.value = resp.data
             groups_perms.value.forEach(gp => {
@@ -268,43 +247,43 @@ const updateData = () => {
 
 const save = (permName: "get_metadata_and_previews" | "get_full_size") => {
     const permVal = entry_perms.value[permName] === true ? true : false
-    api.api.mediaEntryPermsResourceUpdate(props.entry_id,permName, permVal, authParams?.value)
+    api.api.collectionPermsResourceUpdate(props.entry_id,permName, permVal, authParams?.value)
         .then(resp => {
             entry_perms.value = resp.data
         })
 }
 
-const saveUser = (userPerm: iEntryUserPermission, permName) => {
+const saveUser = (userPerm: iCollectionUserPermission, permName) => {
     const userId = userPerm.user_id
     const permVal = userPerm[permName] === true ? true : false
 
-    api.api.mediaEntryPermsUserUpdate(props.entry_id, userId, permName, permVal, authParams?.value)
+    api.api.collectionPermsUserUpdate(props.entry_id, userId, permName, permVal, authParams?.value)
         .then(resp => {
             console.log("updated user perms: " + JSON.stringify(resp.data))
         })
 }
 
-const saveGroup = (groupPerm: iEntryGroupPermission, permName) => {
+const saveGroup = (groupPerm: iCollectionGroupPermission, permName) => {
     const groupId = groupPerm.group_id
     const permVal = groupPerm[permName] === true ? true : false
 
-    api.api.mediaEntryPermsGroupUpdate(props.entry_id, groupId, permName, permVal, authParams?.value)
+    api.api.collectionPermsGroupUpdate(props.entry_id, groupId, permName, permVal, authParams?.value)
         .then(resp => {
             console.log("updated group perms: " + JSON.stringify(resp.data))
 
         })
 }
 
-const clickedDeleteUser = (userPerm: iEntryUserPermission) => {
-    api.api.mediaEntryPermsUserDelete(props.entry_id, userPerm.user_id, authParams?.value)
+const clickedDeleteUser = (userPerm: iCollectionUserPermission) => {
+    api.api.collectionPermsUserDelete(props.entry_id, userPerm.user_id, authParams?.value)
         .then(resp => {
             console.log("deleted user perms:" + JSON.stringify(resp.data))
             updateData()
         })
 
 }
-const clickedDeleteGroup = (groupPerm: iEntryGroupPermission) => {
-    api.api.mediaEntryPermsGroupDelete(props.entry_id, groupPerm.group_id, authParams?.value)
+const clickedDeleteGroup = (groupPerm: iCollectionGroupPermission) => {
+    api.api.collectionPermsGroupDelete(props.entry_id, groupPerm.group_id, authParams?.value)
         .then(resp => {
             console.log("deleted group perms:" + JSON.stringify(resp.data))
             updateData()
@@ -313,42 +292,18 @@ const clickedDeleteGroup = (groupPerm: iEntryGroupPermission) => {
 
 
 
-const selectedPerson = (person: iPerson) => {
-    console.log("selectedPerson: " + JSON.stringify(person))
-    api.api.usersList({person_id: person.id}, authParams?.value)
-        .then(resp => {
-            const user_id = resp.data.users[0].id
-            const data = {
-                get_metadata_and_previews: false,
-                get_full_size: false,
-                edit_metadata: false,
-                edit_permissions: false
-            }
-            api.api.mediaEntryPermsUserCreate(props.entry_id, user_id, data, authParams?.value)
-                .then(resp => {
-                    updateData()
-                })
-        })
-
-    showAddUser.value = false
-}
-
 const selectedUser = (user: iUser) => {
-    console.log("selectedUser: " + JSON.stringify(user))
-    //api.api.usersList({person_id: person.id}, authParams?.value)
-    //    .then(resp => {
-            const user_id = user.id; // resp.data.users[0].id
-            const data = {
-                get_metadata_and_previews: false,
-                get_full_size: false,
-                edit_metadata: false,
-                edit_permissions: false
-            }
-            api.api.mediaEntryPermsUserCreate(props.entry_id, user_id, data, authParams?.value)
-                .then(resp => {
-                    updateData()
-                })
-    //    })
+    console.log("selectedUser: " + JSON.stringify(user))  
+    const data = {
+        get_metadata_and_previews: false,
+        edit_metadata_and_relations: false,
+        edit_permissions: false
+    }
+    api.api.collectionPermsUserCreate(props.entry_id, user.id, data, authParams?.value)
+      .then(resp => {
+        updateData()
+      })
+  
 
     showAddUser.value = false
 }
@@ -356,13 +311,12 @@ const selectedGroup = (group: iGroup) => {
     console.log("selectedGroup: " + JSON.stringify(group))
     const data = {
         get_metadata_and_previews: false,
-        get_full_size: false,
-        edit_metadata: false
+        edit_metadata_and_relations: false
     }
-    api.api.mediaEntryPermsGroupCreate(props.entry_id, group.id, data, authParams?.value)
-                .then(resp => {
-                    updateData()
-                })
+    api.api.collectionPermsGroupCreate(props.entry_id, group.id, data, authParams?.value)
+      .then(resp => {
+        updateData()
+      })
     showAddGroup.value = false
 }
 /*

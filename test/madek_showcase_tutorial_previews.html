@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Showcase</title>
+    <script>
+      const MADEK_URL = new URL("https://dev.madek.hfg-karlsruhe.de/api/");
+      const COLLECTION = "9dddd280-5544-4210-a8f8-8475913fb46d";//"e1d42683-01a8-4a58-850a-f399ea97fb36";
+
+	  function insert_img(id, frame) {
+		  const elim = document.createElement("img");
+      // preview entry
+      elim.src = new URL(`media-entry/${id}/preview/data-stream`, MADEK_URL);
+      frame.appendChild(elim);
+	  }
+
+    async function madek_init() {
+		  const url = new URL(`media-entries?` 
+        + new URLSearchParams({
+          collection_id: COLLECTION,
+          public_get_metadata_and_previews: true,
+          //public_get_full_size: true
+        }),
+        MADEK_URL);
+	  	const cmes = await (await fetch(url)).json();
+	  	const frame = document.getElementById("frame");
+	  	cmes["media_entries"].map((e) => insert_img(e.id, frame))
+      }
+    </script>
+  </head>
+  <body onload="madek_init()">
+    <h1>Madek Showcase</h1>
+    <h2>Collection: (e1d42683-01a8-4a58-850a-f399ea97fb36)</h2>
+    
+    <div id="frame" />
+  </body>
+</html>
