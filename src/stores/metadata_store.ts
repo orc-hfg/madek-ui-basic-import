@@ -6,6 +6,7 @@ import { madekHelper } from '../modules/madek';
 import { errorHelper } from '../modules/error';
 import { CollectionMetaDataDetailData } from '../generated/data-contracts';
 
+const META_DATA = 'meta_data'
 const { api, authParams, user } = apiHelper()
 const {
     RKEY_ENTRY, RKEY_COLLECTION,
@@ -84,7 +85,7 @@ export const useMetadataStore = defineStore('metadata', {
                 case RKEY_COLLECTION:
                     api.api.collectionMetaDataDetail(resId, {}, authParams?.value)
                     .then(resp => {
-                        cbOk(resp.data['meta-data']) // ['meta-data'])
+                        cbOk(resp.data[META_DATA])
                     })
                     .catch(error => {
                         handle_error('getMetaData:', error)
@@ -94,7 +95,7 @@ export const useMetadataStore = defineStore('metadata', {
                 case RKEY_ENTRY:
                     api.api.mediaEntryMetaDataDetail(resId, {}, authParams?.value)
                     .then(resp => {
-                        cbOk(resp.data['meta-data']) // ['meta-data'])
+                        cbOk(resp.data[META_DATA])
                     })
                     .catch(error => {
                         handle_error('getMetaData:', error)
@@ -165,7 +166,7 @@ export const useMetadataStore = defineStore('metadata', {
                 this.getApiMetaDataRelated(resKey, resId, (data) => {
 
                     data.forEach(mdMap => {
-                        const md = mdMap['meta-data']
+                        const md = mdMap[META_DATA]
                         this.metaDataRMap[resKey][resId][md.meta_key_id] = md
 
                         
