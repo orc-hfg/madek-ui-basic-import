@@ -50,14 +50,6 @@ export const apiHelper = (baseUrl?: string) => {
 
     const api = new Api(apiConfig)
 
-    /*
-    watch([user], () => {
-        console.log("api user changed: " + JSON.stringify(user))
-        debugger
-        // reload app data vocabs and meta-key as user or public
-    })
-    */
-
     const sessionAuthParams = () => {
         let rq : RequestParams = {
             headers: {
@@ -103,7 +95,7 @@ export const apiHelper = (baseUrl?: string) => {
                     undefined,
                     params)
                 const userId = json.id
-/*
+
                 api.api.usersDetail(userId, params)
                     .then(resp => {
                         //console.log("full user: " + JSON.stringify(json))
@@ -124,12 +116,12 @@ export const apiHelper = (baseUrl?: string) => {
                                 params)
                         })
                     })
-  */                             
+
             })
   
     }
 
-    checkSession()
+    //checkSession()
 
     const apiLogin = (login: string, password: string, cb: any) => {
      
@@ -146,11 +138,6 @@ export const apiHelper = (baseUrl?: string) => {
                 }
 
                 authInfo.value = json
-                /* setUser(
-                    json.user, json.person, 
-                    basicAuthHash(login,password),
-                    undefined,
-                    params) */
                 
                 const userId = authInfo?.value?.id
 
@@ -187,33 +174,31 @@ export const apiHelper = (baseUrl?: string) => {
      
         const params = tokenAuthParams(login, token);
         
-        console.log("call Auth info: " + JSON.stringify(params))
+        console.log("call Auth info with: " + JSON.stringify(params))
 
         api.api.authInfoList(params)
-            .then(response => {
-                const json = response.data
-                console.log("Auth info: " + JSON.stringify(json))
+            .then(response => response.json())
+            .then(json => {
+                console.log("Auth info response: " + JSON.stringify(json))
                 
-
+                if (!json.id) {
+                    console.error("ABORT: apiLogin: auth info without id")
+                    return
+                }
                 authInfo.value = json
-                setUser(
-                    json.user, json.person, 
-                    undefined,
-                    token,
-                    params)
-/*
+
                 const userId = authInfo?.value?.id
 
                 api.api.usersDetail(userId, params)
                     .then(resp => {
-                        //console.log("full user: " + JSON.stringify(json))
+                        console.log("full user: " + JSON.stringify(json))
                         const user = resp.data
                         const pid = user.person_id
                         console.log("User is person: " + pid)
 
                         api.api.peopleDetail(pid, params)
                         .then(resp => {
-                            //console.log("full person: " + JSON.stringify(json))
+                            console.log("full person: " + JSON.stringify(json))
                             const person = resp.data
 
                             setUser(
@@ -223,7 +208,7 @@ export const apiHelper = (baseUrl?: string) => {
                                 params)
                         })
                     })
-  */              
+
                 
                 
             }).catch(error => {
