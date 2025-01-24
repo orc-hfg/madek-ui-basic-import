@@ -20,7 +20,8 @@ export const apiHelper = (baseUrl?: string) => {
 
     
     const apiConfig = {
-        baseUrl: baseUrl || 'https://dev.madek.hfg-karlsruhe.de'
+        baseUrl: baseUrl || 'https://staging.madek.hfg-karlsruhe.de'
+        //baseUrl: baseUrl || 'https://dev.madek.hfg-karlsruhe.de'
         //baseUrl: baseUrl || 'http://localhost:8080'
         //baseUrl: baseUrl || 'http://localhost:3104'
     }
@@ -90,11 +91,11 @@ export const apiHelper = (baseUrl?: string) => {
                 authInfo.value = json
                 setUser(
                     //json.user, json.person, 
-                    json, json,
+                    json.user, json.person,
                     undefined,
                     undefined,
                     params)
-                const userId = json.id
+              /*   const userId = json.id
 
                 api.api.usersDetail(userId, params)
                     .then(resp => {
@@ -115,7 +116,7 @@ export const apiHelper = (baseUrl?: string) => {
                                 //MS_cookie,
                                 params)
                         })
-                    })
+                    }) */
 
             })
   
@@ -139,9 +140,17 @@ export const apiHelper = (baseUrl?: string) => {
 
                 authInfo.value = json
                 
-                const userId = authInfo?.value?.id
+                //const userId = authInfo?.value?.id
+                const user = authInfo?.value
+                const person = authInfo?.value
 
-                api.api.usersDetail(userId, params).then(uresp =>
+                setUser(
+                    user, person, 
+                    basicAuthHash(login,password),
+                    undefined,
+                    params)
+
+                /* api.api.usersDetail(userId, params).then(uresp =>
                     {
                         const user = uresp.data
                         console.log("full user: " + JSON.stringify(user))
@@ -159,7 +168,7 @@ export const apiHelper = (baseUrl?: string) => {
                                     undefined,
                                     params)
                             })
-                        })
+                        }) */
                 
                 
                 
@@ -187,9 +196,17 @@ export const apiHelper = (baseUrl?: string) => {
                 }
                 authInfo.value = json
 
-                const userId = authInfo?.value?.id
+                //const userId = authInfo?.value?.id
+                const user = authInfo?.value
+                const person = authInfo?.value
 
-                api.api.usersDetail(userId, params)
+                setUser(
+                    user, person, 
+                    basicAuthHash(login,password),
+                    undefined,
+                    params)
+
+                /* api.api.usersDetail(userId, params)
                     .then(resp => {
                         console.log("full user: " + JSON.stringify(json))
                         const user = resp.data
@@ -207,7 +224,7 @@ export const apiHelper = (baseUrl?: string) => {
                                 token,
                                 params)
                         })
-                    })
+                    }) */
 
                 
                 

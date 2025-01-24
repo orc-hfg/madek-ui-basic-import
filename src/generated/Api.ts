@@ -193,11 +193,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name AuthInfoList
    * @summary Authentication help and info.
-   * @request GET:/api/auth-info
+   * @request GET:/api-v2/auth-info
    */
   authInfoList = (params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/auth-info`,
+      path: `/api-v2/auth-info`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -207,11 +207,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name AppSettingsList
    * @summary PUBLIC Context: Get App Settings.
-   * @request GET:/api/app-settings
+   * @request GET:/api-v2/app-settings
    */
   appSettingsList = (params: RequestParams = {}) =>
     this.request<AppSettingsListData, any>({
-      path: `/api/app-settings/`,
+      path: `/api-v2/app-settings/`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -221,11 +221,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name ContextKeysList
    * @summary PUBLIC Context: Query / List context_keys.
-   * @request GET:/api/context-keys/
+   * @request GET:/api-v2/context-keys/
    */
   contextKeysList = (query: ContextKeysListParams, params: RequestParams = {}) =>
     this.request<ContextKeysListData, any>({
-      path: `/api/context-keys/`,
+      path: `/api-v2/context-keys/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -236,11 +236,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name ContextKeysDetail
    * @summary PUBLIC Context: Get context_key by id.
-   * @request GET:/api/context-keys/{id}
+   * @request GET:/api-v2/context-keys/{id}
    */
   contextKeysDetail = (id: string, params: RequestParams = {}) =>
     this.request<ContextKeysDetailData, any>({
-      path: `/api/context-keys/${id}`,
+      path: `/api-v2/context-keys/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -250,11 +250,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name ContextsList
    * @summary USER Context: List contexts.
-   * @request GET:/api/contexts/
+   * @request GET:/api-v2/contexts/
    */
   contextsList = (params: RequestParams = {}) =>
     this.request<ContextsListData, any>({
-      path: `/api/contexts/`,
+      path: `/api-v2/contexts/`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -264,11 +264,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name ContextsDetail
    * @summary USER Context: Get contexts by id.
-   * @request GET:/api/contexts/{id}
+   * @request GET:/api-v2/contexts/{id}
    */
   contextsDetail = (id: string, params: RequestParams = {}) =>
     this.request<ContextsDetailData, any>({
-      path: `/api/contexts/${id}`,
+      path: `/api-v2/contexts/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -278,11 +278,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name KeywordsList
    * @summary PUBLIC Context: Query / list keywords.
-   * @request GET:/api/keywords/
+   * @request GET:/api-v2/keywords/
    */
   keywordsList = (query: KeywordsListParams, params: RequestParams = {}) =>
     this.request<KeywordsListData, any>({
-      path: `/api/keywords/`,
+      path: `/api-v2/keywords/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -293,11 +293,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name KeywordsDetail
    * @summary PUBLIC Context: Get keyword for id.
-   * @request GET:/api/keywords/{id}
+   * @request GET:/api-v2/keywords/{id}
    */
   keywordsDetail = (id: string, params: RequestParams = {}) =>
     this.request<KeywordsDetailData, any>({
-      path: `/api/keywords/${id}`,
+      path: `/api-v2/keywords/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -307,11 +307,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MetaKeysList
    * @summary PUBLIC/USER Context: Get all meta-key ids
-   * @request GET:/api/meta-keys/
+   * @request GET:/api-v2/meta-keys/
    */
   metaKeysList = (query: MetaKeysListParams, params: RequestParams = {}) =>
     this.request<MetaKeysListData, any>({
-      path: `/api/meta-keys/`,
+      path: `/api-v2/meta-keys/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -322,7 +322,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MetaKeysDetail
    * @summary PUBLIC/USER Context: Get meta-key by id
-   * @request GET:/api/meta-keys/{id}
+   * @request GET:/api-v2/meta-keys/{id}
    */
   metaKeysDetail = (id: string, params: RequestParams = {}) =>
     this.request<
@@ -331,7 +331,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
         message: string;
       }
     >({
-      path: `/api/meta-keys/${id}`,
+      path: `/api-v2/meta-keys/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -341,11 +341,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name PeopleList
    * @summary PUBLIC Context: Get all people ids
-   * @request GET:/api/people/
+   * @request GET:/api-v2/people/
    */
   peopleList = (query: PeopleListParams, params: RequestParams = {}) =>
     this.request<PeopleListData, any>({
-      path: `/api/people/`,
+      path: `/api-v2/people/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -356,11 +356,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name PeopleDetail
    * @summary PUBLIC Context: Get person by id
-   * @request GET:/api/people/{id}
+   * @request GET:/api-v2/people/{id}
    */
   peopleDetail = (id: string, params: RequestParams = {}) =>
     this.request<PeopleDetailData, string>({
-      path: `/api/people/${id}`,
+      path: `/api-v2/people/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -370,11 +370,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionsList
    * @summary USER Context: Query/List collections.
-   * @request GET:/api/collections
+   * @request GET:/api-v2/collections
    */
   collectionsList = (query: CollectionsListParams, params: RequestParams = {}) =>
     this.request<CollectionsListData, any>({
-      path: `/api/collections`,
+      path: `/api-v2/collections`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -385,11 +385,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCreate
    * @summary USER Context: Create collection
-   * @request POST:/api/collection
+   * @request POST:/api-v2/collection
    */
   collectionCreate = (body: CollectionCreatePayload, params: RequestParams = {}) =>
     this.request<CollectionCreateData, any>({
-      path: `/api/collection`,
+      path: `/api-v2/collection`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -400,11 +400,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionDetail
    * @summary PUBLIC/USER Context: Get collection for id.
-   * @request GET:/api/collection/{collection_id}
+   * @request GET:/api-v2/collection/{collection_id}
    */
   collectionDetail = (collectionId: string, params: RequestParams = {}) =>
     this.request<CollectionDetailData, any>({
-      path: `/api/collection/${collectionId}`,
+      path: `/api-v2/collection/${collectionId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -414,11 +414,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionUpdate
    * @summary USER Context: Update collection for id.
-   * @request PUT:/api/collection/{collection_id}
+   * @request PUT:/api-v2/collection/{collection_id}
    */
   collectionUpdate = (collectionId: string, body: CollectionUpdatePayload, params: RequestParams = {}) =>
     this.request<CollectionUpdateData, any>({
-      path: `/api/collection/${collectionId}`,
+      path: `/api-v2/collection/${collectionId}`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -429,11 +429,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionDelete
    * @summary USER Context: Delete collection for id.
-   * @request DELETE:/api/collection/{collection_id}
+   * @request DELETE:/api-v2/collection/{collection_id}
    */
   collectionDelete = (collectionId: string, params: RequestParams = {}) =>
     this.request<CollectionDeleteData, any>({
-      path: `/api/collection/${collectionId}`,
+      path: `/api-v2/collection/${collectionId}`,
       method: "DELETE",
       ...params,
     });
@@ -442,11 +442,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDataDetail
    * @summary Get meta-data for collection.
-   * @request GET:/api/collection/{collection_id}/meta-data
+   * @request GET:/api-v2/collection/{collection_id}/meta-data
    */
   collectionMetaDataDetail = ({ collectionId, ...query }: CollectionMetaDataDetailParams, params: RequestParams = {}) =>
     this.request<CollectionMetaDataDetailData, any>({
-      path: `/api/collection/${collectionId}/meta-data`,
+      path: `/api-v2/collection/${collectionId}/meta-data`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -457,14 +457,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDataRelatedDetail
    * @summary Get meta-data for collection.
-   * @request GET:/api/collection/{collection_id}/meta-data-related
+   * @request GET:/api-v2/collection/{collection_id}/meta-data-related
    */
   collectionMetaDataRelatedDetail = (
     { collectionId, ...query }: CollectionMetaDataRelatedDetailParams,
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDataRelatedDetailData, any>({
-      path: `/api/collection/${collectionId}/meta-data-related`,
+      path: `/api-v2/collection/${collectionId}/meta-data-related`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -475,11 +475,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumDetail
    * @summary Get meta-data for collection and meta-key.
-   * @request GET:/api/collection/{collection_id}/meta-datum/{meta_key_id}
+   * @request GET:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}
    */
   collectionMetaDatumDetail = (collectionId: string, metaKeyId: string, params: RequestParams = {}) =>
     this.request<CollectionMetaDatumDetailData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -489,11 +489,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumDelete
    * @summary Delete meta-data for collection and meta-key
-   * @request DELETE:/api/collection/{collection_id}/meta-datum/{meta_key_id}
+   * @request DELETE:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}
    */
   collectionMetaDatumDelete = (collectionId: string, metaKeyId: string, params: RequestParams = {}) =>
     this.request<CollectionMetaDatumDeleteData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -503,7 +503,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumTextCreate
    * @summary Create meta-data text for collection.
-   * @request POST:/api/collection/{collection_id}/meta-datum/{meta_key_id}/text
+   * @request POST:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/text
    */
   collectionMetaDatumTextCreate = (
     collectionId: string,
@@ -514,7 +514,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumTextCreateData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/text`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/text`,
       method: "POST",
       body: body,
       ...params,
@@ -524,7 +524,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumTextUpdate
    * @summary Update meta-data text for collection.
-   * @request PUT:/api/collection/{collection_id}/meta-datum/{meta_key_id}/text
+   * @request PUT:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/text
    */
   collectionMetaDatumTextUpdate = (
     collectionId: string,
@@ -535,7 +535,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumTextUpdateData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/text`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/text`,
       method: "PUT",
       body: body,
       ...params,
@@ -545,7 +545,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumTextDateCreate
    * @summary Create meta-data json for collection.
-   * @request POST:/api/collection/{collection_id}/meta-datum/{meta_key_id}/text-date
+   * @request POST:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/text-date
    */
   collectionMetaDatumTextDateCreate = (
     collectionId: string,
@@ -556,7 +556,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumTextDateCreateData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/text-date`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/text-date`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -567,7 +567,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumTextDateUpdate
    * @summary Update meta-data text-date for collection.
-   * @request PUT:/api/collection/{collection_id}/meta-datum/{meta_key_id}/text-date
+   * @request PUT:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/text-date
    */
   collectionMetaDatumTextDateUpdate = (
     collectionId: string,
@@ -578,7 +578,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumTextDateUpdateData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/text-date`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/text-date`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -589,7 +589,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumJsonCreate
    * @summary Create meta-data json for collection.
-   * @request POST:/api/collection/{collection_id}/meta-datum/{meta_key_id}/json
+   * @request POST:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/json
    */
   collectionMetaDatumJsonCreate = (
     collectionId: string,
@@ -600,7 +600,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumJsonCreateData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/json`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/json`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -611,7 +611,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumJsonUpdate
    * @summary Update meta-data json for collection.
-   * @request PUT:/api/collection/{collection_id}/meta-datum/{meta_key_id}/json
+   * @request PUT:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/json
    */
   collectionMetaDatumJsonUpdate = (
     collectionId: string,
@@ -622,7 +622,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumJsonUpdateData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/json`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/json`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -633,11 +633,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumKeywordDetail
    * @summary Get meta-data keywords for collection meta-key
-   * @request GET:/api/collection/{collection_id}/meta-datum/{meta_key_id}/keyword
+   * @request GET:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/keyword
    */
   collectionMetaDatumKeywordDetail = (collectionId: string, metaKeyId: string, params: RequestParams = {}) =>
     this.request<CollectionMetaDatumKeywordDetailData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/keyword`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/keyword`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -647,7 +647,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumKeywordCreate
    * @summary Create meta-data keyword for collection.
-   * @request POST:/api/collection/{collection_id}/meta-datum/{meta_key_id}/keyword/{keyword_id}
+   * @request POST:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/keyword/{keyword_id}
    */
   collectionMetaDatumKeywordCreate = (
     collectionId: string,
@@ -656,7 +656,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumKeywordCreateData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/keyword/${keywordId}`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/keyword/${keywordId}`,
       method: "POST",
       type: ContentType.Json,
       ...params,
@@ -666,7 +666,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumKeywordDelete
    * @summary Delete meta-data keyword for collection.
-   * @request DELETE:/api/collection/{collection_id}/meta-datum/{meta_key_id}/keyword/{keyword_id}
+   * @request DELETE:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/keyword/{keyword_id}
    */
   collectionMetaDatumKeywordDelete = (
     collectionId: string,
@@ -675,7 +675,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumKeywordDeleteData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/keyword/${keywordId}`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/keyword/${keywordId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -685,11 +685,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumPeopleDetail
    * @summary Get meta-data people for collection meta-key.
-   * @request GET:/api/collection/{collection_id}/meta-datum/{meta_key_id}/people
+   * @request GET:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/people
    */
   collectionMetaDatumPeopleDetail = (collectionId: string, metaKeyId: string, params: RequestParams = {}) =>
     this.request<CollectionMetaDatumPeopleDetailData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/people`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/people`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -699,7 +699,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumPeopleCreate
    * @summary Create meta-data people for media-entry
-   * @request POST:/api/collection/{collection_id}/meta-datum/{meta_key_id}/people/{person_id}
+   * @request POST:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/people/{person_id}
    */
   collectionMetaDatumPeopleCreate = (
     collectionId: string,
@@ -708,7 +708,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumPeopleCreateData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/people/${personId}`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/people/${personId}`,
       method: "POST",
       type: ContentType.Json,
       ...params,
@@ -718,7 +718,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumPeopleDelete
    * @summary Delete meta-data people for collection.
-   * @request DELETE:/api/collection/{collection_id}/meta-datum/{meta_key_id}/people/{person_id}
+   * @request DELETE:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/people/{person_id}
    */
   collectionMetaDatumPeopleDelete = (
     collectionId: string,
@@ -727,7 +727,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumPeopleDeleteData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/people/${personId}`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/people/${personId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -737,7 +737,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMetaDatumRoleCreate
    * @summary Create meta-data role for media-entry
-   * @request POST:/api/collection/{collection_id}/meta-datum/{meta_key_id}/role/{role_id}
+   * @request POST:/api-v2/collection/{collection_id}/meta-datum/{meta_key_id}/role/{role_id}
    */
   collectionMetaDatumRoleCreate = (
     mediaEntryId: string,
@@ -747,7 +747,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMetaDatumRoleCreateData, any>({
-      path: `/api/collection/${collectionId}/meta-datum/${metaKeyId}/role/${roleId}`,
+      path: `/api-v2/collection/${collectionId}/meta-datum/${metaKeyId}/role/${roleId}`,
       method: "POST",
       type: ContentType.Json,
       ...params,
@@ -757,11 +757,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCustomUrlDetail
    * @summary Get custom_url for collection.
-   * @request GET:/api/collection/{collection_id}/custom_url
+   * @request GET:/api-v2/collection/{collection_id}/custom_url
    */
   collectionCustomUrlDetail = (collectionId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/collection/${collectionId}/custom_url`,
+      path: `/api-v2/collection/${collectionId}/custom_url`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -771,7 +771,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCustomUrlCreate
    * @summary USER Context: Create custom_url for collection.
-   * @request POST:/api/collection/{collection_id}/custom_url
+   * @request POST:/api-v2/collection/{collection_id}/custom_url
    */
   collectionCustomUrlCreate = (
     collectionId: string,
@@ -782,7 +782,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionCustomUrlCreateData, any>({
-      path: `/api/collection/${collectionId}/custom_url`,
+      path: `/api-v2/collection/${collectionId}/custom_url`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -793,7 +793,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCustomUrlUpdate
    * @summary USER Context: Update custom_url for collection.
-   * @request PUT:/api/collection/{collection_id}/custom_url
+   * @request PUT:/api-v2/collection/{collection_id}/custom_url
    */
   collectionCustomUrlUpdate = (
     collectionId: string,
@@ -804,7 +804,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionCustomUrlUpdateData, any>({
-      path: `/api/collection/${collectionId}/custom_url`,
+      path: `/api-v2/collection/${collectionId}/custom_url`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -815,11 +815,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCustomUrlDelete
    * @summary TODO: Delete custom_url for collection.
-   * @request DELETE:/api/collection/{collection_id}/custom_url
+   * @request DELETE:/api-v2/collection/{collection_id}/custom_url
    */
   collectionCustomUrlDelete = (collectionId: string, params: RequestParams = {}) =>
     this.request<CollectionCustomUrlDeleteData, any>({
-      path: `/api/collection/${collectionId}/custom_url`,
+      path: `/api-v2/collection/${collectionId}/custom_url`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -829,11 +829,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionEditSessionsDetail
    * @summary PUBLIC/USER Context: Get edit_session list for collection.
-   * @request GET:/api/collection/{collection_id}/edit_sessions
+   * @request GET:/api-v2/collection/{collection_id}/edit_sessions
    */
   collectionEditSessionsDetail = (collectionId: string, params: RequestParams = {}) =>
     this.request<CollectionEditSessionsDetailData, any>({
-      path: `/api/collection/${collectionId}/edit_sessions`,
+      path: `/api-v2/collection/${collectionId}/edit_sessions`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -843,11 +843,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionEditSessionsCreate
    * @summary USER Context: Create edit session for collection and authed user.
-   * @request POST:/api/collection/{collection_id}/edit_sessions
+   * @request POST:/api-v2/collection/{collection_id}/edit_sessions
    */
   collectionEditSessionsCreate = (collectionId: string, params: RequestParams = {}) =>
     this.request<CollectionEditSessionsCreateData, any>({
-      path: `/api/collection/${collectionId}/edit_sessions`,
+      path: `/api-v2/collection/${collectionId}/edit_sessions`,
       method: "POST",
       type: ContentType.Json,
       ...params,
@@ -857,11 +857,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionFavoriteDetail
    * @summary USER Context: Get favorite_collection for authed user and collection id.
-   * @request GET:/api/collection/{collection_id}/favorite
+   * @request GET:/api-v2/collection/{collection_id}/favorite
    */
   collectionFavoriteDetail = (collectionId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/collection/${collectionId}/favorite`,
+      path: `/api-v2/collection/${collectionId}/favorite`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -871,11 +871,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionFavoriteCreate
    * @summary USER Context: Create favorite_collection for authed user and collection.
-   * @request POST:/api/collection/{collection_id}/favorite
+   * @request POST:/api-v2/collection/{collection_id}/favorite
    */
   collectionFavoriteCreate = (collectionId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/collection/${collectionId}/favorite`,
+      path: `/api-v2/collection/${collectionId}/favorite`,
       method: "POST",
       type: ContentType.Json,
       ...params,
@@ -885,11 +885,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionFavoriteDelete
    * @summary USER Context: Delete favorite_collection for authed user and collection id.
-   * @request DELETE:/api/collection/{collection_id}/favorite
+   * @request DELETE:/api-v2/collection/{collection_id}/favorite
    */
   collectionFavoriteDelete = (collectionId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/collection/${collectionId}/favorite`,
+      path: `/api-v2/collection/${collectionId}/favorite`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -899,11 +899,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsDetail
    * @summary Query collection permissions.
-   * @request GET:/api/collection/{collection_id}/perms/
+   * @request GET:/api-v2/collection/{collection_id}/perms/
    */
   collectionPermsDetail = (collectionId: string, params: RequestParams = {}) =>
     this.request<CollectionPermsDetailData, any>({
-      path: `/api/collection/${collectionId}/perms/`,
+      path: `/api-v2/collection/${collectionId}/perms/`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -913,11 +913,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsResourcesDetail
    * @summary Query collection permissions.
-   * @request GET:/api/collection/{collection_id}/perms/resources
+   * @request GET:/api-v2/collection/{collection_id}/perms/resources
    */
   collectionPermsResourcesDetail = (collectionId: string, params: RequestParams = {}) =>
     this.request<CollectionPermsResourcesDetailData, any>({
-      path: `/api/collection/${collectionId}/perms/resources`,
+      path: `/api-v2/collection/${collectionId}/perms/resources`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -927,7 +927,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsResourcesUpdate
    * @summary Update collection entity permissions
-   * @request PUT:/api/collection/{collection_id}/perms/resources
+   * @request PUT:/api-v2/collection/{collection_id}/perms/resources
    */
   collectionPermsResourcesUpdate = (
     collectionId: string,
@@ -935,7 +935,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionPermsResourcesUpdateData, any>({
-      path: `/api/collection/${collectionId}/perms/resources`,
+      path: `/api-v2/collection/${collectionId}/perms/resources`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -946,7 +946,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsResourceUpdate
    * @summary Update collection entity permissions
-   * @request PUT:/api/collection/{collection_id}/perms/resource/{perm_name}/{perm_val}
+   * @request PUT:/api-v2/collection/{collection_id}/perms/resource/{perm_name}/{perm_val}
    */
   collectionPermsResourceUpdate = (
     collectionId: string,
@@ -955,7 +955,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionPermsResourceUpdateData, any>({
-      path: `/api/collection/${collectionId}/perms/resource/${permName}/${permVal}`,
+      path: `/api-v2/collection/${collectionId}/perms/resource/${permName}/${permVal}`,
       method: "PUT",
       type: ContentType.Json,
       ...params,
@@ -965,11 +965,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsUsersDetail
    * @summary Query collection permissions.
-   * @request GET:/api/collection/{collection_id}/perms/users
+   * @request GET:/api-v2/collection/{collection_id}/perms/users
    */
   collectionPermsUsersDetail = (collectionId: string, params: RequestParams = {}) =>
     this.request<CollectionPermsUsersDetailData, any>({
-      path: `/api/collection/${collectionId}/perms/users`,
+      path: `/api-v2/collection/${collectionId}/perms/users`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -979,11 +979,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsUserDetail
    * @summary Get collection user permissions.
-   * @request GET:/api/collection/{collection_id}/perms/user/{user_id}
+   * @request GET:/api-v2/collection/{collection_id}/perms/user/{user_id}
    */
   collectionPermsUserDetail = (collectionId: string, userId: string, params: RequestParams = {}) =>
     this.request<CollectionPermsUserDetailData, any>({
-      path: `/api/collection/${collectionId}/perms/user/${userId}`,
+      path: `/api-v2/collection/${collectionId}/perms/user/${userId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -993,7 +993,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsUserCreate
    * @summary Create collection user permissions.
-   * @request POST:/api/collection/{collection_id}/perms/user/{user_id}
+   * @request POST:/api-v2/collection/{collection_id}/perms/user/{user_id}
    */
   collectionPermsUserCreate = (
     collectionId: string,
@@ -1002,7 +1002,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionPermsUserCreateData, any>({
-      path: `/api/collection/${collectionId}/perms/user/${userId}`,
+      path: `/api-v2/collection/${collectionId}/perms/user/${userId}`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -1013,11 +1013,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsUserDelete
    * @summary Delete collection user permissions.
-   * @request DELETE:/api/collection/{collection_id}/perms/user/{user_id}
+   * @request DELETE:/api-v2/collection/{collection_id}/perms/user/{user_id}
    */
   collectionPermsUserDelete = (collectionId: string, userId: string, params: RequestParams = {}) =>
     this.request<CollectionPermsUserDeleteData, any>({
-      path: `/api/collection/${collectionId}/perms/user/${userId}`,
+      path: `/api-v2/collection/${collectionId}/perms/user/${userId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -1027,7 +1027,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsUserUpdate
    * @summary Update collection user permissions
-   * @request PUT:/api/collection/{collection_id}/perms/user/{user_id}/{perm_name}/{perm_val}
+   * @request PUT:/api-v2/collection/{collection_id}/perms/user/{user_id}/{perm_name}/{perm_val}
    */
   collectionPermsUserUpdate = (
     collectionId: string,
@@ -1037,7 +1037,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionPermsUserUpdateData, any>({
-      path: `/api/collection/${collectionId}/perms/user/${userId}/${permName}/${permVal}`,
+      path: `/api-v2/collection/${collectionId}/perms/user/${userId}/${permName}/${permVal}`,
       method: "PUT",
       type: ContentType.Json,
       ...params,
@@ -1047,11 +1047,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsGroupsDetail
    * @summary Query collection permissions.
-   * @request GET:/api/collection/{collection_id}/perms/groups
+   * @request GET:/api-v2/collection/{collection_id}/perms/groups
    */
   collectionPermsGroupsDetail = (collectionId: string, params: RequestParams = {}) =>
     this.request<CollectionPermsGroupsDetailData, any>({
-      path: `/api/collection/${collectionId}/perms/groups`,
+      path: `/api-v2/collection/${collectionId}/perms/groups`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1061,11 +1061,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsGroupDetail
    * @summary Get collection group permissions.
-   * @request GET:/api/collection/{collection_id}/perms/group/{group_id}
+   * @request GET:/api-v2/collection/{collection_id}/perms/group/{group_id}
    */
   collectionPermsGroupDetail = (collectionId: string, groupId: string, params: RequestParams = {}) =>
     this.request<CollectionPermsGroupDetailData, any>({
-      path: `/api/collection/${collectionId}/perms/group/${groupId}`,
+      path: `/api-v2/collection/${collectionId}/perms/group/${groupId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1075,7 +1075,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsGroupCreate
    * @summary Create collection group permissions.
-   * @request POST:/api/collection/{collection_id}/perms/group/{group_id}
+   * @request POST:/api-v2/collection/{collection_id}/perms/group/{group_id}
    */
   collectionPermsGroupCreate = (
     collectionId: string,
@@ -1084,7 +1084,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionPermsGroupCreateData, any>({
-      path: `/api/collection/${collectionId}/perms/group/${groupId}`,
+      path: `/api-v2/collection/${collectionId}/perms/group/${groupId}`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -1095,11 +1095,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsGroupDelete
    * @summary Delete collection group permissions.
-   * @request DELETE:/api/collection/{collection_id}/perms/group/{group_id}
+   * @request DELETE:/api-v2/collection/{collection_id}/perms/group/{group_id}
    */
   collectionPermsGroupDelete = (collectionId: string, groupId: string, params: RequestParams = {}) =>
     this.request<CollectionPermsGroupDeleteData, any>({
-      path: `/api/collection/${collectionId}/perms/group/${groupId}`,
+      path: `/api-v2/collection/${collectionId}/perms/group/${groupId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -1109,7 +1109,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionPermsGroupUpdate
    * @summary Update collection group permissions
-   * @request PUT:/api/collection/{collection_id}/perms/group/{group_id}/{perm_name}/{perm_val}
+   * @request PUT:/api-v2/collection/{collection_id}/perms/group/{group_id}/{perm_name}/{perm_val}
    */
   collectionPermsGroupUpdate = (
     collectionId: string,
@@ -1119,7 +1119,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionPermsGroupUpdateData, any>({
-      path: `/api/collection/${collectionId}/perms/group/${groupId}/${permName}/${permVal}`,
+      path: `/api-v2/collection/${collectionId}/perms/group/${groupId}/${permName}/${permVal}`,
       method: "PUT",
       type: ContentType.Json,
       ...params,
@@ -1129,11 +1129,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMediaEntryArcsDetail
    * @summary Get collection media-entry arcs.
-   * @request GET:/api/collection/{collection_id}/media-entry-arcs
+   * @request GET:/api-v2/collection/{collection_id}/media-entry-arcs
    */
   collectionMediaEntryArcsDetail = (collectionId: string, params: RequestParams = {}) =>
     this.request<CollectionMediaEntryArcsDetailData, any>({
-      path: `/api/collection/${collectionId}/media-entry-arcs`,
+      path: `/api-v2/collection/${collectionId}/media-entry-arcs`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1143,7 +1143,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMediaEntryArcCreate
    * @summary USER Context: Create collection media-entry arc
-   * @request POST:/api/collection/{collection_id}/media-entry-arc/{media_entry_id}
+   * @request POST:/api-v2/collection/{collection_id}/media-entry-arc/{media_entry_id}
    */
   collectionMediaEntryArcCreate = (
     collectionId: string,
@@ -1159,7 +1159,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMediaEntryArcCreateData, any>({
-      path: `/api/collection/${collectionId}/media-entry-arc/${mediaEntryId}`,
+      path: `/api-v2/collection/${collectionId}/media-entry-arc/${mediaEntryId}`,
       method: "POST",
       body: body,
       ...params,
@@ -1169,7 +1169,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMediaEntryArcUpdate
    * @summary USER Context: Update collection media-entry arc
-   * @request PUT:/api/collection/{collection_id}/media-entry-arc/{media_entry_id}
+   * @request PUT:/api-v2/collection/{collection_id}/media-entry-arc/{media_entry_id}
    */
   collectionMediaEntryArcUpdate = (
     collectionId: string,
@@ -1185,7 +1185,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionMediaEntryArcUpdateData, any>({
-      path: `/api/collection/${collectionId}/media-entry-arc/${mediaEntryId}`,
+      path: `/api-v2/collection/${collectionId}/media-entry-arc/${mediaEntryId}`,
       method: "PUT",
       body: body,
       ...params,
@@ -1195,11 +1195,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMediaEntryArcDelete
    * @summary USER Context: Delete collection media-entry arc
-   * @request DELETE:/api/collection/{collection_id}/media-entry-arc/{media_entry_id}
+   * @request DELETE:/api-v2/collection/{collection_id}/media-entry-arc/{media_entry_id}
    */
   collectionMediaEntryArcDelete = (collectionId: string, mediaEntryId: string, params: RequestParams = {}) =>
     this.request<CollectionMediaEntryArcDeleteData, any>({
-      path: `/api/collection/${collectionId}/media-entry-arc/${mediaEntryId}`,
+      path: `/api-v2/collection/${collectionId}/media-entry-arc/${mediaEntryId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -1209,11 +1209,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCollectionArcDetail
    * @summary Get collection collection arcs.
-   * @request GET:/api/collection/{parent_id}/collection-arc/{child_id}
+   * @request GET:/api-v2/collection/{parent_id}/collection-arc/{child_id}
    */
   collectionCollectionArcDetail = (parentId: string, childId: string, params: RequestParams = {}) =>
     this.request<CollectionCollectionArcDetailData, any>({
-      path: `/api/collection/${parentId}/collection-arc/${childId}`,
+      path: `/api-v2/collection/${parentId}/collection-arc/${childId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1223,7 +1223,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCollectionArcCreate
    * @summary TODO: Create collection collection arc
-   * @request POST:/api/collection/{parent_id}/collection-arc/{child_id}
+   * @request POST:/api-v2/collection/{parent_id}/collection-arc/{child_id}
    */
   collectionCollectionArcCreate = (
     parentId: string,
@@ -1238,7 +1238,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionCollectionArcCreateData, any>({
-      path: `/api/collection/${parentId}/collection-arc/${childId}`,
+      path: `/api-v2/collection/${parentId}/collection-arc/${childId}`,
       method: "POST",
       body: body,
       ...params,
@@ -1248,7 +1248,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCollectionArcUpdate
    * @summary USER Context: Update collection collection arc
-   * @request PUT:/api/collection/{parent_id}/collection-arc/{child_id}
+   * @request PUT:/api-v2/collection/{parent_id}/collection-arc/{child_id}
    */
   collectionCollectionArcUpdate = (
     parentId: string,
@@ -1263,7 +1263,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<CollectionCollectionArcUpdateData, any>({
-      path: `/api/collection/${parentId}/collection-arc/${childId}`,
+      path: `/api-v2/collection/${parentId}/collection-arc/${childId}`,
       method: "PUT",
       body: body,
       ...params,
@@ -1273,11 +1273,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCollectionArcDelete
    * @summary USER Context: Delete collection collection arc
-   * @request DELETE:/api/collection/{parent_id}/collection-arc/{child_id}
+   * @request DELETE:/api-v2/collection/{parent_id}/collection-arc/{child_id}
    */
   collectionCollectionArcDelete = (parentId: string, childId: string, params: RequestParams = {}) =>
     this.request<CollectionCollectionArcDeleteData, any>({
-      path: `/api/collection/${parentId}/collection-arc/${childId}`,
+      path: `/api-v2/collection/${parentId}/collection-arc/${childId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -1287,11 +1287,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMediaEntryArcsList
    * @summary Query collection media-entry arcs.
-   * @request GET:/api/collection-media-entry-arcs/
+   * @request GET:/api-v2/collection-media-entry-arcs/
    */
   collectionMediaEntryArcsList = (query: CollectionMediaEntryArcsListParams, params: RequestParams = {}) =>
     this.request<CollectionMediaEntryArcsListData, any>({
-      path: `/api/collection-media-entry-arcs/`,
+      path: `/api-v2/collection-media-entry-arcs/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1302,13 +1302,13 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionMediaEntryArcsDetail2
    * @summary Get collection media-entry arc.
-   * @request GET:/api/collection-media-entry-arcs/{id}
+   * @request GET:/api-v2/collection-media-entry-arcs/{id}
    * @originalName collectionMediaEntryArcsDetail
    * @duplicate
    */
   collectionMediaEntryArcsDetail2 = (id: string, params: RequestParams = {}) =>
     this.request<CollectionMediaEntryArcsDetail2Data, any>({
-      path: `/api/collection-media-entry-arcs/${id}`,
+      path: `/api-v2/collection-media-entry-arcs/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1318,11 +1318,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCollectionArcsList
    * @summary Query collection collection arcs.
-   * @request GET:/api/collection-collection-arcs/
+   * @request GET:/api-v2/collection-collection-arcs/
    */
   collectionCollectionArcsList = (query: CollectionCollectionArcsListParams, params: RequestParams = {}) =>
     this.request<CollectionCollectionArcsListData, any>({
-      path: `/api/collection-collection-arcs/`,
+      path: `/api-v2/collection-collection-arcs/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1333,11 +1333,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionCollectionArcsDetail
    * @summary Get collection collection arcs.
-   * @request GET:/api/collection-collection-arcs/{id}
+   * @request GET:/api-v2/collection-collection-arcs/{id}
    */
   collectionCollectionArcsDetail = (id: string, params: RequestParams = {}) =>
     this.request<CollectionCollectionArcsDetailData, any>({
-      path: `/api/collection-collection-arcs/${id}`,
+      path: `/api-v2/collection-collection-arcs/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1347,11 +1347,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionFullTextDetail
    * @summary PUBLIC/USER Context: Get full_text.
-   * @request GET:/api/collection/{collection_id}/full_text
+   * @request GET:/api-v2/collection/{collection_id}/full_text
    */
   collectionFullTextDetail = (collectionId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/collection/${collectionId}/full_text`,
+      path: `/api-v2/collection/${collectionId}/full_text`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1361,7 +1361,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionFullTextCreate
    * @summary USER Context: Create full_text for collection
-   * @request POST:/api/collection/{collection_id}/full_text
+   * @request POST:/api-v2/collection/{collection_id}/full_text
    */
   collectionFullTextCreate = (
     collectionId: string,
@@ -1371,7 +1371,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<any, void>({
-      path: `/api/collection/${collectionId}/full_text`,
+      path: `/api-v2/collection/${collectionId}/full_text`,
       method: "POST",
       body: body,
       ...params,
@@ -1381,7 +1381,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionFullTextUpdate
    * @summary USER Context: Update full_text for collection.
-   * @request PUT:/api/collection/{collection_id}/full_text
+   * @request PUT:/api-v2/collection/{collection_id}/full_text
    */
   collectionFullTextUpdate = (
     collectionId: string,
@@ -1391,7 +1391,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<any, void>({
-      path: `/api/collection/${collectionId}/full_text`,
+      path: `/api-v2/collection/${collectionId}/full_text`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -1402,11 +1402,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CollectionFullTextDelete
    * @summary USER Context: Delete full_text.
-   * @request DELETE:/api/collection/{collection_id}/full_text
+   * @request DELETE:/api-v2/collection/{collection_id}/full_text
    */
   collectionFullTextDelete = (collectionId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/collection/${collectionId}/full_text`,
+      path: `/api-v2/collection/${collectionId}/full_text`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -1416,11 +1416,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CustomUrlsList
    * @summary USER Context: Query and list custom_urls.
-   * @request GET:/api/custom_urls/
+   * @request GET:/api-v2/custom_urls/
    */
   customUrlsList = (query: CustomUrlsListParams, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/custom_urls/`,
+      path: `/api-v2/custom_urls/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1431,11 +1431,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name CustomUrlsDetail
    * @summary USER Context: Get custom_url.
-   * @request GET:/api/custom_urls/{id}
+   * @request GET:/api-v2/custom_urls/{id}
    */
   customUrlsDetail = (id: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/custom_urls/${id}`,
+      path: `/api-v2/custom_urls/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1445,11 +1445,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name EditSessionsList
    * @summary USER Context: List authed users edit_sessions.
-   * @request GET:/api/edit_sessions/
+   * @request GET:/api-v2/edit_sessions/
    */
   editSessionsList = (query: EditSessionsListParams, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/edit_sessions/`,
+      path: `/api-v2/edit_sessions/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1460,11 +1460,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name EditSessionsDetail
    * @summary USER Context: Get edit_session.
-   * @request GET:/api/edit_sessions/{id}
+   * @request GET:/api-v2/edit_sessions/{id}
    */
   editSessionsDetail = (id: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/edit_sessions/${id}`,
+      path: `/api-v2/edit_sessions/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1474,11 +1474,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name FavoriteMediaEntriesList
    * @summary USER Context: List users favorites media_entries ids.
-   * @request GET:/api/favorite/media-entries
+   * @request GET:/api-v2/favorite/media-entries
    */
   favoriteMediaEntriesList = (params: RequestParams = {}) =>
     this.request<FavoriteMediaEntriesListData, any>({
-      path: `/api/favorite/media-entries`,
+      path: `/api-v2/favorite/media-entries`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1488,11 +1488,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name FavoriteCollectionsList
    * @summary USER Context: List users favorite_collections.
-   * @request GET:/api/favorite/collections
+   * @request GET:/api-v2/favorite/collections
    */
   favoriteCollectionsList = (params: RequestParams = {}) =>
     this.request<FavoriteCollectionsListData, any>({
-      path: `/api/favorite/collections`,
+      path: `/api-v2/favorite/collections`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1502,11 +1502,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name FullTextsList
    * @summary USER Context: Query or list full_texts.
-   * @request GET:/api/full_texts
+   * @request GET:/api-v2/full_texts
    */
   fullTextsList = (query: FullTextsListParams, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/full_texts`,
+      path: `/api-v2/full_texts`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1517,11 +1517,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name FullTextsDetail
    * @summary USER Context: Get full_text.
-   * @request GET:/api/full_texts/{media_resource_id}
+   * @request GET:/api-v2/full_texts/{media_resource_id}
    */
   fullTextsDetail = (mediaResourceId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/full_texts/${mediaResourceId}`,
+      path: `/api-v2/full_texts/${mediaResourceId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1531,11 +1531,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntriesList
    * @summary Query media-entries.
-   * @request GET:/api/media-entries
+   * @request GET:/api-v2/media-entries
    */
   mediaEntriesList = (query: MediaEntriesListParams, params: RequestParams = {}) =>
     this.request<MediaEntriesListData, any>({
-      path: `/api/media-entries`,
+      path: `/api-v2/media-entries`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1546,11 +1546,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntriesRelatedDataList
    * @summary Query media-entries with all related data.
-   * @request GET:/api/media-entries-related-data
+   * @request GET:/api-v2/media-entries-related-data
    */
   mediaEntriesRelatedDataList = (query: MediaEntriesRelatedDataListParams, params: RequestParams = {}) =>
     this.request<MediaEntriesRelatedDataListData, any>({
-      path: `/api/media-entries-related-data`,
+      path: `/api-v2/media-entries-related-data`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1561,11 +1561,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryCreate
    * @summary TODO: Create media-entry. Only for testing. Use webapp until media-encoder is ready
-   * @request POST:/api/media-entry
+   * @request POST:/api-v2/media-entry
    */
   mediaEntryCreate = (query: MediaEntryCreateParams, data: MediaEntryCreatePayload, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/media-entry`,
+      path: `/api-v2/media-entry`,
       method: "POST",
       query: query,
       body: data,
@@ -1577,11 +1577,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryDetail
    * @summary Get media-entry for id.
-   * @request GET:/api/media-entry/{media_entry_id}
+   * @request GET:/api-v2/media-entry/{media_entry_id}
    */
   mediaEntryDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1591,11 +1591,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryDelete
    * @summary Delete media-entry for id.
-   * @request DELETE:/api/media-entry/{media_entry_id}
+   * @request DELETE:/api-v2/media-entry/{media_entry_id}
    */
   mediaEntryDelete = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/media-entry/${mediaEntryId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -1605,7 +1605,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPublishUpdate
    * @summary Try publish media-entry for id.
-   * @request PUT:/api/media-entry/{media_entry_id}/publish
+   * @request PUT:/api-v2/media-entry/{media_entry_id}/publish
    */
   mediaEntryPublishUpdate = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<
@@ -1619,7 +1619,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
         };
       }
     >({
-      path: `/api/media-entry/${mediaEntryId}/publish`,
+      path: `/api-v2/media-entry/${mediaEntryId}/publish`,
       method: "PUT",
       type: ContentType.Json,
       ...params,
@@ -1629,11 +1629,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPreviewDetail
    * @summary Get preview for media-entry id.
-   * @request GET:/api/media-entry/{media_entry_id}/preview
+   * @request GET:/api-v2/media-entry/{media_entry_id}/preview
    */
   mediaEntryPreviewDetail = ({ mediaEntryId, ...query }: MediaEntryPreviewDetailParams, params: RequestParams = {}) =>
     this.request<MediaEntryPreviewDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/preview`,
+      path: `/api-v2/media-entry/${mediaEntryId}/preview`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1644,14 +1644,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPreviewDataStreamDetail
    * @summary Get preview for media-entry id.
-   * @request GET:/api/media-entry/{media_entry_id}/preview/data-stream
+   * @request GET:/api-v2/media-entry/{media_entry_id}/preview/data-stream
    */
   mediaEntryPreviewDataStreamDetail = (
     { mediaEntryId, ...query }: MediaEntryPreviewDataStreamDetailParams,
     params: RequestParams = {},
   ) =>
     this.request<any, void>({
-      path: `/api/media-entry/${mediaEntryId}/preview/data-stream`,
+      path: `/api-v2/media-entry/${mediaEntryId}/preview/data-stream`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1662,11 +1662,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDataDetail
    * @summary Get meta-data for media-entry.
-   * @request GET:/api/media-entry/{media_entry_id}/meta-data
+   * @request GET:/api-v2/media-entry/{media_entry_id}/meta-data
    */
   mediaEntryMetaDataDetail = ({ mediaEntryId, ...query }: MediaEntryMetaDataDetailParams, params: RequestParams = {}) =>
     this.request<MediaEntryMetaDataDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-data`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-data`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1677,14 +1677,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDataRelatedDetail
    * @summary Get meta-data for media-entry.
-   * @request GET:/api/media-entry/{media_entry_id}/meta-data-related
+   * @request GET:/api-v2/media-entry/{media_entry_id}/meta-data-related
    */
   mediaEntryMetaDataRelatedDetail = (
     { mediaEntryId, ...query }: MediaEntryMetaDataRelatedDetailParams,
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDataRelatedDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-data-related`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-data-related`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -1695,11 +1695,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumDetail
    * @summary Get meta-data for media-entry and meta-key.
-   * @request GET:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}
+   * @request GET:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}
    */
   mediaEntryMetaDatumDetail = (mediaEntryId: string, metaKeyId: string, params: RequestParams = {}) =>
     this.request<MediaEntryMetaDatumDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1709,11 +1709,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumDelete
    * @summary Delete meta-data for media-entry and meta-key
-   * @request DELETE:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}
+   * @request DELETE:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}
    */
   mediaEntryMetaDatumDelete = (mediaEntryId: string, metaKeyId: string, params: RequestParams = {}) =>
     this.request<MediaEntryMetaDatumDeleteData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -1723,7 +1723,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumTextCreate
    * @summary Create meta-data text for media-entry
-   * @request POST:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/text
+   * @request POST:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/text
    */
   mediaEntryMetaDatumTextCreate = (
     mediaEntryId: string,
@@ -1734,7 +1734,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumTextCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/text`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/text`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -1745,7 +1745,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumTextUpdate
    * @summary Update meta-data text for media-entry
-   * @request PUT:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/text
+   * @request PUT:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/text
    */
   mediaEntryMetaDatumTextUpdate = (
     mediaEntryId: string,
@@ -1756,7 +1756,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumTextUpdateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/text`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/text`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -1767,7 +1767,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumTextDateCreate
    * @summary Create meta-data text-date for media-entry
-   * @request POST:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/text-date
+   * @request POST:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/text-date
    */
   mediaEntryMetaDatumTextDateCreate = (
     mediaEntryId: string,
@@ -1778,7 +1778,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumTextDateCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/text-date`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/text-date`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -1789,7 +1789,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumTextDateUpdate
    * @summary Update meta-data text-date for media-entry
-   * @request PUT:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/text-date
+   * @request PUT:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/text-date
    */
   mediaEntryMetaDatumTextDateUpdate = (
     mediaEntryId: string,
@@ -1800,7 +1800,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumTextDateUpdateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/text-date`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/text-date`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -1811,7 +1811,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumJsonCreate
    * @summary Create meta-data json for media-entry
-   * @request POST:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/json
+   * @request POST:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/json
    */
   mediaEntryMetaDatumJsonCreate = (
     mediaEntryId: string,
@@ -1822,7 +1822,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumJsonCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/json`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/json`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -1833,7 +1833,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumJsonUpdate
    * @summary Update meta-data json for media-entry
-   * @request PUT:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/json
+   * @request PUT:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/json
    */
   mediaEntryMetaDatumJsonUpdate = (
     mediaEntryId: string,
@@ -1844,7 +1844,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumJsonUpdateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/json`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/json`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -1855,11 +1855,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumKeywordDetail
    * @summary Get meta-data keywords for media-entries meta-key
-   * @request GET:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/keyword
+   * @request GET:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/keyword
    */
   mediaEntryMetaDatumKeywordDetail = (mediaEntryId: string, metaKeyId: string, params: RequestParams = {}) =>
     this.request<MediaEntryMetaDatumKeywordDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/keyword`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/keyword`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1869,7 +1869,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumKeywordCreate
    * @summary Create meta-data keyword for media-entry.
-   * @request POST:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/keyword/{keyword_id}
+   * @request POST:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/keyword/{keyword_id}
    */
   mediaEntryMetaDatumKeywordCreate = (
     mediaEntryId: string,
@@ -1878,7 +1878,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumKeywordCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/keyword/${keywordId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/keyword/${keywordId}`,
       method: "POST",
       type: ContentType.Json,
       ...params,
@@ -1888,7 +1888,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumKeywordDelete
    * @summary Delete meta-data keyword for media-entry.
-   * @request DELETE:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/keyword/{keyword_id}
+   * @request DELETE:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/keyword/{keyword_id}
    */
   mediaEntryMetaDatumKeywordDelete = (
     mediaEntryId: string,
@@ -1897,7 +1897,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumKeywordDeleteData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/keyword/${keywordId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/keyword/${keywordId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -1907,11 +1907,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumPeopleDetail
    * @summary Get meta-data people for media-entries meta-key.
-   * @request GET:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/people
+   * @request GET:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/people
    */
   mediaEntryMetaDatumPeopleDetail = (mediaEntryId: string, metaKeyId: string, params: RequestParams = {}) =>
     this.request<MediaEntryMetaDatumPeopleDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/people`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/people`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1921,7 +1921,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumPeopleCreate
    * @summary Create meta-data people for a media-entries meta-key.
-   * @request POST:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/people/{person_id}
+   * @request POST:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/people/{person_id}
    */
   mediaEntryMetaDatumPeopleCreate = (
     mediaEntryId: string,
@@ -1930,7 +1930,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumPeopleCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/people/${personId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/people/${personId}`,
       method: "POST",
       type: ContentType.Json,
       ...params,
@@ -1940,7 +1940,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumPeopleDelete
    * @summary Delete meta-data people for media-entry
-   * @request DELETE:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/people/{person_id}
+   * @request DELETE:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/people/{person_id}
    */
   mediaEntryMetaDatumPeopleDelete = (
     mediaEntryId: string,
@@ -1949,7 +1949,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumPeopleDeleteData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/people/${personId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/people/${personId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -1959,11 +1959,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumRoleDetail
    * @summary Get meta-data role for media-entry.
-   * @request GET:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/role
+   * @request GET:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/role
    */
   mediaEntryMetaDatumRoleDetail = (mediaEntryId: string, metaKeyId: string, params: RequestParams = {}) =>
     this.request<MediaEntryMetaDatumRoleDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/role`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/role`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -1973,7 +1973,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumRoleDelete
    * @summary Delete meta-data role for media-entry.
-   * @request DELETE:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/role/{role_id}/{person_id}
+   * @request DELETE:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/role/{role_id}/{person_id}
    */
   mediaEntryMetaDatumRoleDelete = (
     mediaEntryId: string,
@@ -1983,7 +1983,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumRoleDeleteData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/role/${roleId}/${personId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/role/${roleId}/${personId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -1993,7 +1993,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMetaDatumRoleCreate
    * @summary Create meta-data role for media-entry.
-   * @request POST:/api/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/role/{role_id}/{person_id}/{position}
+   * @request POST:/api-v2/media-entry/{media_entry_id}/meta-datum/{meta_key_id}/role/{role_id}/{person_id}/{position}
    */
   mediaEntryMetaDatumRoleCreate = (
     mediaEntryId: string,
@@ -2004,7 +2004,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryMetaDatumRoleCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/role/${roleId}/${personId}/${position}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/meta-datum/${metaKeyId}/role/${roleId}/${personId}/${position}`,
       method: "POST",
       type: ContentType.Json,
       ...params,
@@ -2014,11 +2014,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryCustomUrlDetail
    * @summary Get custom_url for media entry.
-   * @request GET:/api/media-entry/{media_entry_id}/custom_url
+   * @request GET:/api-v2/media-entry/{media_entry_id}/custom_url
    */
   mediaEntryCustomUrlDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryCustomUrlDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/custom_url`,
+      path: `/api-v2/media-entry/${mediaEntryId}/custom_url`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2028,7 +2028,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryCustomUrlCreate
    * @summary USER Context: Create custom_url for media entry.
-   * @request POST:/api/media-entry/{media_entry_id}/custom_url
+   * @request POST:/api-v2/media-entry/{media_entry_id}/custom_url
    */
   mediaEntryCustomUrlCreate = (
     mediaEntryId: string,
@@ -2039,7 +2039,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryCustomUrlCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/custom_url`,
+      path: `/api-v2/media-entry/${mediaEntryId}/custom_url`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -2050,7 +2050,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryCustomUrlUpdate
    * @summary USER Context: Update custom_url for media entry.
-   * @request PUT:/api/media-entry/{media_entry_id}/custom_url
+   * @request PUT:/api-v2/media-entry/{media_entry_id}/custom_url
    */
   mediaEntryCustomUrlUpdate = (
     mediaEntryId: string,
@@ -2061,7 +2061,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryCustomUrlUpdateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/custom_url`,
+      path: `/api-v2/media-entry/${mediaEntryId}/custom_url`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -2072,11 +2072,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryCustomUrlDelete
    * @summary TODO: Delete custom_url for media entry.
-   * @request DELETE:/api/media-entry/{media_entry_id}/custom_url
+   * @request DELETE:/api-v2/media-entry/{media_entry_id}/custom_url
    */
   mediaEntryCustomUrlDelete = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryCustomUrlDeleteData, any>({
-      path: `/api/media-entry/${mediaEntryId}/custom_url`,
+      path: `/api-v2/media-entry/${mediaEntryId}/custom_url`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -2086,11 +2086,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryEditSessionsDetail
    * @summary PUBLIC/USER Context: Get edit_session list for media entry.
-   * @request GET:/api/media-entry/{media_entry_id}/edit_sessions
+   * @request GET:/api-v2/media-entry/{media_entry_id}/edit_sessions
    */
   mediaEntryEditSessionsDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryEditSessionsDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/edit_sessions`,
+      path: `/api-v2/media-entry/${mediaEntryId}/edit_sessions`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2100,11 +2100,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryEditSessionsCreate
    * @summary USER Context: Create edit session for media entry and authed user.
-   * @request POST:/api/media-entry/{media_entry_id}/edit_sessions
+   * @request POST:/api-v2/media-entry/{media_entry_id}/edit_sessions
    */
   mediaEntryEditSessionsCreate = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryEditSessionsCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/edit_sessions`,
+      path: `/api-v2/media-entry/${mediaEntryId}/edit_sessions`,
       method: "POST",
       type: ContentType.Json,
       ...params,
@@ -2114,11 +2114,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryFavoriteDetail
    * @summary USER Context: Get favorite_media_entry for authed user and media-entry.
-   * @request GET:/api/media-entry/{media_entry_id}/favorite
+   * @request GET:/api-v2/media-entry/{media_entry_id}/favorite
    */
   mediaEntryFavoriteDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryFavoriteDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/favorite`,
+      path: `/api-v2/media-entry/${mediaEntryId}/favorite`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2128,11 +2128,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryFavoriteCreate
    * @summary USER Context: Create favorite_media_entry for authed user and media-entry.
-   * @request POST:/api/media-entry/{media_entry_id}/favorite
+   * @request POST:/api-v2/media-entry/{media_entry_id}/favorite
    */
   mediaEntryFavoriteCreate = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryFavoriteCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/favorite`,
+      path: `/api-v2/media-entry/${mediaEntryId}/favorite`,
       method: "POST",
       type: ContentType.Json,
       ...params,
@@ -2142,11 +2142,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryFavoriteDelete
    * @summary USER Context: Delete favorite_media_entry for authed user and media-entry.
-   * @request DELETE:/api/media-entry/{media_entry_id}/favorite
+   * @request DELETE:/api-v2/media-entry/{media_entry_id}/favorite
    */
   mediaEntryFavoriteDelete = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryFavoriteDeleteData, any>({
-      path: `/api/media-entry/${mediaEntryId}/favorite`,
+      path: `/api-v2/media-entry/${mediaEntryId}/favorite`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -2156,11 +2156,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMediaFileDetail
    * @summary PUBLIC/USER Context: Get media-file for media-entry id.
-   * @request GET:/api/media-entry/{media_entry_id}/media-file
+   * @request GET:/api-v2/media-entry/{media_entry_id}/media-file
    */
   mediaEntryMediaFileDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryMediaFileDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/media-file`,
+      path: `/api-v2/media-entry/${mediaEntryId}/media-file`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2170,11 +2170,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryMediaFileDataStreamDetail
    * @summary PUBLIC/USER Context: Get media-file data-stream for media-entry id.
-   * @request GET:/api/media-entry/{media_entry_id}/media-file/data-stream
+   * @request GET:/api-v2/media-entry/{media_entry_id}/media-file/data-stream
    */
   mediaEntryMediaFileDataStreamDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/media-entry/${mediaEntryId}/media-file/data-stream`,
+      path: `/api-v2/media-entry/${mediaEntryId}/media-file/data-stream`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2184,11 +2184,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsDetail
    * @summary PUBLIC/USER Context: List media-entry permissions.
-   * @request GET:/api/media-entry/{media_entry_id}/perms/
+   * @request GET:/api-v2/media-entry/{media_entry_id}/perms/
    */
   mediaEntryPermsDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryPermsDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2198,11 +2198,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsResourcesDetail
    * @summary Query media-entry permissions.
-   * @request GET:/api/media-entry/{media_entry_id}/perms/resources
+   * @request GET:/api-v2/media-entry/{media_entry_id}/perms/resources
    */
   mediaEntryPermsResourcesDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryPermsResourcesDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/resources`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/resources`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2212,7 +2212,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsResourcesUpdate
    * @summary Update media-entry entity permissions
-   * @request PUT:/api/media-entry/{media_entry_id}/perms/resources
+   * @request PUT:/api-v2/media-entry/{media_entry_id}/perms/resources
    */
   mediaEntryPermsResourcesUpdate = (
     mediaEntryId: string,
@@ -2220,7 +2220,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryPermsResourcesUpdateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/resources`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/resources`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -2231,7 +2231,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsResourceUpdate
    * @summary Update media-entry entity permissions
-   * @request PUT:/api/media-entry/{media_entry_id}/perms/resource/{perm_name}/{perm_val}
+   * @request PUT:/api-v2/media-entry/{media_entry_id}/perms/resource/{perm_name}/{perm_val}
    */
   mediaEntryPermsResourceUpdate = (
     mediaEntryId: string,
@@ -2240,7 +2240,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryPermsResourceUpdateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/resource/${permName}/${permVal}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/resource/${permName}/${permVal}`,
       method: "PUT",
       type: ContentType.Json,
       ...params,
@@ -2250,11 +2250,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsUsersDetail
    * @summary Query media-entry user permissions.
-   * @request GET:/api/media-entry/{media_entry_id}/perms/users
+   * @request GET:/api-v2/media-entry/{media_entry_id}/perms/users
    */
   mediaEntryPermsUsersDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryPermsUsersDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/users`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/users`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2264,11 +2264,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsUserDetail
    * @summary Get media-entry user permissions.
-   * @request GET:/api/media-entry/{media_entry_id}/perms/user/{user_id}
+   * @request GET:/api-v2/media-entry/{media_entry_id}/perms/user/{user_id}
    */
   mediaEntryPermsUserDetail = (mediaEntryId: string, userId: string, params: RequestParams = {}) =>
     this.request<MediaEntryPermsUserDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/user/${userId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/user/${userId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2278,7 +2278,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsUserCreate
    * @summary Create media-entry user permissions.
-   * @request POST:/api/media-entry/{media_entry_id}/perms/user/{user_id}
+   * @request POST:/api-v2/media-entry/{media_entry_id}/perms/user/{user_id}
    */
   mediaEntryPermsUserCreate = (
     mediaEntryId: string,
@@ -2287,7 +2287,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryPermsUserCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/user/${userId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/user/${userId}`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -2298,11 +2298,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsUserDelete
    * @summary Delete media-entry user permissions.
-   * @request DELETE:/api/media-entry/{media_entry_id}/perms/user/{user_id}
+   * @request DELETE:/api-v2/media-entry/{media_entry_id}/perms/user/{user_id}
    */
   mediaEntryPermsUserDelete = (mediaEntryId: string, userId: string, params: RequestParams = {}) =>
     this.request<MediaEntryPermsUserDeleteData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/user/${userId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/user/${userId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -2312,7 +2312,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsUserUpdate
    * @summary Update media-entry user permissions
-   * @request PUT:/api/media-entry/{media_entry_id}/perms/user/{user_id}/{perm_name}/{perm_val}
+   * @request PUT:/api-v2/media-entry/{media_entry_id}/perms/user/{user_id}/{perm_name}/{perm_val}
    */
   mediaEntryPermsUserUpdate = (
     mediaEntryId: string,
@@ -2322,7 +2322,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryPermsUserUpdateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/user/${userId}/${permName}/${permVal}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/user/${userId}/${permName}/${permVal}`,
       method: "PUT",
       type: ContentType.Json,
       ...params,
@@ -2332,11 +2332,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsGroupsDetail
    * @summary Query media-entry group permissions.
-   * @request GET:/api/media-entry/{media_entry_id}/perms/groups
+   * @request GET:/api-v2/media-entry/{media_entry_id}/perms/groups
    */
   mediaEntryPermsGroupsDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<MediaEntryPermsGroupsDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/groups`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/groups`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2346,11 +2346,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsGroupDetail
    * @summary Get media-entry group permissions.
-   * @request GET:/api/media-entry/{media_entry_id}/perms/group/{group_id}
+   * @request GET:/api-v2/media-entry/{media_entry_id}/perms/group/{group_id}
    */
   mediaEntryPermsGroupDetail = (mediaEntryId: string, groupId: string, params: RequestParams = {}) =>
     this.request<MediaEntryPermsGroupDetailData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/group/${groupId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/group/${groupId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2360,7 +2360,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsGroupCreate
    * @summary Create media-entry group permissions.
-   * @request POST:/api/media-entry/{media_entry_id}/perms/group/{group_id}
+   * @request POST:/api-v2/media-entry/{media_entry_id}/perms/group/{group_id}
    */
   mediaEntryPermsGroupCreate = (
     mediaEntryId: string,
@@ -2369,7 +2369,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryPermsGroupCreateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/group/${groupId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/group/${groupId}`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -2380,11 +2380,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsGroupDelete
    * @summary Delete media-entry group permissions.
-   * @request DELETE:/api/media-entry/{media_entry_id}/perms/group/{group_id}
+   * @request DELETE:/api-v2/media-entry/{media_entry_id}/perms/group/{group_id}
    */
   mediaEntryPermsGroupDelete = (mediaEntryId: string, groupId: string, params: RequestParams = {}) =>
     this.request<MediaEntryPermsGroupDeleteData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/group/${groupId}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/group/${groupId}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -2394,7 +2394,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryPermsGroupUpdate
    * @summary Update media-entry group permissions
-   * @request PUT:/api/media-entry/{media_entry_id}/perms/group/{group_id}/{perm_name}/{perm_val}
+   * @request PUT:/api-v2/media-entry/{media_entry_id}/perms/group/{group_id}/{perm_name}/{perm_val}
    */
   mediaEntryPermsGroupUpdate = (
     mediaEntryId: string,
@@ -2404,7 +2404,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<MediaEntryPermsGroupUpdateData, any>({
-      path: `/api/media-entry/${mediaEntryId}/perms/group/${groupId}/${permName}/${permVal}`,
+      path: `/api-v2/media-entry/${mediaEntryId}/perms/group/${groupId}/${permName}/${permVal}`,
       method: "PUT",
       type: ContentType.Json,
       ...params,
@@ -2414,11 +2414,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryFullTextDetail
    * @summary PUBLIC/USER Context: Get full_text.
-   * @request GET:/api/media-entry/{media_entry_id}/full_text
+   * @request GET:/api-v2/media-entry/{media_entry_id}/full_text
    */
   mediaEntryFullTextDetail = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/media-entry/${mediaEntryId}/full_text`,
+      path: `/api-v2/media-entry/${mediaEntryId}/full_text`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2428,7 +2428,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryFullTextCreate
    * @summary USER Context: Create full_text for collection
-   * @request POST:/api/media-entry/{media_entry_id}/full_text
+   * @request POST:/api-v2/media-entry/{media_entry_id}/full_text
    */
   mediaEntryFullTextCreate = (
     mediaEntryId: string,
@@ -2438,7 +2438,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<any, void>({
-      path: `/api/media-entry/${mediaEntryId}/full_text`,
+      path: `/api-v2/media-entry/${mediaEntryId}/full_text`,
       method: "POST",
       body: body,
       ...params,
@@ -2448,7 +2448,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryFullTextUpdate
    * @summary USER Context: Update full_text for collection.
-   * @request PUT:/api/media-entry/{media_entry_id}/full_text
+   * @request PUT:/api-v2/media-entry/{media_entry_id}/full_text
    */
   mediaEntryFullTextUpdate = (
     mediaEntryId: string,
@@ -2458,7 +2458,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     params: RequestParams = {},
   ) =>
     this.request<any, void>({
-      path: `/api/media-entry/${mediaEntryId}/full_text`,
+      path: `/api-v2/media-entry/${mediaEntryId}/full_text`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -2469,11 +2469,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaEntryFullTextDelete
    * @summary USER Context: Delete full_text.
-   * @request DELETE:/api/media-entry/{media_entry_id}/full_text
+   * @request DELETE:/api-v2/media-entry/{media_entry_id}/full_text
    */
   mediaEntryFullTextDelete = (mediaEntryId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/media-entry/${mediaEntryId}/full_text`,
+      path: `/api-v2/media-entry/${mediaEntryId}/full_text`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -2483,11 +2483,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaFileDetail
    * @summary PUBLIC/USER Context: Get media-file for id.
-   * @request GET:/api/media-file/{media_file_id}
+   * @request GET:/api-v2/media-file/{media_file_id}
    */
   mediaFileDetail = (mediaFileId: string, params: RequestParams = {}) =>
     this.request<MediaFileDetailData, any>({
-      path: `/api/media-file/${mediaFileId}`,
+      path: `/api-v2/media-file/${mediaFileId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2497,11 +2497,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MediaFileDataStreamDetail
    * @summary PUBLIC/USER Context: Get media-file data-stream for id.
-   * @request GET:/api/media-file/{media_file_id}/data-stream
+   * @request GET:/api-v2/media-file/{media_file_id}/data-stream
    */
   mediaFileDataStreamDetail = (mediaFileId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/media-file/${mediaFileId}/data-stream`,
+      path: `/api-v2/media-file/${mediaFileId}/data-stream`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2511,11 +2511,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MetaDataDetail
    * @summary Get meta-data for id
-   * @request GET:/api/meta-data/{meta_datum_id}
+   * @request GET:/api-v2/meta-data/{meta_datum_id}
    */
   metaDataDetail = (metaDatumId: string, params: RequestParams = {}) =>
     this.request<MetaDataDetailData, any>({
-      path: `/api/meta-data/${metaDatumId}`,
+      path: `/api-v2/meta-data/${metaDatumId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2525,11 +2525,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MetaDataDataStreamDetail
    * @summary Get meta-data data-stream.
-   * @request GET:/api/meta-data/{meta_datum_id}/data-stream
+   * @request GET:/api-v2/meta-data/{meta_datum_id}/data-stream
    */
   metaDataDataStreamDetail = (metaDatumId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/meta-data/${metaDatumId}/data-stream`,
+      path: `/api-v2/meta-data/${metaDatumId}/data-stream`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2539,11 +2539,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name MetaDataRoleDetail
    * @summary Get meta-data role for id
-   * @request GET:/api/meta-data/{meta_datum_id}/role
+   * @request GET:/api-v2/meta-data/{meta_datum_id}/role
    */
   metaDataRoleDetail = (metaDatumId: string, params: RequestParams = {}) =>
     this.request<MetaDataRoleDetailData, any>({
-      path: `/api/meta-data/${metaDatumId}/role`,
+      path: `/api-v2/meta-data/${metaDatumId}/role`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2553,11 +2553,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name PreviewsDetail
    * @summary Get preview for id.
-   * @request GET:/api/previews/{preview_id}
+   * @request GET:/api-v2/previews/{preview_id}
    */
   previewsDetail = (previewId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/previews/${previewId}`,
+      path: `/api-v2/previews/${previewId}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2567,11 +2567,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name PreviewsDataStreamDetail
    * @summary Get preview data-stream for id.
-   * @request GET:/api/previews/{preview_id}/data-stream
+   * @request GET:/api-v2/previews/{preview_id}/data-stream
    */
   previewsDataStreamDetail = (previewId: string, params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/previews/${previewId}/data-stream`,
+      path: `/api-v2/previews/${previewId}/data-stream`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2581,11 +2581,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name RolesList
    * @summary Get list of roles.
-   * @request GET:/api/roles/
+   * @request GET:/api-v2/roles/
    */
   rolesList = (query: RolesListParams, params: RequestParams = {}) =>
     this.request<RolesListData, any>({
-      path: `/api/roles/`,
+      path: `/api-v2/roles/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -2596,11 +2596,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name RolesDetail
    * @summary Get role by id
-   * @request GET:/api/roles/{id}
+   * @request GET:/api-v2/roles/{id}
    */
   rolesDetail = (id: string, params: RequestParams = {}) =>
     this.request<RolesDetailData, any>({
-      path: `/api/roles/${id}`,
+      path: `/api-v2/roles/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2610,11 +2610,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name UsersList
    * @summary USER Context: Get list of users ids.
-   * @request GET:/api/users/
+   * @request GET:/api-v2/users/
    */
   usersList = (query: UsersListParams, params: RequestParams = {}) =>
     this.request<UsersListData, any>({
-      path: `/api/users/`,
+      path: `/api-v2/users/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -2625,11 +2625,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name UsersDetail
    * @summary USER Context: Get user by id
-   * @request GET:/api/users/{id}
+   * @request GET:/api-v2/users/{id}
    */
   usersDetail = (id: string, params: RequestParams = {}) =>
     this.request<UsersDetailData, any>({
-      path: `/api/users/${id}`,
+      path: `/api-v2/users/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2639,11 +2639,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name GroupsList
    * @summary Get all group ids
-   * @request GET:/api/groups/
+   * @request GET:/api-v2/groups/
    */
   groupsList = (query: GroupsListParams, params: RequestParams = {}) =>
     this.request<GroupsListData, any>({
-      path: `/api/groups/`,
+      path: `/api-v2/groups/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -2654,11 +2654,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name GroupsDetail
    * @summary Get group by id
-   * @request GET:/api/groups/{id}
+   * @request GET:/api-v2/groups/{id}
    */
   groupsDetail = (id: string, params: RequestParams = {}) =>
     this.request<GroupsDetailData, any>({
-      path: `/api/groups/${id}`,
+      path: `/api-v2/groups/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2668,11 +2668,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name UsageTermsList
    * @summary PUBLIC Context: List usage_terms.
-   * @request GET:/api/usage-terms/
+   * @request GET:/api-v2/usage-terms/
    */
   usageTermsList = (query: UsageTermsListParams, params: RequestParams = {}) =>
     this.request<UsageTermsListData, any>({
-      path: `/api/usage-terms/`,
+      path: `/api-v2/usage-terms/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -2683,11 +2683,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name UsageTermsDetail
    * @summary PUBLIC Context: Get usage_terms by id.
-   * @request GET:/api/usage-terms/{id}
+   * @request GET:/api-v2/usage-terms/{id}
    */
   usageTermsDetail = (id: string, params: RequestParams = {}) =>
     this.request<UsageTermsDetailData, any>({
-      path: `/api/usage-terms/${id}`,
+      path: `/api-v2/usage-terms/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2697,11 +2697,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name VocabulariesList
    * @summary Get list of vocabularies ids.
-   * @request GET:/api/vocabularies/
+   * @request GET:/api-v2/vocabularies/
    */
   vocabulariesList = (query: VocabulariesListParams, params: RequestParams = {}) =>
     this.request<VocabulariesListData, any>({
-      path: `/api/vocabularies/`,
+      path: `/api-v2/vocabularies/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -2712,11 +2712,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name VocabulariesDetail
    * @summary Get vocabulary by id.
-   * @request GET:/api/vocabularies/{id}
+   * @request GET:/api-v2/vocabularies/{id}
    */
   vocabulariesDetail = (id: string, params: RequestParams = {}) =>
     this.request<VocabulariesDetailData, any>({
-      path: `/api/vocabularies/${id}`,
+      path: `/api-v2/vocabularies/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2726,11 +2726,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name WorkflowsList
    * @summary ADMIN Context: List workflows.
-   * @request GET:/api/workflows/
+   * @request GET:/api-v2/workflows/
    */
   workflowsList = (query: WorkflowsListParams, params: RequestParams = {}) =>
     this.request<WorkflowsListData, any>({
-      path: `/api/workflows/`,
+      path: `/api-v2/workflows/`,
       method: "GET",
       query: query,
       type: ContentType.Json,
@@ -2741,11 +2741,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name WorkflowsCreate
    * @summary ADMIN Context: Create workflow.
-   * @request POST:/api/workflows/
+   * @request POST:/api-v2/workflows/
    */
   workflowsCreate = (body: WorkflowsCreatePayload, params: RequestParams = {}) =>
     this.request<WorkflowsCreateData, any>({
-      path: `/api/workflows/`,
+      path: `/api-v2/workflows/`,
       method: "POST",
       body: body,
       type: ContentType.Json,
@@ -2756,11 +2756,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name WorkflowsDetail
    * @summary ADMIN Context: Get workflow by id.
-   * @request GET:/api/workflows/{id}
+   * @request GET:/api-v2/workflows/{id}
    */
   workflowsDetail = (id: string, params: RequestParams = {}) =>
     this.request<WorkflowsDetailData, any>({
-      path: `/api/workflows/${id}`,
+      path: `/api-v2/workflows/${id}`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2770,11 +2770,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name WorkflowsUpdate
    * @summary ADMIN Context: Update workflow with id.
-   * @request PUT:/api/workflows/{id}
+   * @request PUT:/api-v2/workflows/{id}
    */
   workflowsUpdate = (id: string, body: WorkflowsUpdatePayload, params: RequestParams = {}) =>
     this.request<WorkflowsUpdateData, any>({
-      path: `/api/workflows/${id}`,
+      path: `/api-v2/workflows/${id}`,
       method: "PUT",
       body: body,
       type: ContentType.Json,
@@ -2785,11 +2785,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @name WorkflowsDelete
    * @summary ADMIN Context: Delete workflow by id.
-   * @request DELETE:/api/workflows/{id}
+   * @request DELETE:/api-v2/workflows/{id}
    */
   workflowsDelete = (id: string, params: RequestParams = {}) =>
     this.request<WorkflowsDeleteData, any>({
-      path: `/api/workflows/${id}`,
+      path: `/api-v2/workflows/${id}`,
       method: "DELETE",
       type: ContentType.Json,
       ...params,
@@ -2798,11 +2798,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @name ManagementStatusList
-   * @request GET:/api/management/status
+   * @request GET:/api-v2/management/status
    */
   managementStatusList = (params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/management/status`,
+      path: `/api-v2/management/status`,
       method: "GET",
       type: ContentType.Json,
       ...params,
@@ -2811,11 +2811,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @name ManagementShutdownCreate
-   * @request POST:/api/management/shutdown
+   * @request POST:/api-v2/management/shutdown
    */
   managementShutdownCreate = (params: RequestParams = {}) =>
     this.request<any, void>({
-      path: `/api/management/shutdown`,
+      path: `/api-v2/management/shutdown`,
       method: "POST",
       type: ContentType.Json,
       ...params,

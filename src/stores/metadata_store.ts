@@ -6,7 +6,7 @@ import { madekHelper } from '../modules/madek';
 import { errorHelper } from '../modules/error';
 import { CollectionMetaDataDetailData } from '../generated/data-contracts';
 
-const META_DATA = 'meta_data'
+const META_DATA = 'meta-data'
 const { api, authParams, user } = apiHelper()
 const {
     RKEY_ENTRY, RKEY_COLLECTION,
