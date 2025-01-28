@@ -9,6 +9,7 @@
         <CollectionsGrid
             :collectionsList="allCollections"
             :show_action_list="['view', 'edit', 'delete']"
+            :max_count="10"
             @clickedView="clickedView"
             @clickedEdit="clickedEdit"
             @clickedEntries="clickedEntries"
@@ -76,7 +77,7 @@ const { error_msg, handle_error, reset_error } = errorHelper()
 
 
 const props = defineProps({
-    max_count: { type: Number, default: 10, required: true}
+    max_count: { type: Number, default: 10, required: false}
 })
 
 const show_paging = ref(true)

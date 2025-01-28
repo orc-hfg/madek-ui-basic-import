@@ -62,7 +62,8 @@ function onInputChange(e: any) {
 
 // Uploader
 
-const { uploadFilesWebApp } = createUploader('https://dev.madek.hfg-karlsruhe.de/entries/')
+//const { uploadFilesWebApp } = createUploader('https://dev.madek.hfg-karlsruhe.de/entries/')
+const { uploadFilesWebApp } = createUploader('https://staging.madek.hfg-karlsruhe.de/entries/')
 //const { uploadFilesWebApp } = createUploader('http://localhost:3100/entries/')
 
 </script>

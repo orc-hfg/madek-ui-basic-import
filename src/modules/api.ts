@@ -91,7 +91,7 @@ export const apiHelper = (baseUrl?: string) => {
                 authInfo.value = json
                 setUser(
                     //json.user, json.person, 
-                    json.user, json.person,
+                    json, json,
                     undefined,
                     undefined,
                     params)
@@ -122,7 +122,7 @@ export const apiHelper = (baseUrl?: string) => {
   
     }
 
-    //checkSession()
+    checkSession()
 
     const apiLogin = (login: string, password: string, cb: any) => {
      

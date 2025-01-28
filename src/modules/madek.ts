@@ -99,6 +99,7 @@ export const madekHelper = () => {
     const MD_KEYWORDS_DATA = 'md_keywords'
     const MD_PEOPLE_DATA = 'md_people'
 
+    const META_DATA = 'meta-data'
 
     const { api, apiConfig } = apiHelper()
     const { user, person, authParams} = authHelper()
@@ -307,7 +308,6 @@ export const madekHelper = () => {
 
         return result
     }
-
     
     const checkPublishable = (e_id:string, cbOK: any) => {
         const MD = 'checkPublishable: ' + e_id + ': '
@@ -385,7 +385,7 @@ export const madekHelper = () => {
         const mkid = encodeURIComponent(meta_key_id)
         api.api.collectionMetaDatumDetail(col_id, mkid, authParams?.value)
             .then(resp => {
-                const val = resp.data.meta_data.string
+                const val = resp.data[META_DATA].string
                 cbOK(val)
             })
             .catch(error => handle_error('getCollectionMetaDataText', error))
@@ -396,7 +396,7 @@ export const madekHelper = () => {
         const mkid = encodeURIComponent(meta_key_id)
         api.api.mediaEntryMetaDatumDetail(e_id, mkid, authParams?.value)
             .then(resp => {
-                const val = resp.data.meta_data.string
+                const val = resp.data[META_DATA].string
                 cbOK(val)
             })
             .catch(error => handle_error('getEntryMetaDataText', error))
