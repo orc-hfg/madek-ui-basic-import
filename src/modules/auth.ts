@@ -29,48 +29,54 @@ const state = reactive<iLoginState>({
     authParams: undefined
 })
 
-const check_stored_creds = () => {
 
-    try {
-
-        const stored = window.localStorage.getItem(AUTH_KEY)
-        const parsedStored = JSON.parse(stored || '')
-        if (parsedStored && parsedStored.user) {
-            console.log("has user:\n" + JSON.stringify(parsedStored))
-            if (parsedStored.hash) {
-                console.log("has user: basic auth")
-                state.authInfo = parsedStored.authInfo
-                state.user = parsedStored.user
-                state.person = parsedStored.person
-                state.hash = parsedStored.hash
-                state.authParams = parsedStored.authParams
-            } else if (parsedStored.token) {
-                console.log("has user: token auth")
-        
-                state.authInfo = parsedStored.authInfo
-                state.user = parsedStored.user
-                state.person = parsedStored.person
-                state.token = parsedStored.token
-                state.authParams = parsedStored.authParams
-            } else {
-                console.log("has user: session auth")
-        
-                state.authInfo = parsedStored.authInfo
-                state.user = parsedStored.user
-                state.person = parsedStored.person
-                //state.cookie = parsedStored.cookie
-                state.authParams = parsedStored.authParams
-            }
-        }
-    } catch(error) {
-        console.error("Could not read stored credentials:\n" + JSON.stringify(error))
-    }
-}
-
-check_stored_creds()
 
 export const authHelper = () => {
-  
+
+    const check_stored_creds = () => {
+
+        if (state.authInfo && state.user) {
+            //console.debug("check_stored_cred: ABORT: already has user")
+            return
+        }
+        try {
+    
+            const stored = window.localStorage.getItem(AUTH_KEY)
+            const parsedStored = JSON.parse(stored || '')
+            if (parsedStored && parsedStored.user) {
+                console.log("has user:\n" + JSON.stringify(parsedStored))
+                if (parsedStored.hash) {
+                    console.log("has user: basic auth")
+                    state.authInfo = parsedStored.authInfo
+                    state.user = parsedStored.user
+                    state.person = parsedStored.person
+                    state.hash = parsedStored.hash
+                    state.authParams = parsedStored.authParams
+                } else if (parsedStored.token) {
+                    console.log("has user: token auth")
+            
+                    state.authInfo = parsedStored.authInfo
+                    state.user = parsedStored.user
+                    state.person = parsedStored.person
+                    state.token = parsedStored.token
+                    state.authParams = parsedStored.authParams
+                } else {
+                    console.log("has user: session auth")
+            
+                    state.authInfo = parsedStored.authInfo
+                    state.user = parsedStored.user
+                    state.person = parsedStored.person
+                    //state.cookie = parsedStored.cookie
+                    state.authParams = parsedStored.authParams
+                }
+            }
+        } catch(error) {
+            console.error("Could not read stored credentials:\n" + JSON.stringify(error))
+        }
+    }
+    
+    check_stored_creds()
+
     const setUser = (user: iUser, person: iPerson,
         hash:string|undefined,
         token: string|undefined,
@@ -99,6 +105,7 @@ export const authHelper = () => {
         return Promise.resolve(state.user = undefined)
     }
     return {
+        check_stored_creds,
         setUser,       
         logout,
         ...toRefs(state),

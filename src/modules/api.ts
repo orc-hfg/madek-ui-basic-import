@@ -64,8 +64,8 @@ export const apiHelper = (baseUrl?: string) => {
     }
     const checkSession = () => {
         if (authInfo?.value && authInfo.value.id) {
-            console.warn("already has auth info user id")
-            //return
+            console.debug("checkSession: already has auth info user id")
+            return
         }
 
         const params = sessionAuthParams()
@@ -202,30 +202,9 @@ export const apiHelper = (baseUrl?: string) => {
 
                 setUser(
                     user, person, 
-                    basicAuthHash(login,password),
                     undefined,
+                    token,
                     params)
-
-                /* api.api.usersDetail(userId, params)
-                    .then(resp => {
-                        console.log("full user: " + JSON.stringify(json))
-                        const user = resp.data
-                        const pid = user.person_id
-                        console.log("User is person: " + pid)
-
-                        api.api.peopleDetail(pid, params)
-                        .then(resp => {
-                            console.log("full person: " + JSON.stringify(json))
-                            const person = resp.data
-
-                            setUser(
-                                user, person, 
-                                undefined,
-                                token,
-                                params)
-                        })
-                    }) */
-
                 
                 
             }).catch(error => {

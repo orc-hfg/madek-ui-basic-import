@@ -55,7 +55,7 @@ const update = () => {
   };
 
   const onPreviewData = (jsondata: any) => {
-    preview_file.value = jsondata;
+    preview_file.value = jsondata[0];
     asyncApplyPreviewData(entry_id.value, onImgData, props.size);
   };
 
