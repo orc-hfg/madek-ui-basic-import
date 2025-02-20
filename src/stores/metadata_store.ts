@@ -21,10 +21,10 @@ const {
 const { handle_error } = errorHelper()
 
 export interface iMetaDataMap {
-    [key: string]: iGenMetaData,
+    [res_id: string]: iGenMetaData,
 }
 export interface iResourceMetaDataMap {
-    [key: string]: iMetaDataMap,
+    [res_key: string]: iMetaDataMap,
 }
 export interface iFileMap {
     [key: string]: iMediaFile,

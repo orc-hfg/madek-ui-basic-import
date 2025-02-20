@@ -1,6 +1,7 @@
-import { iMediaFile } from './api_resources';
+//import { iMediaFile } from './api_resources';
 
-export interface iAppSettings {
+  //TODO update sig  
+  export interface iAppSettings {
     available_locales: string[]
     default_locale: string
     
@@ -20,6 +21,43 @@ export interface iAppSettings {
     media_entry_default_license_usage_meta_key: string
     media_entry_default_license_usage_text: string
   }
+
+  export interface iContext {
+    id: string,
+    labels: any,
+    descriptions: any,
+  }
+
+  export interface iContextKey {
+    id: string
+    context_id: string
+    meta_key_id: string
+    is_required: boolean
+    length_max: number
+    length_min: number
+    position: number
+    labels: any
+    descriptions: any
+    hints:any
+  }
+
+  export interface iMetaKey {
+    id: string
+    is_extensible_list: boolean
+    meta_datum_object_type: string
+    keywords_alphabetical_order: boolean
+    position: number
+    is_enabled_for_media_entries: boolean
+    is_enabled_for_collections: boolean
+    vocabulary_id: string
+    labels: any
+  }
+
+  export interface iVocabulary {
+    id: string
+  
+  }
+
   export interface iCollection {
     id: string,
     get_metadata_and_previews: boolean,
@@ -41,14 +79,6 @@ export interface iAppSettings {
     get_full_size?: boolean,
     get_metadata_and_previews?: boolean,
   }
-
-  export interface iPreview {
-    id: string
-    thumbnail: string
-    media_type: string
-    media_file_id: string
-  }
- 
   export interface iMediaFile {
     id: string,
     media_entry_id: string,
@@ -58,6 +88,15 @@ export interface iAppSettings {
     content_type: string,
     previews: iPreview[]
   }
+
+  export interface iPreview {
+    id: string
+    thumbnail: string
+    media_type: string
+    media_file_id: string
+  }
+ 
+  
   export interface iMetaData {
     id: string
     media_entry_id: string
@@ -67,44 +106,15 @@ export interface iAppSettings {
     'string': string
     'json': string
   }
+
   export interface iKeyword {
     id: string,
     meta_key_id: string,
     term: string
   }
-  export interface iContext {
-    id: string,
-    labels: any,
-    descriptions: any,
-  }
-  export interface iContextKey {
-    id: string
-    context_id: string
-    meta_key_id: string
-    is_required: boolean
-    length_max: number
-    length_min: number
-    position: number
-    labels: any
-    descriptions: any
-    hints:any
-  }
-  export interface iMetaKey {
-    id: string
-    is_extensible_list: boolean
-    meta_datum_object_type: string
-    keywords_alphabetical_order: boolean
-    position: number
-    is_enabled_for_media_entries: boolean
-    is_enabled_for_collections: boolean
-    vocabulary_id: string
-    labels: any
-  
-  }
-  export interface iVocabulary {
-    id: string
-  
-  }
+
+
+  //TODO update sig
   export interface iPerson {
     id: string
     first_name: string
@@ -113,6 +123,7 @@ export interface iAppSettings {
     subtype: string
   }
 
+  //TODO update sig
   export interface iGroup {
     id: string
     name: string
@@ -123,6 +134,7 @@ export interface iAppSettings {
     person_id: string
   }
 
+  //TODO update sig
   export interface iUser {
     id: string
     email: string
@@ -156,12 +168,6 @@ export interface iMediaEntriesQueryFilterByPermissionsData {
 export interface iMediaEntriesQueryFilterByPermissions {
   key: string;
   value: string;
-  /*
-  public: boolean;
-  responsible_user: string;
-  entrusted_to_user: string;
-  entrusted_to_group: string;
-  */
 }
 export const queryPermissionsData2FilterBy = (data: iMediaEntriesQueryFilterByPermissionsData) : iMediaEntriesQueryFilterByPermissions[] => {
     const result = [] as iMediaEntriesQueryFilterByPermissions[];
@@ -215,6 +221,7 @@ export interface iMediaEntriesQuery {
   
   /** @format int32 */
   count?: number;
+  // to be converted to filter_by as JSON string
   filter_by_data?: iMediaEntriesQueryFilterBy;
   //filter_by?: iMediaEntriesQueryFilterBy | string;
   filter_by?: string;
@@ -261,6 +268,8 @@ export const buildMEQuery = (query: iMediaEntriesQuery) => {
   return query
 }
 
+
+// permissions
 export interface iEntryUserPermission {
   id: string,
   user_id: string,

@@ -41,7 +41,7 @@ export enum MLType {
 
       
 export interface iGenMetaData {
-    [key: string]: iGenMetaDatum,
+    [meta_key_id: string]: iGenMetaDatum,
 }
 export interface iGenMetaDatum {
     meta_key_id: string,
@@ -683,14 +683,14 @@ export const madekHelper = () => {
             const toDelete = new Array<string>()
             const toAdd = new Array<string>()
     
-            kws_after.forEach((kwa:iPerson) => {
+            kws_after.forEach((kwa:iPerson|iKeyword) => {
                 const hadkw = kws_before.find(kw => { return kw.id === kwa.id})
                 if (!hadkw || !hadkw.id) {
                   toAdd.push(kwa.id)
                 }
             })
     
-            kws_before.forEach((kwb:iPerson) => {
+            kws_before.forEach((kwb:iPerson|iKeyword) => {
                 const hadkw = kws_after.find(kw => { return kw.id === kwb.id})
                 if (!hadkw || !hadkw.id) {
                   toDelete.push(kwb.id)
@@ -952,30 +952,29 @@ export const madekHelper = () => {
         context_ids.forEach(cid => {
           getContextKeysForContext(cid as string).forEach((ck:ContextKeysDetailData) => {
   
-            const mkid = ck.meta_key_id
-            const mk = getMetaKey(mkid)
+            const meta_key_id = ck.meta_key_id
+            const mk = getMetaKey(meta_key_id)
             if (!mk || !mk.id) {
-                console.error("Hidden or invalid meta key: " + mkid)
+                console.error("Hidden or invalid meta key: " + meta_key_id)
             }
             else {
-                const md = {
-                    meta_key_id: mkid,
+                const new_meta_datum = {
+                    meta_key_id: meta_key_id,
                     type: mk?.meta_datum_object_type,
                     string: "",
                     json: "",
     
                 } as iGenMetaDatum
-                if (isMetaKeyObjectType(mkid, MD_TYPE_KEYWORDS)) {
-                    md.selectedKeywords = new Array<KeywordsDetailData>()
+                if (isMetaKeyObjectType(meta_key_id, MD_TYPE_KEYWORDS)) {
+                    new_meta_datum.selectedKeywords = new Array<KeywordsDetailData>()
                 }
-                if (isMetaKeyObjectType(mkid, MD_TYPE_PEOPLE)) {
-                    md.selectedPeople = new Array<PeopleDetailData>()
+                if (isMetaKeyObjectType(meta_key_id, MD_TYPE_PEOPLE)) {
+                    new_meta_datum.selectedPeople = new Array<PeopleDetailData>()
                 }
-                if (isMetaKeyObjectType(mkid, MD_TYPE_ROLES)) {
-                    md.selectedKeywords = new Array<MetaDataRoleDetailData>()
+                if (isMetaKeyObjectType(meta_key_id, MD_TYPE_ROLES)) {
+                    //new_meta_datum.selectedRoles = new Array<MetaDataRoleDetailData>()
                 }
-                //meta_data.data.set(mkid, md)
-                meta_data[mkid] = md
+                meta_data[meta_key_id] = new_meta_datum
     
             }
             
