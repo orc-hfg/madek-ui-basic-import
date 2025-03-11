@@ -6,6 +6,9 @@
 		<Button @click.prevent="uploadFilesWebApp(files, props.collection_id, uploadedCB)"
 			label="Upload"
 			class="upload-btn"/>
+		<Button @click.prevent="uploadFilesSeq()"
+			label="Upload Seq"
+			class="upload-btn"/>
 		<DropZone class="drop-area" @files-dropped="addFiles" #default="{ dropZoneActive }">
 			<label for="file-input">
 				<span v-if="dropZoneActive">
@@ -41,7 +44,7 @@ import FilePreview from './FilePreview.vue'
 import useFileList from './compositions/file-list'
 import createUploader from './compositions/file-uploader'
 
-const { files, addFiles, removeFile } = useFileList()
+const { files, addFiles, removeFile, seqfiles, addSeqFiles, removeSeqFile } = useFileList()
 
 const props = defineProps(['collection_id'])
 
@@ -55,15 +58,41 @@ const uploadedCB = (data: any, files: any) => {
 function onInputChange(e: any) {
 	
 	addFiles(e.target.files)
-	emit('selected', files.value)
+	//addSeqFiles(e.target.files)
+	seqfiles.value = files.value
+	//emit('selected', files.value)
+	emit('selected', seqfiles.value)
 	e.target.value = null // reset so that selecting the same file again will still cause it to fire this change
 }
 
+const uploadFilesSeqCB = async (data:any, pfiles: any) => {
+	console.log("uploadFilesSeqCB: " + JSON.stringify(data) + "\n files: " + pfiles)
+	if (pfiles.length == 1) {
+		const changedFile = pfiles[0]
+		removeFile(changedFile)
+		files.value = files.value.concat(changedFile)
+		//addFiles(pfiles)
+	}
+	//emit('change', data, files.value)
+	emit('change', data, files.value)
+	uploadFilesSeq()
+}
+
+const uploadFilesSeq = async () => {
+
+	if (!seqfiles.value.length) {
+		console.error("no files selected")
+		return
+	}
+	const file = seqfiles.value.at(0)
+	uploadFileWebApp(file, props.collection_id, uploadFilesSeqCB)
+	removeSeqFile(file)
+}
 
 // Uploader
 
 //const { uploadFilesWebApp } = createUploader('https://dev.madek.hfg-karlsruhe.de/entries/')
-const { uploadFilesWebApp } = createUploader('https://staging.madek.hfg-karlsruhe.de/entries/')
+const { uploadFilesWebApp, uploadFileWebApp } = createUploader('https://staging.madek.hfg-karlsruhe.de/entries/')
 //const { uploadFilesWebApp } = createUploader('http://localhost:3100/entries/')
 
 </script>

@@ -762,7 +762,7 @@ const isAllUploaded = () => {
   return result
 }
 const onUploadChanged = (entryId: string, files:any) => {
-  console.log("onUploadChanged: " + entryId + ":" + files)
+  console.log("onUploadChanged: " + entryId + ":" + JSON.stringify(files))
 
   reset_error()
 

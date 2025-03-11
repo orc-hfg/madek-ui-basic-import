@@ -387,8 +387,21 @@ const deleteMDKeyword = (resource_key: string, resourceId: string,
     }    
 }
 
-
-
+const get_set() => {
+    const query = {
+        full_data: true,
+        creator_id: user.id,
+        me_edit_metadata_and_relations: true,
+      }
+      
+      api.api.collectionsList(query, authParams?.value)
+        .then(resp => {
+          this.collectionList = resp.data.collections
+        })
+        .catch(error => handle_error('api collectionsList:', error))
+        
+      }      
+}
 
 // init empty meta-data map
 

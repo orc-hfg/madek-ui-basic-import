@@ -81,15 +81,16 @@ function uploadWebApp(file:any, url:string, collectionId:string, formData: FormD
 		
 			response.json().then(json => {
 
-				const jsonRes = JSON.stringify(json)
-				console.log('got json result: ' + jsonRes)
+				//const jsonRes = JSON.stringify(json)
+				//console.log('got json result: ' + jsonRes)
+				console.log('got upload ok response')
 				file.mediaEntryId = json.uuid
 				file.mediaEntry = {id: file.mediaEntryId }
 				
 				file.mediaFileId = json.media_file.uuid
 				file.serverurl = apiConfig.baseUrl + '/api/media-entry/' + file.mediaEntryId + '/media-file/data-stream'
 
-				cb(file.mediaEntryId, files)
+				cb(file.mediaEntryId, files || [file ])
 			})
 			
 	})
@@ -97,6 +98,7 @@ function uploadWebApp(file:any, url:string, collectionId:string, formData: FormD
 		file.status = "Error"
 		//TODO handle error
 		console.error("got error uploading: " + JSON.stringify((error)))
+		//cb(error,[])
 	})
 
 }
